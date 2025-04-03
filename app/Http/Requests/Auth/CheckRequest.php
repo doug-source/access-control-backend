@@ -13,7 +13,7 @@ class CheckRequest extends FormRequest
     private Checker $checker;
 
     /**
-     * Indicates if the validator should stop on the first rule failure.
+     * Indicate if the validator should stop on the first rule failure.
      *
      * @var bool
      */
@@ -34,8 +34,6 @@ class CheckRequest extends FormRequest
 
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize()
     {
@@ -43,13 +41,6 @@ class CheckRequest extends FormRequest
         // return !auth()->check();
     }
 
-    /**
-     * Used by access the url argument 'customerID' (if present) included
-     * on the url to validate it
-     *
-     * @param array|mixed|null $keys
-     * @return array
-     */
     public function all($keys = NULL)
     {
         $request = parent::all($keys);
@@ -59,18 +50,13 @@ class CheckRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, mixed>
+     * @return array
      */
     public function rules()
     {
         return $this->getChecker()->rules();
     }
 
-    /**
-     * Get the validation messages that apply to the request.
-     *
-     * @return array<string, mixed>
-     */
     public function messages()
     {
         return $this->getChecker()->messages();

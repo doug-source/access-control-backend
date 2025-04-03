@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    /**
+     * Execute the application login process
+     */
     public function login(CheckRequest $request)
     {
         $credentials = $request->only('email', 'password');

@@ -8,14 +8,6 @@ use Illuminate\Support\Str;
 
 class Plain implements Checker
 {
-    /**
-     * Get all of the input and files for the request and organize the fields
-     * to be validated.
-     *
-     * @param  Illuminate\Foundation\Http\FormRequest  $formRequest
-     * @param  array  $requestInputs
-     * @return array
-     */
     public function all(FormRequest $formRequest, array $requestInputs): array
     {
         return [

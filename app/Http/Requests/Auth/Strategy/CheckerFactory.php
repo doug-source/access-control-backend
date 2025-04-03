@@ -9,7 +9,7 @@ use App\Http\Requests\Auth\Strategy\Post\Plain as PostPlain;
 class CheckerFactory
 {
     /**
-     * Returns the Checker instance based on FormRequest instance
+     * Return the Checker instance based on FormRequest instance
      */
     public static function getChecker(FormRequest $formRequest): ?Checker
     {

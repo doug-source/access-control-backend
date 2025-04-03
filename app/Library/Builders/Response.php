@@ -8,9 +8,6 @@ final class Response
 {
     /**
      * Build the invalid json response output
-     *
-     * @param \Illuminate\Support\Stringable|string $msg
-     * @return \Illuminate\Http\JsonResponse
      */
     public static function invalidJSON(Stringable|string $msg)
     {
@@ -20,7 +17,7 @@ final class Response
     }
 
     /**
-     * Build the invalid json response output
+     * Build the successful json response output
      *
      * @param mixed|null $data
      */
