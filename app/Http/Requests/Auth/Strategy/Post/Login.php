@@ -6,7 +6,7 @@ use App\Http\Requests\Checker;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
-class Plain implements Checker
+class Login implements Checker
 {
     public function all(FormRequest $formRequest, array $requestInputs): array
     {

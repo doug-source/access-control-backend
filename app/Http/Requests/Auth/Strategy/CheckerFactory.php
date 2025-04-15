@@ -4,7 +4,9 @@ namespace App\Http\Requests\Auth\Strategy;
 
 use App\Http\Requests\Checker;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Http\Requests\Auth\Strategy\Post\Plain as PostPlain;
+use App\Http\Requests\Auth\Strategy\Post\{
+    Login as LoginPost,
+};
 
 class CheckerFactory
 {
@@ -13,6 +15,7 @@ class CheckerFactory
      */
     public static function getChecker(FormRequest $formRequest): ?Checker
     {
-        return new PostPlain($formRequest);
+        return new LoginPost();
     }
+
 }
