@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 describe('Authentication', function () {
     it('receives no field and returns email invalidation', function () {
-        $response = $this->postJson('/api/login');
+        $response = $this->postJson(route('auth.login'));
         $response
             ->assertStatus(422)
             ->assertInvalid(['email'])
@@ -20,7 +20,7 @@ describe('Authentication', function () {
             ]);
     });
     it('receives only password and returns email invalidation', function () {
-        $response = $this->postJson('/api/login', ['password' => 'whatever']);
+        $response = $this->postJson(route('auth.login'), ['password' => 'whatever']);
         $response
             ->assertStatus(422)
             ->assertInvalid(['email'])
@@ -33,7 +33,7 @@ describe('Authentication', function () {
             ]);
     });
     it('receives only email and returns password invalidation', function () {
-        $response = $this->postJson('/api/login', ['email' => 'someone@test.com']);
+        $response = $this->postJson(route('auth.login'), ['email' => 'someone@test.com']);
         $response
             ->assertStatus(422)
             ->assertInvalid(['password'])
@@ -46,7 +46,7 @@ describe('Authentication', function () {
             ]);
     });
     it('receives invalid email and returns email invalidation', function () {
-        $response = $this->postJson('/api/login', ['email' => 'someone@', 'password' => 'whatever']);
+        $response = $this->postJson(route('auth.login'), ['email' => 'someone@', 'password' => 'whatever']);
         $response
             ->assertStatus(422)
             ->assertInvalid(['email'])
@@ -68,7 +68,7 @@ describe('Authentication', function () {
             'password' => Hash::make($password)
         ])->first();
 
-        $response = $this->postJson('/api/login', ['email' => $email, 'password' => 'another-password']);
+        $response = $this->postJson(route('auth.login'), ['email' => $email, 'password' => 'another-password']);
         $response->assertInvalid(['status']);
     });
     it('receives successful login validation', function () {
@@ -81,7 +81,7 @@ describe('Authentication', function () {
             'password' => Hash::make($password)
         ])->first();
 
-        $this->postJson('/api/login', ['email' => $email, 'password' => $password]);
+        $this->postJson(route('auth.login'), ['email' => $email, 'password' => $password]);
         $this->assertAuthenticated();
     });
     it('receives failing logout validation by unauthorization', function () {
@@ -106,14 +106,14 @@ describe('Authentication', function () {
             'email' => $email,
             'password' => Hash::make($password)
         ])->first();
-        $responseLogin = $this->postJson('/api/login', [
+        $responseLogin = $this->postJson(route('auth.login'), [
             'email' => $email,
             'password' => $password
         ]);
 
         $token = Str::after($responseLogin->baseResponse->original['data']['token'], '|');
 
-        $this->postJson('/api/logout', [], [
+        $this->postJson(route('auth.logout'), [], [
             'Authorization' => "Bearer {$token}"
         ])->assertOk();
     });
