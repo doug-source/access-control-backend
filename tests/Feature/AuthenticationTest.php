@@ -4,7 +4,6 @@ use App\Models\Enterprise;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
 describe('Authentication', function () {
     it('receives no field and returns email invalidation', function () {
