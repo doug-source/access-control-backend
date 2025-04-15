@@ -3,6 +3,8 @@
 use App\Models\Enterprise;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 describe('Authentication', function () {
     it('receives no field and returns email invalidation', function () {
@@ -82,5 +84,38 @@ describe('Authentication', function () {
 
         $this->postJson('/api/login', ['email' => $email, 'password' => $password]);
         $this->assertAuthenticated();
+    });
+    it('receives failing logout validation by unauthorization', function () {
+        $email = 'someone@test.com';
+        $password = 'password';
+        $token = 'anyToken';
+        $enterpriseList = Enterprise::factory(count: 1)->create();
+        User::factory(count: 1)->create([
+            'enterprises_id' => $enterpriseList->first()->id,
+            'email' => $email,
+            'password' => Hash::make($password)
+        ])->first();
+        $response = $this->postJson('/api/logout', ['tokenAuthApi' => $token]);
+        $response->assertUnauthorized();
+    });
+    it('receives successful logout validation', function () {
+        $email = 'someone@test.com';
+        $password = 'password';
+        $enterpriseList = Enterprise::factory(count: 1)->create();
+        $user = User::factory(count: 1)->create([
+            'enterprises_id' => $enterpriseList->first()->id,
+            'email' => $email,
+            'password' => Hash::make($password)
+        ])->first();
+        $responseLogin = $this->postJson('/api/login', [
+            'email' => $email,
+            'password' => $password
+        ]);
+
+        $token = Str::after($responseLogin->baseResponse->original['data']['token'], '|');
+
+        $this->postJson('/api/logout', [], [
+            'Authorization' => "Bearer {$token}"
+        ])->assertOk();
     });
 });

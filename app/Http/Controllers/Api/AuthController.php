@@ -5,7 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\CheckRequest;
 use App\Library\Builders\Response as ResponseBuilder;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
+use Illuminate\Support\{
+    Facades\Auth,
+    Str
+};
 
 class AuthController extends Controller
 {
@@ -27,5 +32,15 @@ class AuthController extends Controller
                 'token' => $request->user()->createToken('auth-app')->plainTextToken
             ]
         ]);
+    }
+
+    /**
+     * Execute the application logout process
+     */
+    public function logout(Request $request)
+    {
+        $user = $request->user();
+        $user->tokens()->delete();
+        return ResponseBuilder::successJSON();
     }
 }
