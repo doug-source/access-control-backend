@@ -118,8 +118,7 @@ describe('Authentication', function () {
             'email' => $email,
             'password' => $password
         ]);
-
-        $token = Str::after($responseLogin->baseResponse->original['data']['token'], '|');
+        $token = Str::after($responseLogin->baseResponse->original['data']['user']['token'], '|');
 
         $this->postJson(route('auth.logout'), [], [
             'Authorization' => "Bearer {$token}"
