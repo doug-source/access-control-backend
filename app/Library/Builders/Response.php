@@ -2,6 +2,7 @@
 
 namespace App\Library\Builders;
 
+use Illuminate\Http\Response as HttpResponse;
 use \Illuminate\Support\Stringable;
 
 final class Response
@@ -13,7 +14,7 @@ final class Response
     {
         return response()->json([
             'errors' => ['status' => [$msg]]
-        ], 403);
+        ], HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     /**
