@@ -34,6 +34,14 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Relationship between users and enterprises tables
+     */
+    public function enterprise()
+    {
+        return $this->belongsTo(Enterprise::class, 'enterprises_id');
+    }
+
+    /**
      * Format datetime properties based on current locale
      *
      * @return string
