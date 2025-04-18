@@ -14,7 +14,7 @@ describe('Authentication', function () {
             ->assertJson([
                 "errors" => [
                     "email" => [
-                        "Required"
+                        __('email') . ': ' . __('required')
                     ]
                 ]
             ]);
@@ -27,7 +27,7 @@ describe('Authentication', function () {
             ->assertJson([
                 "errors" => [
                     "email" => [
-                        "Required"
+                        __('email') . ': ' . __('required')
                     ]
                 ]
             ]);
@@ -40,7 +40,7 @@ describe('Authentication', function () {
             ->assertJson([
                 "errors" => [
                     "password" => [
-                        "Required"
+                        __('password') . ': ' . __('required')
                     ]
                 ]
             ]);
@@ -53,7 +53,7 @@ describe('Authentication', function () {
             ->assertJson([
                 "errors" => [
                     "email" => [
-                        "Invalid"
+                        __('email') . ': ' . __('invalid')
                     ]
                 ]
             ]);
@@ -69,7 +69,15 @@ describe('Authentication', function () {
         ])->first();
 
         $response = $this->postJson(route('auth.login'), ['email' => $email, 'password' => 'another-password']);
-        $response->assertInvalid(['status']);
+        $response
+            ->assertJson([
+                "errors" => [
+                    "status" => [
+                        __('log-in') . ' ' . __('invalid')
+                    ]
+                ]
+            ])
+            ->assertInvalid(['status']);
     });
     it('receives successful login validation', function () {
         $email = 'someone@test.com';

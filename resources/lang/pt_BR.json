@@ -1,6 +1,7 @@
 {
     "required": "obrigatório",
     "email": "e-mail",
+    "password": "senha",
     "invalid": "inválido",
     "log-in": "login"
 }

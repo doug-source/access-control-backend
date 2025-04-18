@@ -26,9 +26,9 @@ class Login implements Checker
     public function messages(): array
     {
         return [
-            'email.required' => Str::of(__('required'))->ucfirst(),
-            'email.email' => Str::of(__('invalid'))->ucfirst(),
-            'password.required' => Str::of(__('required'))->ucfirst()
+            'email.required' => __('email') . ': ' . __('required'),
+            'email.email' => __('email') . ': ' . __('invalid'),
+            'password.required' => __('password') . ': ' . __('required')
         ];
     }
 }

@@ -22,7 +22,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         if (!Auth::attempt($credentials)) {
             return ResponseBuilder::invalidJSON(
-                __('log-in') . ': ' . __('invalid')
+                __('log-in') . ' ' . __('invalid')
             );
         }
         return ResponseBuilder::successJSON([
