@@ -37,8 +37,13 @@ class CheckRequest extends FormRequest
      */
     public function authorize()
     {
-        return !Auth::check();
-        // return !auth()->check();
+        $user = Auth::user();
+        if (!$user) {
+            return true;
+        }
+        $tokenMethod = 'currentAccessToken';
+        $token = $user->$tokenMethod();
+        return $token === null;
     }
 
     public function all($keys = NULL)
