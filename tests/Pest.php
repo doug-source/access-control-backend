@@ -11,6 +11,14 @@
 |
 */
 
+use App\Models\Enterprise;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\{
+    Facades\Socialite,
+    Two\User as ProviderUser
+};
+
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
@@ -41,7 +49,38 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+
+/**
+ * Create the database user instance used by testing environment
+ */
+function createUserDB(?string $password, string $email)
 {
-    // ..
+    $enterprise = Enterprise::factory(count: 1)->create()->first();
+    return User::factory(count: 1)->create([
+        'enterprises_id' => $enterprise->id,
+        'email' => $email,
+        'password' => $password ? Hash::make($password) : NULL
+    ])->first();
+}
+
+/**
+ * Create the user socialite mocking instance used by testing environment
+ */
+function buildSocialite(?string $password = NULL, string $email = 'test@test.com', bool $createUsedDB = true, ?Exception $exception = NULL)
+{
+    $user = $createUsedDB ? createUserDB($password, $email) : (object)['email' => $email];
+
+    $socialiteUser = Mockery::mock(ProviderUser::class);
+
+    if ($exception) {
+        $socialiteUser->shouldReceive('getEmail')->andThrow($exception);
+    } else {
+        // ->shouldReceive('getId')->andReturn($googleId = '12345654321345')
+        // ->shouldReceive('getName')->andReturn($user->name)
+        // ->shouldReceive('getAvatar')->andReturn($avatarUrl = 'https://en.gravatar.com/userimage');
+        $socialiteUser->shouldReceive('getEmail')->andReturn($user->email);
+    }
+
+    Socialite::shouldReceive('driver->user')->andReturn($socialiteUser);
+    return $user;
 }

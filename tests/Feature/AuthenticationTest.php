@@ -1,8 +1,6 @@
 <?php
 
-use App\Models\Enterprise;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Provider;
 use Illuminate\Support\Str;
 
 describe('Authentication', function () {
@@ -59,16 +57,8 @@ describe('Authentication', function () {
             ]);
     });
     it('receives failing login validation', function () {
-        $email = 'someone@test.com';
-        $password = 'password';
-        $enterpriseList = Enterprise::factory(count: 1)->create();
-        User::factory(count: 1)->create([
-            'enterprises_id' => $enterpriseList->first()->id,
-            'email' => $email,
-            'password' => Hash::make($password)
-        ])->first();
-
-        $response = $this->postJson(route('auth.login'), ['email' => $email, 'password' => 'another-password']);
+        $user = createUserDB(password: 'password', email: 'someone@test.com');
+        $response = $this->postJson(route('auth.login'), ['email' => $user->email, 'password' => 'another-password']);
         $response
             ->assertJson([
                 "errors" => [
@@ -80,48 +70,67 @@ describe('Authentication', function () {
             ->assertInvalid(['status']);
     });
     it('receives successful login validation', function () {
-        $email = 'someone@test.com';
         $password = 'password';
-        $enterpriseList = Enterprise::factory(count: 1)->create();
-        User::factory(count: 1)->create([
-            'enterprises_id' => $enterpriseList->first()->id,
-            'email' => $email,
-            'password' => Hash::make($password)
-        ])->first();
+        $user = createUserDB(password: $password, email: 'someone@test.com');
 
-        $this->postJson(route('auth.login'), ['email' => $email, 'password' => $password]);
+        $this->postJson(route('auth.login'), ['email' => $user->email, 'password' => $password]);
         $this->assertAuthenticated();
     });
-    it('receives failing logout validation by unauthorization', function () {
-        $email = 'someone@test.com';
-        $password = 'password';
-        $token = 'anyToken';
-        $enterpriseList = Enterprise::factory(count: 1)->create();
-        User::factory(count: 1)->create([
-            'enterprises_id' => $enterpriseList->first()->id,
-            'email' => $email,
-            'password' => Hash::make($password)
+    it('receives failing login because user was registered by provider', function () {
+        $providers = config('services.providers');
+        $user = createUserDB(password: NULL, email: 'someone@test.com');
+        Provider::factory(count: 1)->create([
+            'user_id' => $user->id
         ])->first();
-        $response = $this->postJson('/api/logout', ['tokenAuthApi' => $token]);
+        $response = $this->postJson(route('auth.login'), ['email' => $user->email, 'password' => 'whatever']);
+        $response
+            ->assertInvalid(['email'])
+            ->assertJson([
+                "errors" => [
+                    "email" => [
+                        Str::of(__('login-by-provider', [
+                            'log-in' => __('log-in'),
+                            'with' => __('with'),
+                            'provider' => implode(' ' . _('or') . ' ', $providers),
+                            'required' => __('required')
+                        ]))->ucfirst()->toString()
+                    ]
+                ]
+            ]);
+    });
+    it('receives failing logout validation by unauthorization', function () {
+        $response = $this->postJson(route('auth.logout'));
         $response->assertUnauthorized();
     });
     it('receives successful logout validation', function () {
-        $email = 'someone@test.com';
         $password = 'password';
-        $enterpriseList = Enterprise::factory(count: 1)->create();
-        $user = User::factory(count: 1)->create([
-            'enterprises_id' => $enterpriseList->first()->id,
-            'email' => $email,
-            'password' => Hash::make($password)
-        ])->first();
+        $user = createUserDB(password: $password, email: 'someone@test.com');
         $responseLogin = $this->postJson(route('auth.login'), [
-            'email' => $email,
+            'email' => $user->email,
             'password' => $password
         ]);
-        $token = Str::after($responseLogin->baseResponse->original['data']['user']['token'], '|');
+        $token = Str::after($responseLogin->baseResponse->original['user']['token'], '|');
 
         $this->postJson(route('auth.logout'), [], [
             'Authorization' => "Bearer {$token}"
         ])->assertOk();
+    });
+    it('receives double successful logout validation', function () {
+        $password = 'password';
+        $user = createUserDB(password: $password, email: 'someone@test.com');
+        $responseLogin = $this->postJson(route('auth.login'), [
+            'email' => $user->email,
+            'password' => $password
+        ]);
+        $token = Str::after($responseLogin->baseResponse->original['user']['token'], '|');
+
+        $this->postJson(route('auth.logout'), [], [
+            'Authorization' => "Bearer {$token}"
+        ]);
+        $responseLogin = $this->postJson(route('auth.login'), [
+            'email' => $user->email,
+            'password' => $password
+        ]);
+        $this->assertAuthenticated();
     });
 });
