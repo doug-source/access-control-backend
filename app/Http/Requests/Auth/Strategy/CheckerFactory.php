@@ -15,7 +15,6 @@ class CheckerFactory
      */
     public static function getChecker(FormRequest $formRequest): ?Checker
     {
-        return new LoginPost();
+        return new LoginPost($formRequest);
     }
-
 }
