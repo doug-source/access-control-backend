@@ -27,21 +27,17 @@ class AuthController extends Controller
         }
         $user = $request->user();
         return ResponseBuilder::successJSON([
-            'message' => 'Authorized',
-            'status' => 200,
-            'data' => [
-                'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'enterprise' => [
-                        'name' => $user->enterprise->name
-                    ],
-                    'token' => Str::replaceMatches(
-                        pattern: '|^\d+\||',
-                        replace: '',
-                        subject: $user->createToken('auth-app')->plainTextToken
-                    )
-                ]
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'enterprise' => [
+                    'name' => $user->enterprise->name
+                ],
+                'token' => Str::replaceMatches(
+                    pattern: '|^\d+\||',
+                    replace: '',
+                    subject: $user->createToken('auth-app')->plainTextToken
+                )
             ]
         ]);
     }
