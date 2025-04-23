@@ -3,5 +3,12 @@
     "email": "email",
     "password": "password",
     "invalid": "invalid",
-    "log-in": "log in"
+    "log-in": "log in",
+    "provider": "provider",
+    "register": "register",
+    "with": "with",
+    "or": "or",
+    "login-with-password-required": ":login-in :with :password :required",
+    "register-required": ":register :required",
+    "provider-invalid": ":invalid provider"
 }
