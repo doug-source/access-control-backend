@@ -7,13 +7,14 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Auth\Strategy\Post\{
     Login as LoginPost,
 };
+use App\Http\Requests\CheckerFactoryScheme;
 
-class CheckerFactory
+class CheckerFactory implements CheckerFactoryScheme
 {
     /**
      * Return the Checker instance based on FormRequest instance
      */
-    public static function getChecker(FormRequest $formRequest): ?Checker
+    public function getChecker(FormRequest $formRequest): ?Checker
     {
         return new LoginPost($formRequest);
     }
