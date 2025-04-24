@@ -2,10 +2,11 @@
 
 namespace App\Library\Validators;
 
+use App\Library\Builders\Phrase;
+use App\Library\Enums\PhraseKey;
 use App\Rules\ProviderUserLinked;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Str;
 
 final class ProviderLogin
 {
@@ -35,9 +36,7 @@ final class ProviderLogin
                 new ProviderUserLinked($this->provider)
             ]
         ], [
-            'provider.in' => Str::of(__('provider-invalid', [
-                'invalid' => __('invalid')
-            ]))->ucfirst()
+            'provider.in' => Phrase::pickSentence(PhraseKey::ProviderInvalid)
         ]);
 
         if ($validator->stopOnFirstFailure()->fails()) {

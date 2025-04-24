@@ -1,10 +1,12 @@
 <?php
 
+use App\Library\Builders\Phrase;
 use App\Library\Builders\Response;
+use App\Library\Enums\PhraseKey;
 
 describe('Response Builder', function () {
     it('runs invalidJSON correctly', function () {
-        $msg = __('required');
+        $msg = Phrase::pickSentence(PhraseKey::EmailRequired)->toString();
         $response = Response::invalidJSON($msg);
         expect($response->original)->toMatchArray([
             'errors' => ['status' => [$msg]]

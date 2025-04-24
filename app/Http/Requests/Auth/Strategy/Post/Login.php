@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Auth\Strategy\Post;
 
 use App\Http\Requests\Checker;
+use App\Library\Builders\Phrase;
+use App\Library\Enums\PhraseKey;
 use App\Rules\UserNotProvided;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -25,13 +27,11 @@ class Login implements Checker
 
     public function rules(): array
     {
-        $providers = config('services.providers');
-
         return [
             'email' => [
                 'required',
                 'email',
-                new UserNotProvided($this->email, $providers)
+                new UserNotProvided($this->email)
             ],
             'password' => 'required',
         ];
@@ -40,9 +40,9 @@ class Login implements Checker
     public function messages(): array
     {
         return [
-            'email.required' => __('email') . ': ' . __('required'),
-            'email.email' => __('email') . ': ' . __('invalid'),
-            'password.required' => __('password') . ': ' . __('required'),
+            'email.required' => Phrase::pickSentence(PhraseKey::EmailRequired),
+            'email.email' =>  Phrase::pickSentence(PhraseKey::EmailInvalid),
+            'password.required' => Phrase::pickSentence(PhraseKey::PasswordRequired),
         ];
     }
 }

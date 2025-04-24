@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\CheckRequest;
+use App\Library\Builders\Phrase;
 use App\Library\Builders\Response as ResponseBuilder;
+use App\Library\Enums\PhraseKey;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\{
@@ -22,7 +24,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         if (!Auth::attempt($credentials)) {
             return ResponseBuilder::invalidJSON(
-                __('log-in') . ' ' . __('invalid')
+                Phrase::pickSentence(PhraseKey::LoginInvalid)
             );
         }
         $user = $request->user();

@@ -2,12 +2,13 @@
 
 namespace App\Rules;
 
+use App\Library\Builders\Phrase;
+use App\Library\Enums\PhraseKey;
 use App\Models\User;
 use Closure;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Support\Str;
 
 class ProviderUserLinked implements ValidationRule
 {
@@ -36,35 +37,12 @@ class ProviderUserLinked implements ValidationRule
             $user = User::where('email', $providerUser->getEmail())->first();
 
             if (is_null($user)) {
-                $fail($this->pickErrorMessage('user-nullable'));
+                $fail(Phrase::pickSentence(PhraseKey::UserNullable));
             } else if (!is_null($user->password)) {
-                $fail($this->pickErrorMessage('password-not-nullable'));
+                $fail(Phrase::pickSentence(PhraseKey::PasswordNotNullable));
             }
         } catch (ClientException $th) {
-            $fail($this->pickErrorMessage('invalid-provider'));
+            $fail(Phrase::pickSentence(PhraseKey::ProviderInvalid));
         }
-    }
-
-    /**
-     * Determine the error message from this validator
-     */
-    protected function pickErrorMessage(string $key)
-    {
-        return match ($key) {
-            'user-nullable' => Str::of(__('register-required', [
-                'register' => __('register'),
-                'required' => __('required')
-            ]))->ucfirst(),
-            'password-not-nullable' => Str::of(__('login-with-password-required', [
-                'log-in' => __('log-in'),
-                'with' => __('with'),
-                'password' => __('password'),
-                'required' => __('required'),
-            ]))->ucfirst(),
-            'invalid-provider' => Str::of(__('provider-invalid', [
-                'invalid' => __('invalid')
-            ]))->ucfirst(),
-            default => false
-        };
     }
 }

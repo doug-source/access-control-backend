@@ -1,15 +1,22 @@
 {
-    "required": "obrigatório",
+    "required-m": "obrigatório",
+    "required-f": "obrigatória",
     "email": "e-mail",
     "password": "senha",
-    "invalid": "inválido",
+    "invalid-m": "inválido",
+    "invalid-f": "inválida",
     "log-in": "login",
     "provider": "provider",
     "register": "registro",
     "with": "com",
     "or": "ou",
+
     "login-with-password-required": ":log-in :with :password :required",
+    "email-required": ":email :required",
+    "email-invalid": ":email :invalid",
     "register-required": ":register :required",
-    "provider-invalid": "provider :invalid",
-    "login-by-provider": ":log-in :with :provider :required"
+    "provider-invalid": ":provider :invalid",
+    "login-by-provider": ":log-in :with :provider :required",
+    "password-required": ":password :required",
+    "log-in-invalid": ":log-in :invalid"
 }

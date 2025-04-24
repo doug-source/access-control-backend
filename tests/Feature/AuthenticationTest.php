@@ -1,5 +1,7 @@
 <?php
 
+use App\Library\Builders\Phrase;
+use App\Library\Enums\PhraseKey;
 use App\Models\Provider;
 use Illuminate\Support\Str;
 
@@ -10,9 +12,9 @@ describe('Authentication', function () {
             ->assertStatus(422)
             ->assertInvalid(['email'])
             ->assertJson([
-                "errors" => [
-                    "email" => [
-                        __('email') . ': ' . __('required')
+                'errors' => [
+                    'email' => [
+                        Phrase::pickSentence(PhraseKey::EmailRequired)->toString()
                     ]
                 ]
             ]);
@@ -23,35 +25,39 @@ describe('Authentication', function () {
             ->assertStatus(422)
             ->assertInvalid(['email'])
             ->assertJson([
-                "errors" => [
-                    "email" => [
-                        __('email') . ': ' . __('required')
+                'errors' => [
+                    'email' => [
+                        Phrase::pickSentence(PhraseKey::EmailRequired)->toString()
                     ]
                 ]
             ]);
     });
     it('receives only email and returns password invalidation', function () {
+        $errorMsg = Phrase::pickSentence(PhraseKey::PasswordRequired);
         $response = $this->postJson(route('auth.login'), ['email' => 'someone@test.com']);
         $response
             ->assertStatus(422)
             ->assertInvalid(['password'])
             ->assertJson([
-                "errors" => [
-                    "password" => [
-                        __('password') . ': ' . __('required')
+                'message' => $errorMsg,
+                'errors' => [
+                    'password' => [
+                        $errorMsg
                     ]
                 ]
             ]);
     });
     it('receives invalid email and returns email invalidation', function () {
+        $errorMsg = Phrase::pickSentence(PhraseKey::EmailInvalid);
         $response = $this->postJson(route('auth.login'), ['email' => 'someone@', 'password' => 'whatever']);
         $response
             ->assertStatus(422)
             ->assertInvalid(['email'])
             ->assertJson([
-                "errors" => [
-                    "email" => [
-                        __('email') . ': ' . __('invalid')
+                'message' => $errorMsg,
+                'errors' => [
+                    'email' => [
+                        $errorMsg
                     ]
                 ]
             ]);
@@ -61,9 +67,9 @@ describe('Authentication', function () {
         $response = $this->postJson(route('auth.login'), ['email' => $user->email, 'password' => 'another-password']);
         $response
             ->assertJson([
-                "errors" => [
-                    "status" => [
-                        __('log-in') . ' ' . __('invalid')
+                'errors' => [
+                    'status' => [
+                        Phrase::pickSentence(PhraseKey::LoginInvalid)
                     ]
                 ]
             ])
@@ -86,14 +92,9 @@ describe('Authentication', function () {
         $response
             ->assertInvalid(['email'])
             ->assertJson([
-                "errors" => [
-                    "email" => [
-                        Str::of(__('login-by-provider', [
-                            'log-in' => __('log-in'),
-                            'with' => __('with'),
-                            'provider' => implode(' ' . _('or') . ' ', $providers),
-                            'required' => __('required')
-                        ]))->ucfirst()->toString()
+                'errors' => [
+                    'email' => [
+                        Phrase::pickSentence(PhraseKey::LoginByProvider)->toString()
                     ]
                 ]
             ]);

@@ -1,5 +1,7 @@
 <?php
 
+use App\Library\Builders\Phrase;
+use App\Library\Enums\PhraseKey;
 use GuzzleHttp\{
     Psr7\Request,
     Psr7\Response,
@@ -65,7 +67,7 @@ describe('Web application routes', function () {
         $response->assertStatus(302);
 
         $url = makeRedirectErrorUrl(
-            Str::of(__('provider-invalid', ['invalid' => __('invalid')]))->ucfirst()->toString()
+            Phrase::pickSentence(PhraseKey::ProviderInvalid)->toString()
         );
         expect($response->getTargetUrl())->toBe($url);
     });
@@ -76,12 +78,7 @@ describe('Web application routes', function () {
         $response->assertStatus(302);
 
         $url = makeRedirectErrorUrl(
-            Str::of(__('login-with-password-required', [
-                'log-in' => __('log-in'),
-                'with' => __('with'),
-                'password' => __('password'),
-                'required' => __('required'),
-            ]))->ucfirst()->toString()
+            Phrase::pickSentence(PhraseKey::PasswordNotNullable)->toString()
         );
         expect($response->getTargetUrl())->toBe($url);
     });
@@ -95,10 +92,8 @@ describe('Web application routes', function () {
                 'errormsg='
             )
         );
-        expect($errorMsg)->toBe(Str::of(__('register-required', [
-            'register' => __('register'),
-            'required' => __('required')
-        ]))->ucfirst()->toString());
+
+        expect($errorMsg)->toBe(Phrase::pickSentence(PhraseKey::UserNullable)->toString());
     });
     it('fails the sign in with provider when user is registered with password', function () {
         buildSocialite(password: 'whatever', email: 'dude@mail.com', createUsedDB: TRUE);
@@ -110,12 +105,7 @@ describe('Web application routes', function () {
                 'errormsg='
             )
         );
-        expect($errorMsg)->toBe(Str::of(__('login-with-password-required', [
-            'log-in' => __('log-in'),
-            'with' => __('with'),
-            'password' => __('password'),
-            'required' => __('required'),
-        ]))->ucfirst()->toString());
+        expect($errorMsg)->toBe(Phrase::pickSentence(PhraseKey::PasswordNotNullable)->toString());
     });
     it('fails the sign in with provider when provider throws the ClientException', function () {
         $route = route('oauth.callback', 'google');
@@ -133,8 +123,6 @@ describe('Web application routes', function () {
                 'errormsg='
             )
         );
-        expect($errorMsg)->toBe(Str::of(__('provider-invalid', [
-            'invalid' => __('invalid')
-        ]))->ucfirst()->toString());
+        expect($errorMsg)->toBe(Phrase::pickSentence(PhraseKey::ProviderInvalid)->toString());
     });
 });
