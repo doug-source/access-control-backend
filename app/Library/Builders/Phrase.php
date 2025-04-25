@@ -45,14 +45,14 @@ final class Phrase
                 'email' => __('email'),
                 'invalid' => __('invalid-m')
             ]))->ucfirst(),
-            PhraseKey::PasswordRequired => __('password-required', [
+            PhraseKey::PasswordRequired => Str::of(__('password-required', [
                 'password' => __('password'),
                 'required' => __('required-f')
-            ]),
-            PhraseKey::LoginInvalid => __('login-invalid', [
+            ]))->ucfirst(),
+            PhraseKey::LoginInvalid => Str::of(__('login-invalid', [
                 'login-in' => 'log-in',
                 'invalid' => 'invalid-m'
-            ]),
+            ]))->ucfirst(),
             default => false
         };
     }
