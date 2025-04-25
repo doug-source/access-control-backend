@@ -17,6 +17,10 @@ final class Phrase
         $providers = config('services.providers');
 
         return match ($key) {
+            PhraseKey::ParameterRequired => Str::of(__('parameter-required', [
+                'parameter' => __('parameter'),
+                'required' => __('required-m')
+            ]))->ucfirst(),
             PhraseKey::UserNullable => Str::of(__('register-required', [
                 'register' => __('register'),
                 'required' => __('required-m')
@@ -52,6 +56,18 @@ final class Phrase
             PhraseKey::LoginInvalid => Str::of(__('login-invalid', [
                 'login-in' => 'log-in',
                 'invalid' => 'invalid-m'
+            ]))->ucfirst(),
+            PhraseKey::ParameterInvalid => Str::of(__('parameter-invalid', [
+                'parameter' => __('parameter'),
+                'invalid' => __('invalid-m')
+            ]))->ucfirst(),
+            PhraseKey::MinSizeInvalid => Str::of(__('min-size-invalid', [
+                'minimum' => __('minimum'),
+                'size' => __('size'),
+            ]))->ucfirst(),
+            PhraseKey::MaxSizeInvalid => Str::of(__('max-size-invalid', [
+                'maximum' => __('maximum'),
+                'size' => __('size'),
             ]))->ucfirst(),
             default => false
         };

@@ -14,4 +14,8 @@ enum PhraseKey
     case EmailRequired;
     case EmailInvalid;
     case LoginInvalid;
+    case ParameterInvalid;
+    case ParameterRequired;
+    case MinSizeInvalid;
+    case MaxSizeInvalid;
 }

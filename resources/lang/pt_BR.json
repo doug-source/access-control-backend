@@ -10,6 +10,10 @@
     "register": "registro",
     "with": "com",
     "or": "ou",
+    "size": "tamanho",
+    "minimum": "mínimo",
+    "maximum": "máximo",
+    "parameter": "parâmetro",
 
     "login-with-password-required": ":log-in :with :password :required",
     "email-required": ":email :required",
@@ -18,5 +22,9 @@
     "provider-invalid": ":provider :invalid",
     "login-by-provider": ":log-in :with :provider :required",
     "password-required": ":password :required",
-    "log-in-invalid": ":log-in :invalid"
+    "log-in-invalid": ":log-in :invalid",
+    "parameter-required": ":parameter :required",
+    "parameter-invalid": ":parameter :invalid",
+    "min-size-invalid": ":size :minimum não fornecido",
+    "max-size-invalid": ":size :maximum excedido"
 }
