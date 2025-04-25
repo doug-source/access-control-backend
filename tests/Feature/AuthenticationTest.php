@@ -83,7 +83,6 @@ describe('Authentication', function () {
         $this->assertAuthenticated();
     });
     it('receives failing login because user was registered by provider', function () {
-        $providers = config('services.providers');
         $user = createUserDB(password: NULL, email: 'someone@test.com');
         Provider::factory(count: 1)->create([
             'user_id' => $user->id
