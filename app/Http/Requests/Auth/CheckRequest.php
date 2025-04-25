@@ -14,6 +14,6 @@ class CheckRequest extends VerifyRequest
 
     public function authorize(): bool
     {
-        return $this->isLoggedIn();
+        return $this->isLoggedIn() === FALSE;
     }
 }

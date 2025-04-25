@@ -31,11 +31,11 @@ abstract class VerifyRequest extends FormRequest
     {
         $user = Auth::user();
         if (!$user) {
-            return true;
+            return FALSE;
         }
         $tokenMethod = 'currentAccessToken';
         $token = $user->$tokenMethod();
-        return $token === null;
+        return $token !== null;
     }
 
     /**
