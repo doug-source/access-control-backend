@@ -16,7 +16,7 @@ final class Phone
         if (!$phone) {
             return $phone;
         }
-        return trim(substr(preg_replace('|[^\d]|', '', $phone), 0, 11));
+        return Str::of($phone)->replaceMatches('|[^\d]|', '')->toString();
     }
 
     /**
