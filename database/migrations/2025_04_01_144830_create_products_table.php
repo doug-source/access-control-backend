@@ -15,11 +15,7 @@ return new class extends Migration
             $table->bigInteger('id', true, true);
             $table->string('nome');
             $table->string('description')->nullable();
-            $table->unsignedBigInteger('enterprises_id');
             $table->timestamps();
-        });
-        Schema::table('products', function (Blueprint $table) {
-            $table->foreign(['enterprises_id'], 'fk_Product_enterprises1')->references(['id'])->on('enterprises')->onUpdate('no action')->onDelete('no action');
         });
     }
 
@@ -28,9 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropForeign('fk_Product_enterprises1');
-        });
         Schema::dropIfExists('products');
     }
 };

@@ -32,9 +32,6 @@ class AuthController extends Controller
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
-                'enterprise' => [
-                    'name' => $user->enterprise->name
-                ],
                 'token' => Str::replaceMatches(
                     pattern: '|^\d+\||',
                     replace: '',

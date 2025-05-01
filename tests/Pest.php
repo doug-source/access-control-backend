@@ -11,7 +11,6 @@
 |
 */
 
-use App\Models\Enterprise;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\{
@@ -55,9 +54,7 @@ expect()->extend('toBeOne', function () {
  */
 function createUserDB(?string $password, string $email)
 {
-    $enterprise = Enterprise::factory(count: 1)->create()->first();
     return User::factory(count: 1)->create([
-        'enterprises_id' => $enterprise->id,
         'email' => $email,
         'password' => $password ? Hash::make($password) : NULL
     ])->first();
