@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RegisterRequestsController;
 use App\Http\Controllers\Api\SocialiteController;
+use App\Http\Controllers\Api\UserController;
 use \Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
@@ -14,6 +15,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/provide', [SocialiteController::class, 'releaseToken'])->name(
         'release.token'
     );
+});
+
+Route::prefix('users')->group(function () {
+    // Used by guest
+    Route::post(
+        '/store',
+        [UserController::class, 'store']
+    )->name('users.store');
 });
 
 Route::prefix('/registers/requests')->group(function () {

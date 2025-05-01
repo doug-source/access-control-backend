@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace App\Library\Enums;
 
-enum UserColumnSize
+enum RegisterPermissionColumnSize
 {
-    case EMAIL;
-    case NAME;
+    case TOKEN;
     case PHONE;
 
     public function get(): int
     {
         return match ($this) {
-            UserColumnSize::EMAIL,
-            UserColumnSize::NAME => 250,
-            UserColumnSize::PHONE => 11
+            RegisterPermissionColumnSize::TOKEN => 40,
+            RegisterPermissionColumnSize::PHONE => 11
         };
     }
 }

@@ -63,6 +63,35 @@ final class Phrase
                 'maximum' => __('maximum'),
                 'size' => __('size'),
             ]))->ucfirst(),
+            PhraseKey::MinLettersInvalid => Str::of(__('min-qty-invalid', [
+                'minimum' => __('minimum-f'),
+                'quantity' => __('quantity'),
+                'subject' => __('letters')
+            ]))->ucfirst(),
+            PhraseKey::MinUppercaseInvalid => Str::of(__('min-qty-invalid', [
+                'minimum' => __('minimum-f'),
+                'quantity' => __('quantity'),
+                'subject' => __('uppercases')
+            ]))->ucfirst(),
+            PhraseKey::MinLowercaseInvalid => Str::of(__('min-qty-invalid', [
+                'minimum' => __('minimum-f'),
+                'quantity' => __('quantity'),
+                'subject' => __('lowercases')
+            ]))->ucfirst(),
+            PhraseKey::MinDigitsInvalid => Str::of(__('min-qty-invalid', [
+                'minimum' => __('minimum-f'),
+                'quantity' => __('quantity'),
+                'subject' => __('digits')
+            ]))->ucfirst(),
+            PhraseKey::MinSpecialCharsInvalid => Str::of(__('min-qty-invalid', [
+                'minimum' => __('minimum-f'),
+                'quantity' => __('quantity'),
+                'subject' => __('special-chars')
+            ]))->ucfirst(),
+            PhraseKey::RegistrationExpired => Str(__('registration-expired'))->ucfirst(),
+            PhraseKey::PassConfirmInvalid => Str::of(__('pass-confirm-invalid', [
+                'password' => __('password')
+            ]))->ucfirst(),
 
             PhraseKey::Congratulations => Str::of(__('congratulations'))->ucfirst(),
             PhraseKey::ClickHere => Str::of(__('click-here'))->ucfirst(),

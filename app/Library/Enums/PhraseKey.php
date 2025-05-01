@@ -16,6 +16,13 @@ enum PhraseKey
     case ParameterRequired;
     case MinSizeInvalid;
     case MaxSizeInvalid;
+    case MinLettersInvalid;
+    case MinUppercaseInvalid;
+    case MinLowercaseInvalid;
+    case MinDigitsInvalid;
+    case MinSpecialCharsInvalid;
+    case RegistrationExpired;
+    case PassConfirmInvalid;
 
     case Congratulations;
     case ClickHere;
