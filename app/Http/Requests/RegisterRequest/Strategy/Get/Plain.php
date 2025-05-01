@@ -16,7 +16,12 @@ use Illuminate\Support\Str;
  */
 final class Plain implements Checker
 {
-    private int $emailColumnSize = UserColumnSize::EMAIL->value;
+    private int $emailColumnSize;
+
+    public function __construct()
+    {
+        $this->emailColumnSize = UserColumnSize::EMAIL->get();
+    }
 
     public function all(FormRequest $formRequest, array $requestInputs): array
     {
