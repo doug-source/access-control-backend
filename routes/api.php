@@ -27,6 +27,10 @@ Route::prefix('users')->group(function () {
 
 Route::prefix('/registers/requests')->group(function () {
     // Used only by admin role
+    Route::get(
+        '/',
+        [RegisterRequestsController::class, 'index']
+    )->name('register.request.index')->middleware('auth:sanctum');
     Route::delete(
         '/{registerRequestID}',
         [RegisterRequestsController::class, 'destroy']

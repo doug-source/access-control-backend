@@ -14,6 +14,9 @@ class CheckerFactory implements CheckerFactoryScheme
 {
     public function getChecker(FormRequest $formRequest): ?Checker
     {
+        if ($formRequest->isMethod('GET')) {
+            return new RegisterForm();
+        }
         return new PostPlain($formRequest);
     }
 }
