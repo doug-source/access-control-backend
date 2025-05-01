@@ -18,4 +18,10 @@ enum PhraseKey
     case ParameterRequired;
     case MinSizeInvalid;
     case MaxSizeInvalid;
+
+    case Congratulations;
+    case ClickHere;
+    case PreRegisterUserTextOne;
+    case PreRegisterUserTextTwo;
+    case Regards;
 }

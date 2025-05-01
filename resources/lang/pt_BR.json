@@ -26,5 +26,11 @@
     "parameter-required": ":parameter :required",
     "parameter-invalid": ":parameter :invalid",
     "min-size-invalid": ":size :minimum não fornecido",
-    "max-size-invalid": ":size :maximum excedido"
+    "max-size-invalid": ":size :maximum excedido",
+
+    "congratulations": "parabéns",
+    "click-here": "clique aqui",
+    "pre-register-user-text-1": "a partir de agora, você poderá registrar sua nova conta",
+    "pre-register-user-text-2": "cadastre seus dados clicando no botão abaixo",
+    "regards": "atenciosamente"
 }

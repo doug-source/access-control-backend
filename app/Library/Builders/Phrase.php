@@ -69,6 +69,11 @@ final class Phrase
                 'maximum' => __('maximum'),
                 'size' => __('size'),
             ]))->ucfirst(),
+            PhraseKey::Congratulations => Str::of(__('congratulations'))->ucfirst(),
+            PhraseKey::ClickHere => Str::of(__('click-here'))->ucfirst(),
+            PhraseKey::PreRegisterUserTextOne => Str::of(__('pre-register-user-text-1'))->ucfirst(),
+            PhraseKey::PreRegisterUserTextTwo => Str::of(__('pre-register-user-text-2'))->ucfirst(),
+            PhraseKey::Regards => Str::of(__('regards'))->ucfirst(),
             default => false
         };
     }

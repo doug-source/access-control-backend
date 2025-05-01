@@ -134,4 +134,20 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Register backend data
+    |--------------------------------------------------------------------------
+    |
+    | Default values involving Register from backend context
+    |
+    */
+
+    'register' => [
+        /*
+        * Timeout to register a user (in hours)
+        */
+        'expire' => env('REGISTER_EXPIRATION_DATA_HOURS', 2)
+    ]
+
 ];

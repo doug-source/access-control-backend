@@ -18,6 +18,9 @@ final class CheckRequest extends VerifyRequest
     public function authorize(): bool
     {
         $method = strtolower(Request::method());
+        if ($method === 'post') {
+            return $this->isLoggedIn() === FALSE;
+        }
         if ($method === 'delete') {
             return $this->isLoggedIn();
         }

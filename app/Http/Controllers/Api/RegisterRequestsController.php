@@ -6,9 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest\CheckRequest;
 use App\Library\Builders\Response as ResponseBuilder;
 use App\Models\RegisterRequest;
+use App\Library\Registration\{
+    RegisterRequestHandler,
+    PermissionRequestHandler
+};
+use App\Services\Register\RegisterServiceInterface;
 
 class RegisterRequestsController extends Controller
 {
+    public function __construct(private readonly RegisterServiceInterface $registerService)
+    {
+        $this->registerService->setHandlers(
+            new RegisterRequestHandler($this->registerService),
+            new PermissionRequestHandler($this->registerService)
+        );
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -20,6 +33,19 @@ class RegisterRequestsController extends Controller
                 email: $request->input('email')
             )
         );
+    }
+
+    /**
+     * Execute the logic from register request form submit.
+     */
+    public function store(CheckRequest $request)
+    {
+        $email = $request->input('email');
+        if (!$this->registerService->existsUserByEmail($email)) {
+            $this->registerService->handleRegister($email, $request->input('phone'));
+        }
+
+        return ResponseBuilder::successJSON();
     }
 
     /**

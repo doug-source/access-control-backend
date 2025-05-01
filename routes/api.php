@@ -22,4 +22,10 @@ Route::prefix('/registers/requests')->group(function () {
         '/{registerRequestID}',
         [RegisterRequestsController::class, 'destroy']
     )->name('register.request.destroy')->middleware('auth:sanctum');
+
+    // Used by guest
+    Route::post(
+        '/store',
+        [RegisterRequestsController::class, 'store']
+    )->name('register.request.store');
 });
