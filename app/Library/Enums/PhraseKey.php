@@ -7,11 +7,9 @@ namespace App\Library\Enums;
 enum PhraseKey
 {
     case UserNullable;
-    case PasswordRequired;
     case PasswordNotNullable;
     case ProviderInvalid;
     case LoginByProvider;
-    case EmailRequired;
     case EmailInvalid;
     case LoginInvalid;
     case ParameterInvalid;
@@ -24,4 +22,5 @@ enum PhraseKey
     case PreRegisterUserTextOne;
     case PreRegisterUserTextTwo;
     case Regards;
+    case RegisterApproval;
 }

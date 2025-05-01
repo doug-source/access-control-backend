@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest\CheckRequest;
-use App\Library\Builders\Response as ResponseBuilder;
 use App\Models\RegisterRequest;
+use App\Library\Builders\Response as ResponseBuilder;
+use App\Library\Builders\Token as TokenBuilder;
 use App\Library\Registration\{
     RegisterRequestHandler,
     PermissionRequestHandler
 };
+use App\Models\RegisterPermission;
 use App\Services\Register\RegisterServiceInterface;
 
 class RegisterRequestsController extends Controller
@@ -54,6 +56,30 @@ class RegisterRequestsController extends Controller
     public function destroy(CheckRequest $request)
     {
         RegisterRequest::destroy($request->validated('registerRequestID'));
+        return ResponseBuilder::successJSON();
+    }
+
+    /**
+     * Execute the register request instance's approval.
+     */
+    public function approve(CheckRequest $request)
+    {
+        $registerRequestID = $request->validated('registerRequestID');
+        $registerRequest = RegisterRequest::find($registerRequestID);
+        RegisterRequest::destroy($registerRequestID);
+        $token = TokenBuilder::build();
+        $expire = config('app.register.expire');
+        $fields = [
+            'email' => $registerRequest->email,
+            'token' => $token,
+            'expiration_data' => now()->addHours($expire)
+        ];
+        if ($registerRequest->phone) {
+            $fields['phone'] = $registerRequest->phone;
+        }
+        RegisterPermission::create($fields);
+        $this->registerService->sendApprovalMail($registerRequest->email, $token);
+
         return ResponseBuilder::successJSON();
     }
 

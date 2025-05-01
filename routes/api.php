@@ -22,6 +22,10 @@ Route::prefix('/registers/requests')->group(function () {
         '/{registerRequestID}',
         [RegisterRequestsController::class, 'destroy']
     )->name('register.request.destroy')->middleware('auth:sanctum');
+    Route::delete(
+        '/{registerRequestID}/approval',
+        [RegisterRequestsController::class, 'approve']
+    )->name('register.request.approval')->middleware('auth:sanctum');
 
     // Used by guest
     Route::post(
