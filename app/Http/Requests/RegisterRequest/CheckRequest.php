@@ -6,6 +6,7 @@ namespace App\Http\Requests\RegisterRequest;
 
 use App\Http\Requests\VerifyRequest;
 use App\Http\Requests\RegisterRequest\Strategy\CheckerFactory;
+use Illuminate\Http\Request;
 
 final class CheckRequest extends VerifyRequest
 {
@@ -16,6 +17,10 @@ final class CheckRequest extends VerifyRequest
 
     public function authorize(): bool
     {
+        $method = strtolower(Request::method());
+        if ($method === 'delete') {
+            return $this->isLoggedIn();
+        }
         return $this->isLoggedIn();
     }
 }

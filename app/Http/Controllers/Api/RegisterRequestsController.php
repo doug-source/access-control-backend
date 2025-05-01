@@ -23,6 +23,15 @@ class RegisterRequestsController extends Controller
     }
 
     /**
+     * Remove the specified register request instance.
+     */
+    public function destroy(CheckRequest $request)
+    {
+        RegisterRequest::destroy($request->validated('registerRequestID'));
+        return ResponseBuilder::successJSON();
+    }
+
+    /**
      * Query the RegisterRequest instance list
      *
      * @return  \Illuminate\Database\Eloquent\Collection
