@@ -40,9 +40,9 @@ class Login implements Checker
     public function messages(): array
     {
         return [
-            'email.required' => Phrase::pickSentence(PhraseKey::EmailRequired),
+            'email.required' => Phrase::pickSentence(PhraseKey::ParameterRequired),
             'email.email' =>  Phrase::pickSentence(PhraseKey::EmailInvalid),
-            'password.required' => Phrase::pickSentence(PhraseKey::PasswordRequired),
+            'password.required' => Phrase::pickSentence(PhraseKey::ParameterRequired),
         ];
     }
 }

@@ -9,7 +9,6 @@ use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
 use App\Library\Enums\UserColumnSize;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Str;
 
 /**
  * Used by RegisterRequest index
@@ -47,11 +46,11 @@ final class Plain implements Checker
         return [
             'page.required' => Phrase::pickSentence(PhraseKey::ParameterRequired),
             'page.integer' => Phrase::pickSentence(PhraseKey::ParameterInvalid),
-            'page.min' => Str::of(Phrase::pickSentence(PhraseKey::MinSizeInvalid))->append(" (1)"),
+            'page.min' => Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)"),
             'group.required' => Phrase::pickSentence(PhraseKey::ParameterRequired),
             'group.integer' => Phrase::pickSentence(PhraseKey::ParameterInvalid),
-            'group.min' => Str::of(Phrase::pickSentence(PhraseKey::MinSizeInvalid))->append(" (1)"),
-            'email.max' => Str::of(Phrase::pickSentence(PhraseKey::MaxSizeInvalid))->append(" ({$this->emailColumnSize})")
+            'group.min' => Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)"),
+            'email.max' => Phrase::pickSentence(PhraseKey::MaxSizeInvalid, " ({$this->emailColumnSize})")
         ];
     }
 }
