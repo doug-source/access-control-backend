@@ -14,7 +14,7 @@ describe('Authentication', function () {
             ->assertJson([
                 'errors' => [
                     'email' => [
-                        Phrase::pickSentence(PhraseKey::EmailRequired)->toString()
+                        Phrase::pickSentence(PhraseKey::ParameterRequired)
                     ]
                 ]
             ]);
@@ -27,13 +27,13 @@ describe('Authentication', function () {
             ->assertJson([
                 'errors' => [
                     'email' => [
-                        Phrase::pickSentence(PhraseKey::EmailRequired)->toString()
+                        Phrase::pickSentence(PhraseKey::ParameterRequired)
                     ]
                 ]
             ]);
     });
     it('receives only email and returns password invalidation', function () {
-        $errorMsg = Phrase::pickSentence(PhraseKey::PasswordRequired);
+        $errorMsg = Phrase::pickSentence(PhraseKey::ParameterRequired);
         $response = $this->postJson(route('auth.login'), ['email' => 'someone@test.com']);
         $response
             ->assertStatus(422)
@@ -93,7 +93,7 @@ describe('Authentication', function () {
             ->assertJson([
                 'errors' => [
                     'email' => [
-                        Phrase::pickSentence(PhraseKey::LoginByProvider)->toString()
+                        Phrase::pickSentence(PhraseKey::LoginByProvider)
                     ]
                 ]
             ]);

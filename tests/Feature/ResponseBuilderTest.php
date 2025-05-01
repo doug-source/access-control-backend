@@ -6,7 +6,7 @@ use App\Library\Enums\PhraseKey;
 
 describe('Response Builder', function () {
     it('runs invalidJSON correctly', function () {
-        $msg = Phrase::pickSentence(PhraseKey::EmailRequired)->toString();
+        $msg = Phrase::pickSentence(PhraseKey::ParameterRequired)->toString();
         $response = Response::invalidJSON($msg);
         expect($response->original)->toMatchArray([
             'errors' => ['status' => [$msg]]
