@@ -39,7 +39,7 @@ class SocialiteController extends Controller
         $qs = http_build_query([
             'provided' => $user->createToken('Sanctum+Socialite+temporary')->plainTextToken
         ]);
-        $frontendUrl = config('app.frontend-url');
+        $frontendUrl = config('app.frontend.uri.host');
         return redirect()->away("{$frontendUrl}?{$qs}");
     }
 }

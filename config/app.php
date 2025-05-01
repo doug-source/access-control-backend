@@ -17,17 +17,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Frontend Application Url
-    |--------------------------------------------------------------------------
-    |
-    | This value is the url of your frontend application.
-    |
-    */
-
-    'frontend-url' => env('APP_FRONT_URL', 'http://localhost:5173'),
-
-    /*
-    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |
@@ -132,6 +121,21 @@ return [
     'maintenance' => [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Frontend frontend data
+    |--------------------------------------------------------------------------
+    |
+    | Default values involving Register from frontend context
+    |
+    */
+
+    'frontend' => [
+        'uri' => [
+            'host' => env('APP_FRONT_URL', 'http://localhost:5173'),
+        ]
     ],
 
     /*

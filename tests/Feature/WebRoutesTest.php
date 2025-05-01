@@ -21,7 +21,7 @@ function makeRedirectErrorUrl($errormsg)
     $qs = http_build_query([
         'errormsg' => $errormsg
     ]);
-    $host = config('app.frontend-url');
+    $host = config('app.frontend.uri.host');
     return "$host?$qs";
 }
 function makeClientException(string $uri)
@@ -57,7 +57,7 @@ describe('Web application routes', function () {
         $response = $this->get(route('oauth.callback', 'google'));
         $response->assertStatus(302);
 
-        $url = preg_replace(['|[-]|', '|[.]|'], ['\\-', '\\.'], config('app.frontend-url'));
+        $url = preg_replace(['|[-]|', '|[.]|'], ['\\-', '\\.'], config('app.frontend.uri.host'));
         expect($response->getTargetUrl())->toMatch("|^{$url}\?provided=.+$|");
     });
     it('fails the sign in with invalid provider', function () {

@@ -43,7 +43,7 @@ final class ProviderLogin
             $qs = http_build_query([
                 'errormsg' => $validator->errors()->first()
             ]);
-            $frontendUrl = config('app.frontend-url');
+            $frontendUrl = config('app.frontend.uri.host');
             return [
                 'url' => "{$frontendUrl}?{$qs}"
             ];
