@@ -11,6 +11,9 @@ use App\Library\Enums\UserColumnSize;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
+/**
+ * Used by RegisterRequest index
+ */
 final class Plain implements Checker
 {
     private int $emailColumnSize = UserColumnSize::EMAIL->value;

@@ -11,9 +11,6 @@ use App\Http\Requests\CheckerFactoryScheme;
 
 class CheckerFactory implements CheckerFactoryScheme
 {
-    /**
-     * Return the Checker instance based on FormRequest instance
-     */
     public function getChecker(FormRequest $formRequest): ?Checker
     {
         return new LoginPost($formRequest);

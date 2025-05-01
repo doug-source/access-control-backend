@@ -8,5 +8,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 interface CheckerFactoryScheme
 {
-    function getChecker(FormRequest $formRequest): ?Checker;
+    /**
+     * Return the Checker instance based on FormRequest instance
+     */
+    public function getChecker(FormRequest $formRequest): ?Checker;
 }

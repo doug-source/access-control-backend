@@ -6,6 +6,9 @@ namespace App\Library\Converters;
 
 final class Phone
 {
+    /**
+     * Keep only digits from phone
+     */
     public static function clear(?string $phone): ?string
     {
         if (!$phone) {

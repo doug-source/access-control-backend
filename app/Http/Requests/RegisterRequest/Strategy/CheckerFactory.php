@@ -11,9 +11,6 @@ use App\Http\Requests\RegisterRequest\Strategy\{
 
 class CheckerFactory implements CheckerFactoryScheme
 {
-    /**
-     * Return the Checker instance based on FormRequest instance
-     */
     public function getChecker(FormRequest $formRequest): ?Checker
     {
         return new GetChecker();
