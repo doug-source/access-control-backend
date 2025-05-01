@@ -3,17 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+// use App\Library\Builders\Response as ResponseBuilder;
 use App\Library\Validators\ProviderLogin as ProviderLoginValidator;
 use App\Models\User;
+// use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\RedirectResponse;
+// use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
+// use Laravel\Socialite\Contracts\User as UserProvided;
 
 class SocialiteController extends Controller
 {
     /**
      * Execute the provider's redirect logic
      */
-    public function redirectToProvider($provider, $enterpriseID)
+    public function redirectToProvider($provider)
     {
         return Socialite::driver($provider)->redirect();
     }
