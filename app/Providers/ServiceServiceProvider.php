@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Services\Auth\{
+    Contracts\EmailVerifiedServiceInterface,
+    EmailVerifiedService
+};
 use App\Services\Register\RegisterService;
 use App\Services\Register\RegisterServiceInterface;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +30,10 @@ final class ServiceServiceProvider extends ServiceProvider
         $this->app->bind(
             RegisterServiceInterface::class,
             RegisterService::class
+        );
+        $this->app->bind(
+            EmailVerifiedServiceInterface::class,
+            EmailVerifiedService::class
         );
     }
 }

@@ -68,6 +68,81 @@ class SocialiteController extends Controller
         )->redirect();
     }
 
+    // public function handleProviderCallback($provider)
+    // {
+    // $validator = Validator::make($request->only('provider', 'access_provider_token'), [
+    //     'provider' => ['required', 'string'],
+    //     'access_provider_token' => ['required', 'string']
+    // ]);
+    // if ($validator->fails()) {
+    //     return response()->json($validator->errors(), 400);
+    // }
+    // ------------------------------------------------------------------------
+
+    //     $validated = $this->validateProvider($provider);
+    //     if (!is_null($validated)) {
+    //         return $validated;
+    //     }
+
+    //     try {
+    //         $providerUser = Socialite::driver($provider)->user();
+    //     } catch (ClientException $th) {
+    //         return ResponseBuilder::invalidJSON('invalid credentials provided.');
+    //     }
+
+    //     $user = $this->buildUserProvided($providerUser, $provider);
+    //     $qs = http_build_query([
+    //         'provided' => $user->createToken('Sanctum+Socialite+temporary')->plainTextToken
+    //     ]);
+
+    //     $frontendUrl = config('app.frontend.uri.host');
+    //     return redirect()->away("{$frontendUrl}?{$qs}");
+    // }
+
+    // protected function validateProvider($provider)
+    // {
+    //     if (!in_array($provider, ['google'])) {
+    //         return ResponseBuilder::invalidJSON('Please login using google');
+    //     }
+    // }
+
+    // protected function buildUserProvided(UserProvided $providerUser, string $provider)
+    // {
+    //     $user = $this->makeUser($providerUser);
+    //     $this->makeProvider($providerUser, $user, $provider);
+
+    //     return $user;
+    // }
+
+    // protected function makeUser(UserProvided $providerUser)
+    // {
+    //     $user = User::where(
+    //         'email',
+    //         $providerUser->getEmail()
+    //     )->first();
+    //     if (is_null($user)) {
+    //         $user = new User;
+    //         $user->email = $providerUser->getEmail();
+    //         $user->name = $providerUser->getName();
+    //         $user->email_verified_at = now();
+    //         $user->save();
+    //     }
+    //     return $user;
+    // }
+
+    // protected function makeProvider(UserProvided $providerUser, User $user, string $provider)
+    // {
+    //     $user->providers()->updateOrCreate(
+    //         [
+    //             'provider' => $provider,
+    //             'provider_id' => $providerUser->getId(),
+    //         ],
+    //         [
+    //             'avatar' => $providerUser->getAvatar()
+    //         ]
+    //     );
+    // }
+
     /**
      * Build the redirect response used by provider callback during the authentication
      */

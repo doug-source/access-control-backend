@@ -93,6 +93,14 @@ final class Phrase
                 'password' => __('password'),
                 'confirmation' => __('confirmation')
             ]))->ucfirst(),
+            PhraseKey::EmailNotVerified => Str(__('verify-email-not-verified', [
+                'email' => __('email'),
+                'verified' => __('verified')
+            ]))->ucfirst(),
+            PhraseKey::EmailAlreadyVerified => Str(__('verify-email-already-verified', [
+                'email' => __('email'),
+                'verified' => __('verified')
+            ]))->ucfirst(),
             PhraseKey::Congratulations => Str::of(__('congratulations'))->ucfirst(),
             PhraseKey::ClickHere => Str::of(__('click-here'))->ucfirst(),
             PhraseKey::PreRegisterUserTextOne => Str::of(__('pre-register-user-text-1'))->ucfirst(),

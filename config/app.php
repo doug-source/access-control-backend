@@ -139,6 +139,9 @@ return [
                 'form' => '/register',
                 'request' => '/request',
             ],
+            'email-verify' => [
+                'form' => '/email/verify'
+            ]
         ]
     ],
 

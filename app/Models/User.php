@@ -56,16 +56,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Format the email_verified_at to view
-     *
-     * @return string
-     */
-    public function getEmailVerifiedAtFormattedAttribute()
-    {
-        return $this->getPropertyFormatted('email_verified_at');
-    }
-
-    /**
      * Format the created_at to view
      *
      * @return string

@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\CheckRequest;
 use App\Library\Builders\Phrase;
 use App\Library\Builders\Response as ResponseBuilder;
 use App\Library\Enums\PhraseKey;
+use App\Services\Auth\Contracts\EmailVerifiedServiceInterface;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\{
@@ -16,6 +17,11 @@ use Illuminate\Support\{
 
 class AuthController extends Controller
 {
+    public function __construct(private EmailVerifiedServiceInterface $emailVerifiedService)
+    {
+        // ...
+    }
+
     /**
      * Execute the application login process
      */
@@ -27,7 +33,10 @@ class AuthController extends Controller
                 Phrase::pickSentence(PhraseKey::LoginInvalid)
             );
         }
+
         $user = $request->user();
+        $isEmailVerified = $this->emailVerifiedService->userHasEmailVerified();
+
         return ResponseBuilder::successJSON([
             'user' => [
                 'id' => $user->id,
@@ -36,7 +45,9 @@ class AuthController extends Controller
                     pattern: '|^\d+\||',
                     replace: '',
                     subject: $user->createToken('auth-app')->plainTextToken
-                )
+                ),
+                'email' => $user->email,
+                'emailVerified' => $isEmailVerified
             ]
         ]);
     }

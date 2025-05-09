@@ -17,18 +17,6 @@ describe('UserModel', function () {
                 'password' => $user->password
             ]);
         });
-        it('persists an user with email_verified_at_formatted property on pt_BR locale correctly', function () {
-            App::setLocale('pt_BR');
-            $date = new DateTimeImmutable();
-            $user = User::factory(count: 1)->create()->first();
-            expect($user->email_verified_at_formatted)->toBe($date->format('d/m/Y'));
-        });
-        it('persists an user with email_verified_at_formatted property on en_US locale correctly', function () {
-            App::setLocale('en_US');
-            $date = new DateTimeImmutable();
-            $user = User::factory(count: 1)->create()->first();
-            expect($user->email_verified_at_formatted)->toBe($date->format('m/d/Y'));
-        });
         it('persists an user with created_at_formatted property on pt_BR locale correctly', function () {
             App::setLocale('pt_BR');
             $date = new DateTimeImmutable();
