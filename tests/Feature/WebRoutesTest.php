@@ -1,6 +1,7 @@
 <?php
 
 use App\Library\Builders\Phrase;
+use App\Library\Builders\UrlExternal;
 use App\Library\Enums\PhraseKey;
 use GuzzleHttp\{
     Psr7\Request,
@@ -18,11 +19,11 @@ use Laravel\Socialite\{
 
 function makeRedirectErrorUrl($errormsg)
 {
-    $qs = http_build_query([
-        'errormsg' => $errormsg
-    ]);
-    $host = config('app.frontend.uri.host');
-    return "$host?$qs";
+    return UrlExternal::build(
+        query: [
+            'errormsg' => $errormsg
+        ]
+    )->value();
 }
 function makeClientException(string $uri)
 {

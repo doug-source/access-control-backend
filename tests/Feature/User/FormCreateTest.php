@@ -1,6 +1,7 @@
 <?php
 
 use App\Library\Builders\Phrase;
+use App\Library\Builders\UrlExternal;
 use App\Library\Enums\PhraseKey;
 use App\Library\Enums\RegisterPermissionColumnSize;
 use App\Models\RegisterPermission;
@@ -53,11 +54,10 @@ describe('User form create request', function () {
             $this->getJson($url)
                 ->assertStatus(Response::HTTP_FOUND)
                 ->assertRedirect(
-                    Uri::of(
-                        config('app.frontend.uri.host') . config('app.frontend.uri.register.form')
-                    )->withQuery([
-                        'action' => '/' . Uri::of(route('users.store'))->path() . "?token={$permission->token}"
-                    ])->value()
+                    UrlExternal::build(
+                        path: config('app.frontend.uri.register.form'),
+                        query: ['token' => $permission->token]
+                    )->value()
                 );
         });
     });

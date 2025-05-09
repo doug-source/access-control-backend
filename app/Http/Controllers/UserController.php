@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\CheckRequest;
+use App\Library\Builders\UrlExternal;
 use Illuminate\Support\Uri;
 
 class UserController extends Controller
@@ -20,11 +21,9 @@ class UserController extends Controller
             parameters: ['token' => $request->token],
             absolute: false
         );
-
-        return Uri::of(
-            config('app.frontend.uri.host')
-        )->withPath(
-            config('app.frontend.uri.register.form')
-        )->withQuery(['action' => $url])->redirect();
+        return UrlExternal::build(
+            path: config('app.frontend.uri.register.form'),
+            query: ['action' => $url]
+        )->redirect();
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Library\Builders\UrlExternal;
 // use App\Library\Builders\Response as ResponseBuilder;
 use App\Library\Validators\ProviderLogin as ProviderLoginValidator;
 use App\Models\User;
@@ -11,7 +12,7 @@ use Illuminate\Http\RedirectResponse;
 // use Illuminate\Http\Request;
 // use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
-// use Laravel\Socialite\Contracts\User as UserProvided;
+use Laravel\Socialite\Contracts\User as UserProvided;
 
 class SocialiteController extends Controller
 {
@@ -30,7 +31,9 @@ class SocialiteController extends Controller
     {
         $errors = (new ProviderLoginValidator($provider))->validate();
         if ($errors) {
-            return redirect()->away($errors['url']);
+            return UrlExternal::build(query: [
+                'errormsg' => array_pop($errors)
+            ])->redirect();
         }
         return $this->providerUserResponse(Socialite::driver($provider)->user());
     }
@@ -38,13 +41,13 @@ class SocialiteController extends Controller
     /**
      * Build the redirect response used by provider callback during the authentication
      */
-    protected function providerUserResponse(\Laravel\Socialite\Contracts\User $providerUser): RedirectResponse
+    protected function providerUserResponse(UserProvided $userProvided): RedirectResponse
     {
-        $user = User::where('email', $providerUser->getEmail())->first();
-        $qs = http_build_query([
-            'provided' => $user->createToken('Sanctum+Socialite+temporary')->plainTextToken
-        ]);
-        $frontendUrl = config('app.frontend.uri.host');
-        return redirect()->away("{$frontendUrl}?{$qs}");
+        $user = User::where('email', $userProvided->getEmail())->first();
+        return UrlExternal::build(
+            query: [
+                'provided' => $user->createToken('Sanctum+Socialite+temporary')->plainTextToken
+            ]
+        )->redirect();
     }
 }

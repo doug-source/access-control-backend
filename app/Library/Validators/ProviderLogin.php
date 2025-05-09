@@ -40,12 +40,8 @@ final class ProviderLogin
         ]);
 
         if ($validator->stopOnFirstFailure()->fails()) {
-            $qs = http_build_query([
-                'errormsg' => $validator->errors()->first()
-            ]);
-            $frontendUrl = config('app.frontend.uri.host');
             return [
-                'url' => "{$frontendUrl}?{$qs}"
+                $validator->errors()->first()
             ];
         }
         return [];
