@@ -13,6 +13,7 @@ describe('Socialite from api namespace', function () {
         Provider::factory(count: 1)->create([
             'user_id' => $user->id
         ])->first();
+        $this->get(route('oauth.redirect', ['provider' => 'google', 'type' => 'login']));
         $responseRedirect = $this->get(route('oauth.callback', 'google'));
         $token = Str::replaceMatches(
             pattern: '|^\d+\||',

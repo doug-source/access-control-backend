@@ -19,15 +19,31 @@ class SocialiteController extends Controller
     /**
      * Execute the provider's redirect logic
      */
-    public function redirectToProvider($provider)
+    public function redirectToProvider($provider, $type)
     {
+        session()->put('type', $type);
         return Socialite::driver($provider)->redirect();
+    }
+
+    /**
+     * Execute the provider's callback logic
+     */
+    public function handleProvideCallback($provider)
+    {
+        $type = session('type');
+        session()->forget('type');
+        switch ($type) {
+            case 'login':
+                return $this->handleProvideCallbackToLogin($provider);
+            case 'register':
+                return $this->handleProvideCallbackToRegister($provider);
+        }
     }
 
     /**
      * Execute the provider's callback logic during the authentication
      */
-    public function handleProvideCallbackToLogin($provider)
+    private function handleProvideCallbackToLogin($provider)
     {
         $errors = (new ProviderLoginValidator($provider))->validate();
         if ($errors) {
@@ -36,6 +52,20 @@ class SocialiteController extends Controller
             ])->redirect();
         }
         return $this->providerUserResponse(Socialite::driver($provider)->user());
+    }
+
+    /**
+     * Execute the provider's callback logic during the request register
+     */
+    private function handleProvideCallbackToRegister($provider)
+    {
+        $userProvided = Socialite::driver($provider)->user();
+        return UrlExternal::build(
+            path: config('app.frontend.uri.register.request'),
+            query: [
+                'provided' => $userProvided->getEmail()
+            ]
+        )->redirect();
     }
 
     /**

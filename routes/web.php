@@ -9,13 +9,13 @@ Route::get('/', function () {
 });
 
 Route::get(
-    '/auth/{provider}/redirect',
+    '/auth/{provider}/redirect/{type}',
     [SocialiteController::class, 'redirectToProvider']
 )->name('oauth.redirect');
 
 Route::get(
     '/auth/{provider}/callback',
-    [SocialiteController::class, 'handleProvideCallbackToLogin']
+    [SocialiteController::class, 'handleProvideCallback']
 )->name('oauth.callback');
 
 Route::get(

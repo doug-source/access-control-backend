@@ -55,6 +55,7 @@ describe('Web application routes', function () {
     it('signs in with Google Provider', function () {
         buildSocialite();
 
+        $this->get(route('oauth.redirect', ['provider' => 'google', 'type' => 'login']));
         $response = $this->get(route('oauth.callback', 'google'));
         $response->assertStatus(302);
 
@@ -64,6 +65,7 @@ describe('Web application routes', function () {
     it('fails the sign in with invalid provider', function () {
         buildSocialite();
 
+        $this->get(route('oauth.redirect', ['provider' => 'google', 'type' => 'login']));
         $response = $this->get(route('oauth.callback', 'foo'));
         $response->assertStatus(302);
 
@@ -75,6 +77,7 @@ describe('Web application routes', function () {
     it('fails the sign in with user passworded with provider', function () {
         buildSocialite(password: true);
 
+        $this->get(route('oauth.redirect', ['provider' => 'google', 'type' => 'login']));
         $response = $this->get(route('oauth.callback', 'google'));
         $response->assertStatus(302);
 
@@ -85,6 +88,7 @@ describe('Web application routes', function () {
     });
     it('fails the sign in with provider when user not is registered', function () {
         buildSocialite(password: NULL, email: 'dude@mail.com', createUsedDB: FALSE);
+        $this->get(route('oauth.redirect', ['provider' => 'google', 'type' => 'login']));
         $responseRedirect = $this->get(route('oauth.callback', 'google'));
         $responseRedirect->assertStatus(302);
         $errorMsg = urldecode(
@@ -98,6 +102,7 @@ describe('Web application routes', function () {
     });
     it('fails the sign in with provider when user is registered with password', function () {
         buildSocialite(password: 'whatever', email: 'dude@mail.com', createUsedDB: TRUE);
+        $this->get(route('oauth.redirect', ['provider' => 'google', 'type' => 'login']));
         $responseRedirect = $this->get(route('oauth.callback', 'google'));
         $responseRedirect->assertStatus(302);
         $errorMsg = urldecode(
@@ -116,6 +121,7 @@ describe('Web application routes', function () {
             password: 'whatever',
             exception: $exception
         );
+        $this->get(route('oauth.redirect', ['provider' => 'google', 'type' => 'login']));
         $responseRedirect = $this->get($route);
         $responseRedirect->assertStatus(302);
         $errorMsg = urldecode(

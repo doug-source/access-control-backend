@@ -136,7 +136,8 @@ return [
         'uri' => [
             'host' => env('APP_FRONT_URL', 'http://localhost:5173'),
             'register' => [
-                'form' => '/register'
+                'form' => '/register',
+                'request' => '/request',
             ],
         ]
     ],
