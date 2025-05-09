@@ -4,11 +4,12 @@ namespace App\Library\Validators;
 
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
+use App\Library\Validators\Contracts\CustomValidatorInterface;
 use App\Rules\ProviderUserLinked;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
-final class ProviderLogin
+final class ProviderLogin implements CustomValidatorInterface
 {
     /** @var string */
     protected $provider;
@@ -27,7 +28,7 @@ final class ProviderLogin
      * Execute the validation
      * @return array{url: string}|array
      */
-    public function validate()
+    public function validate(): array
     {
         $providers = config('services.providers');
         $validator = Validator::make(['provider' => $this->provider], [
