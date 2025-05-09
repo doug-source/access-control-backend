@@ -59,7 +59,7 @@ describe('RegisterRequest store request', function () {
             $registerRequest = RegisterRequest::factory(count: 1)->create()->first();
             $this->postJson(route('register.request.store', [
                 'email' => $registerRequest->email,
-                'phone' => fake()->phoneNumber()
+                'phone' => '12345678901'
             ]))->assertStatus(200);
         });
         it('has already a register permission instance into database', function () {
