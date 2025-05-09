@@ -12,9 +12,9 @@ use Carbon\Carbon;
 class RegisterPermissionValid implements ValidationRule
 {
     /** @var \Illuminate\Database\Eloquent\Model|object|static|null */
-    protected $allowed;
+    private $allowed;
 
-    protected ?string $token;
+    private ?string $token;
 
     /**
      * Create a new rule instance.
@@ -34,10 +34,10 @@ class RegisterPermissionValid implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (Carbon::now()->greaterThan(Carbon::parse($this->allowed->expiration_data))) {
-            $fail(Phrase::pickSentence(PhraseKey::RegistrationExpired));
-        } else if ($this->allowed->token !== $this->token) {
+        if ($this->allowed?->token !== $this->token) {
             $fail(Phrase::pickSentence(PhraseKey::ParameterInvalid));
+        } else if (Carbon::now()->greaterThan(Carbon::parse($this->allowed->expiration_data))) {
+            $fail(Phrase::pickSentence(PhraseKey::RegistrationExpired));
         }
     }
 }
