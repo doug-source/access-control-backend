@@ -15,15 +15,9 @@ class UserController extends Controller
      */
     public function create(CheckRequest $request)
     {
-        $url = route(
-            // Route the form submits the user form data to end the user register
-            name: 'users.store',
-            parameters: ['token' => $request->token],
-            absolute: false
-        );
         return UrlExternal::build(
             path: config('app.frontend.uri.register.form'),
-            query: ['action' => $url]
+            query: ['token' => $request->token]
         )->redirect();
     }
 }
