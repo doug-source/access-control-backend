@@ -37,7 +37,7 @@ final class Plain implements Checker
         $this->tokenMaxSize = RegisterPermissionColumnSize::TOKEN->get();
 
         $this->email = $formRequest->input('email');
-        $this->token = $formRequest->query('token');
+        $this->token = $formRequest->input('token');
     }
 
     public function all(FormRequest $formRequest, array $requestInputs): array
