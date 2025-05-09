@@ -90,14 +90,28 @@ final class Phrase
             ]))->ucfirst(),
             PhraseKey::RegistrationExpired => Str(__('registration-expired'))->ucfirst(),
             PhraseKey::PassConfirmInvalid => Str::of(__('pass-confirm-invalid', [
-                'password' => __('password')
+                'password' => __('password'),
+                'confirmation' => __('confirmation')
             ]))->ucfirst(),
-
             PhraseKey::Congratulations => Str::of(__('congratulations'))->ucfirst(),
             PhraseKey::ClickHere => Str::of(__('click-here'))->ucfirst(),
             PhraseKey::PreRegisterUserTextOne => Str::of(__('pre-register-user-text-1'))->ucfirst(),
-            PhraseKey::PreRegisterUserTextTwo => Str::of(__('pre-register-user-text-2'))->ucfirst(),
+            PhraseKey::PreRegisterUserTextTwo => Str::of(__('pre-register-user-text-2', [
+                'button' => __('button')
+            ]))->ucfirst(),
             PhraseKey::Regards => Str::of(__('regards'))->ucfirst(),
+            PhraseKey::Hello => Str::of(__('hello'))->ucfirst(),
+            PhraseKey::ConfirmationEmail => Str::of(__('confirmation-email', [
+                'confirmation' => __('confirmation'),
+                'email' => __('email')
+            ]))->ucfirst(),
+            PhraseKey::ConfirmationEmailText => Str::of(__('confirmation-email-text', [
+                'button' => __('button'),
+                'email-address' => __('email-address', [
+                    'address' => __('address'),
+                    'email' => __('email')
+                ])
+            ]))->ucfirst(),
             PhraseKey::RegisterApproval => Str::of(__('register-approval', [
                 'register' => __('register')
             ]))->ucfirst(),

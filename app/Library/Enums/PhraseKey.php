@@ -29,5 +29,8 @@ enum PhraseKey
     case PreRegisterUserTextOne;
     case PreRegisterUserTextTwo;
     case Regards;
+    case Hello;
+    case ConfirmationEmail;
+    case ConfirmationEmailText;
     case RegisterApproval;
 }
