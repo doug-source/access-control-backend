@@ -60,11 +60,11 @@ function createUserDB(string $email, ?string $password = NULL, bool $emailVerifi
 {
     $preParams = $emailVerified ? [] : ['email_verified_at' => NULL];
 
-    return User::factory(count: 1)->create([
+    return User::factory()->createOne([
         'email' => $email,
         'password' => !is_null($password) ? Hash::make($password) : NULL,
         ...$preParams
-    ])->first();
+    ]);
 }
 
 /**
