@@ -4,6 +4,9 @@ use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
 use App\Models\Provider;
 use Illuminate\Support\Str;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
 
 describe('Authentication', function () {
     it('receives no field and returns email invalidation', function () {
@@ -11,7 +14,8 @@ describe('Authentication', function () {
         $response
             ->assertStatus(422)
             ->assertInvalid(['email'])
-            ->assertJson([
+            ->assertExactJson([
+                'message' => Phrase::pickSentence(PhraseKey::ParameterRequired),
                 'errors' => [
                     'email' => [
                         Phrase::pickSentence(PhraseKey::ParameterRequired)
@@ -24,7 +28,8 @@ describe('Authentication', function () {
         $response
             ->assertStatus(422)
             ->assertInvalid(['email'])
-            ->assertJson([
+            ->assertExactJson([
+                'message' => Phrase::pickSentence(PhraseKey::ParameterRequired),
                 'errors' => [
                     'email' => [
                         Phrase::pickSentence(PhraseKey::ParameterRequired)
@@ -38,7 +43,7 @@ describe('Authentication', function () {
         $response
             ->assertStatus(422)
             ->assertInvalid(['password'])
-            ->assertJson([
+            ->assertExactJson([
                 'message' => $errorMsg,
                 'errors' => [
                     'password' => [
@@ -53,7 +58,7 @@ describe('Authentication', function () {
         $response
             ->assertStatus(422)
             ->assertInvalid(['email'])
-            ->assertJson([
+            ->assertExactJson([
                 'message' => $errorMsg,
                 'errors' => [
                     'email' => [
@@ -66,7 +71,7 @@ describe('Authentication', function () {
         $user = createUserDB(password: 'password', email: 'someone@test.com');
         $response = $this->postJson(route('auth.login'), ['email' => $user->email, 'password' => 'another-password']);
         $response
-            ->assertJson([
+            ->assertExactJson([
                 'errors' => [
                     'status' => [
                         Phrase::pickSentence(PhraseKey::LoginInvalid)
@@ -86,11 +91,12 @@ describe('Authentication', function () {
         $user = createUserDB(password: NULL, email: 'someone@test.com');
         Provider::factory(count: 1)->create([
             'user_id' => $user->id
-        ])->first();
+        ]);
         $response = $this->postJson(route('auth.login'), ['email' => $user->email, 'password' => 'whatever']);
         $response
             ->assertInvalid(['email'])
-            ->assertJson([
+            ->assertExactJson([
+                'message' => Phrase::pickSentence(PhraseKey::LoginByProvider),
                 'errors' => [
                     'email' => [
                         Phrase::pickSentence(PhraseKey::LoginByProvider)

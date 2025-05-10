@@ -119,7 +119,7 @@ function login(mixed $scope)
 function assertFailedResponse(TestResponse $response, string $errorKey, Stringable $errorMsg, int $statusCode = Response::HTTP_UNPROCESSABLE_ENTITY): TestResponse
 {
     return $response->assertStatus($statusCode)
-        ->assertJson([
+        ->assertExactJson([
             'message' => $errorMsg,
             'errors' => [
                 $errorKey => [$errorMsg]
