@@ -94,6 +94,7 @@ function buildSocialite(
         $socialiteUser->shouldReceive('getEmail')->andReturn($user->email);
     }
 
+    Socialite::shouldReceive('driver->redirect');
     Socialite::shouldReceive('driver->user')->andReturn($socialiteUser);
     return $user;
 }
