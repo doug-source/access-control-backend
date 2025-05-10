@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 
 class EmailVerifyController extends Controller
 {
+    /**
+     * Execute the email verification logic
+     */
     public function verify($id)
     {
         $user = User::find($id);
