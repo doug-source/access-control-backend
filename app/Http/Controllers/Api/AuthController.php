@@ -4,16 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\CheckRequest;
+use App\Library\Builders\LoginOutput as LoginOutputBuilder;
 use App\Library\Builders\Phrase;
 use App\Library\Builders\Response as ResponseBuilder;
 use App\Library\Enums\PhraseKey;
 use App\Services\Auth\Contracts\EmailVerifiedServiceInterface;
 use Illuminate\Http\Request;
-
-use Illuminate\Support\{
-    Facades\Auth,
-    Str
-};
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -34,21 +31,8 @@ class AuthController extends Controller
             );
         }
 
-        $user = $request->user();
-        $isEmailVerified = $this->emailVerifiedService->userHasEmailVerified();
-
         return ResponseBuilder::successJSON([
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'token' => Str::replaceMatches(
-                    pattern: '|^\d+\||',
-                    replace: '',
-                    subject: $user->createToken('auth-app')->plainTextToken
-                ),
-                'email' => $user->email,
-                'emailVerified' => $isEmailVerified
-            ]
+            'user' => LoginOutputBuilder::generate($this->emailVerifiedService, $request->user())
         ]);
     }
 
