@@ -10,19 +10,6 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class UserNotProvided implements ValidationRule
 {
-    /** @var string */
-    protected $email;
-
-    /**
-     * Create a new rule instance.
-     *
-     * @return void
-     */
-    public function __construct($email)
-    {
-        $this->email = $email;
-    }
-
     /**
      * Run the validation rule.
      *
@@ -30,7 +17,7 @@ class UserNotProvided implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $user = User::where('email', $this->email)->first();
+        $user = User::where('email', $value)->first();
         if ($user && !$user->providers()->getResults()->isEmpty()) {
             $fail(Phrase::pickSentence(PhraseKey::LoginByProvider));
         }

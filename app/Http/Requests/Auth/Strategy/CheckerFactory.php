@@ -13,6 +13,6 @@ class CheckerFactory implements CheckerFactoryScheme
 {
     public function getChecker(FormRequest $formRequest): ?Checker
     {
-        return new LoginPost($formRequest);
+        return new LoginPost();
     }
 }
