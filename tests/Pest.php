@@ -56,20 +56,32 @@ expect()->extend('toBeOne', function () {
 /**
  * Create the database user instance used by testing environment
  */
-function createUserDB(string $email, ?string $password = NULL)
+function createUserDB(string $email, ?string $password = NULL, bool $emailVerified = TRUE)
 {
+    $preParams = $emailVerified ? [] : ['email_verified_at' => NULL];
+
     return User::factory(count: 1)->create([
         'email' => $email,
-        'password' => !is_null($password) ? Hash::make($password) : NULL
+        'password' => !is_null($password) ? Hash::make($password) : NULL,
+        ...$preParams
     ])->first();
 }
 
 /**
  * Create the user socialite mocking instance used by testing environment
  */
-function buildSocialite(?string $password = NULL, string $email = 'test@test.com', bool $createUsedDB = true, ?Exception $exception = NULL)
-{
-    $user = $createUsedDB ? createUserDB(email: $email, password: $password) : (object)['email' => $email];
+function buildSocialite(
+    ?string $password = NULL,
+    string $email = 'test@test.com',
+    bool $createUsedDB = true,
+    bool $emailVerified = TRUE,
+    ?Exception $exception = NULL
+) {
+    $user = $createUsedDB ? createUserDB(
+        email: $email,
+        password: $password,
+        emailVerified: $emailVerified
+    ) : (object)['email' => $email];
 
     $socialiteUser = Mockery::mock(ProviderUser::class);
 
