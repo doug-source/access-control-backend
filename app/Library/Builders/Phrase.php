@@ -93,10 +93,6 @@ final class Phrase
                 'password' => __('password'),
                 'confirmation' => __('confirmation')
             ]))->ucfirst(),
-            PhraseKey::EmailNotVerified => Str(__('verify-email-not-verified', [
-                'email' => __('email'),
-                'verified' => __('verified')
-            ]))->ucfirst(),
             PhraseKey::EmailAlreadyVerified => Str(__('verify-email-already-verified', [
                 'email' => __('email'),
                 'verified' => __('verified')

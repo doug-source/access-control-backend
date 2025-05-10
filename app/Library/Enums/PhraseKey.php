@@ -23,7 +23,6 @@ enum PhraseKey
     case MinSpecialCharsInvalid;
     case RegistrationExpired;
     case PassConfirmInvalid;
-    case EmailNotVerified;
     case EmailAlreadyVerified;
 
     case Congratulations;

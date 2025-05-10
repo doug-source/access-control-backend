@@ -48,6 +48,5 @@
     "confirmation-email": ":confirmation of :email",
     "confirmation-email-text": "click the :button below to verify your :email-address:",
 
-    "verify-email-warn-response": ":email not :verified",
     "verify-email-already-verified": ":email already :verified"
 }

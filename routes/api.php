@@ -36,10 +36,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/login/provide', [SocialiteController::class, 'releaseToken'])->name(
         'release.token'
     );
-    Route::get(
-        '/email/verify',
-        [EmailVerifyController::class, 'verifyEmailWarning']
-    )->name('verification.notice');
     Route::post('/logout', [AuthController::class, 'logout'])->name(
         'auth.logout'
     );

@@ -48,6 +48,5 @@
     "confirmation-email": ":confirmation de :email",
     "confirmation-email-text": "clique no :button abaixo para verificar seu :email-address:",
 
-    "verify-email-not-verified": ":email não :verified",
     "verify-email-already-verified": ":email já :verified"
 }
