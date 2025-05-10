@@ -13,10 +13,6 @@ use \Illuminate\Support\Facades\Route;
  * Used by user authenticated - with email verification
  */
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::post('/login/provide', [SocialiteController::class, 'releaseToken'])->name(
-        'release.token'
-    );
-
     /**
      * Used only by admin role
      */
@@ -37,6 +33,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
  * Used by user authenticated - no email verification
  */
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/login/provide', [SocialiteController::class, 'releaseToken'])->name(
+        'release.token'
+    );
     Route::get(
         '/email/verify',
         [EmailVerifyController::class, 'verifyEmailWarning']
