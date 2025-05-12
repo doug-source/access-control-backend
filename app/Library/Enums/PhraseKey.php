@@ -34,4 +34,17 @@ enum PhraseKey
     case ConfirmationEmail;
     case ConfirmationEmailText;
     case RegisterApproval;
+
+    case PasswordsSent;
+    case PasswordsReset;
+    case PasswordsThrottled;
+    case PasswordsToken;
+    case PasswordsUser;
+
+    case MINUTES;
+    case ForgotPasswordExpireLine;
+    case ForgotPasswordOtherwiseLine;
+    case ForgotPasswordTitle;
+    case ForgotPasswordText;
+    case ForgotPasswordAction;
 }

@@ -119,6 +119,48 @@ final class Phrase
             PhraseKey::RegisterApproval => Str::of(__('register-approval', [
                 'register' => __('register')
             ])),
+
+            PhraseKey::PasswordsSent => Str::of(__('passwords.sent', [
+                'email' => __('email'),
+                'password' => __('password')
+            ])),
+            PhraseKey::PasswordsReset => Str::of(__('passwords.reset', [
+                'password' => __('password')
+            ])),
+            PhraseKey::PasswordsThrottled => Str::of(__('passwords.throttled')),
+            PhraseKey::PasswordsToken => Str::of(__('subject-invalid', [
+                'subject' => __('password-reset-token', [
+                    'password' => __('password')
+                ]),
+                'invalid' => __('invalid-m')
+            ])),
+            PhraseKey::PasswordsUser => Str::of(__('subject-invalid', [
+                'subject' => __('email-address', [
+                    'address' => __('address'),
+                    'email' => __('email')
+                ]),
+                'invalid' => __('invalid-m')
+            ])),
+
+            PhraseKey::MINUTES => Str::of(__('minutes')),
+            PhraseKey::ForgotPasswordExpireLine => Str::of(__('forgot-password-expire-line', [
+                'password' => __('password')
+            ])),
+            PhraseKey::ForgotPasswordOtherwiseLine => Str::of(__('forgot-password-otherwise-line', [
+                'password' => __('password')
+            ])),
+            PhraseKey::ForgotPasswordTitle => Str::of(__('reset-password', [
+                'password' => __('password')
+            ])),
+            PhraseKey::ForgotPasswordText => Str::of(__('forgot-password-text', [
+                'email' => __('email'),
+                'reset-password' => __('reset-password', [
+                    'password' => __('password')
+                ])
+            ])),
+            PhraseKey::ForgotPasswordAction => Str::of(__('forgot-password-action', [
+                'password' => __('password')
+            ])),
         };
         if ($uppercase) {
             return $message->append($remain)->ucfirst();

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\{
     AuthController,
     EmailVerifyController,
+    ForgotPasswordController,
     RegisterRequestsController,
     SocialiteController,
     UserController
@@ -67,4 +68,8 @@ Route::middleware('guest')->group(function () {
         '/users/store',
         [UserController::class, 'store']
     )->name('users.store');
+    Route::get(
+        '/forgot-password',
+        [ForgotPasswordController::class, 'askForgotPass']
+    )->name('password.request');
 });

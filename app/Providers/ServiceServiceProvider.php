@@ -8,6 +8,8 @@ use App\Services\Auth\{
     Contracts\EmailVerifiedServiceInterface,
     EmailVerifiedService
 };
+use App\Services\Password\Constracts\ForgotPasswordServiceInterfacer;
+use App\Services\Password\ForgotPasswordService;
 use App\Services\Register\RegisterService;
 use App\Services\Register\RegisterServiceInterface;
 use Illuminate\Support\ServiceProvider;
@@ -34,6 +36,10 @@ final class ServiceServiceProvider extends ServiceProvider
         $this->app->bind(
             EmailVerifiedServiceInterface::class,
             EmailVerifiedService::class
+        );
+        $this->app->bind(
+            ForgotPasswordServiceInterfacer::class,
+            ForgotPasswordService::class
         );
     }
 }

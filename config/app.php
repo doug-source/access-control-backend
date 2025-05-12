@@ -141,6 +141,9 @@ return [
             ],
             'email-verify' => [
                 'form' => '/email/verify'
+            ],
+            'change-password' => [
+                'form' => '/change-pass'
             ]
         ]
     ],

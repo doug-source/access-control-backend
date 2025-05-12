@@ -38,6 +38,8 @@
     "registration-expired": "registro expirado",
     "pass-confirm-invalid": ":password e :confirmation são diferentes",
     "forbidden-access": "acesso proibido",
+    "minutes": "minutos",
+    "reset-password": "redefinição de :password",
 
     "congratulations": "parabéns",
     "click-here": "clique aqui",
@@ -48,5 +50,16 @@
     "confirmation-email": ":confirmation de :email",
     "confirmation-email-text": "clique no :button abaixo para verificar seu :email-address:",
 
-    "verify-email-already-verified": ":email já :verified"
+    "verify-email-already-verified": ":email já :verified",
+
+    "password-reset-token": "token de redefinição de :password",
+
+    "passwords.sent": "enviamos por :email seu link de redefinição de :password",
+    "passwords.reset": "sua :password foi alterada",
+    "passwords.throttled": "aguarde antes de tentar novamente",
+
+    "forgot-password-expire-line": "este link de redefinição de :password expirará em",
+    "forgot-password-otherwise-line": "se você não solicitou uma redefinição de :password, nenhuma ação adicional será necessária",
+    "forgot-password-text": "você está recebendo este :email porque recebemos uma solicitação de :reset-password da sua conta",
+    "forgot-password-action": "redefina sua :password"
 }
