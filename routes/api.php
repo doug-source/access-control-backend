@@ -55,13 +55,16 @@ Route::middleware('auth:sanctum')->group(function () {
  * Used by guest
  */
 Route::middleware('guest')->group(function () {
-Route::post(
-    '/login',
-    [AuthController::class, 'login']
-)->name('auth.login');
-Route::post(
-    '/registers/requests/store',
-    [RegisterRequestsController::class, 'store']
-)->name('register.request.store');
-Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
+    Route::post(
+        '/login',
+        [AuthController::class, 'login']
+    )->name('auth.login');
+    Route::post(
+        '/registers/requests/store',
+        [RegisterRequestsController::class, 'store']
+    )->name('register.request.store');
+    Route::post(
+        '/users/store',
+        [UserController::class, 'store']
+    )->name('users.store');
 });
