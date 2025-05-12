@@ -5,7 +5,7 @@ namespace App\Http\Requests\Auth\Strategy\Post;
 use App\Http\Requests\Checker;
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
-use App\Rules\UserNotProvided;
+use App\Rules\UserNoProvider;
 use Illuminate\Foundation\Http\FormRequest;
 
 class Login implements Checker
@@ -23,7 +23,7 @@ class Login implements Checker
             'email' => [
                 'required',
                 'email',
-                new UserNotProvided()
+                new UserNoProvider()
             ],
             'password' => 'required',
         ];

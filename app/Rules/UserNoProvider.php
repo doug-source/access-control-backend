@@ -8,7 +8,7 @@ use App\Models\User;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class UserNotProvided implements ValidationRule
+class UserNoProvider implements ValidationRule
 {
     /**
      * Run the validation rule.
