@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Str;
 use Closure;
 use Illuminate\Support\Collection;
-use App\Library\Chains\Password\RuleHanlderInterface;
+use App\Library\Chains\Password\RuleHandlerInterface;
 
 final class PasswordValid implements ValidationRule
 {
@@ -17,9 +17,9 @@ final class PasswordValid implements ValidationRule
     /**
      * Constructor of this PasswordValid
      *
-     * @param array<int, RuleHanlderInterface> $ruleHandlers
+     * @param array<int, RuleHandlerInterface> $ruleHandlers
      */
-    public function __construct(RuleHanlderInterface ...$ruleHandlers)
+    public function __construct(RuleHandlerInterface ...$ruleHandlers)
     {
         $this->ruleHandlers = collect($ruleHandlers);
         $this->ruleHandlers->each(

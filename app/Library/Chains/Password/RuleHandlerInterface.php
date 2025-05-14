@@ -7,7 +7,7 @@ namespace App\Library\Chains\Password;
 use Closure;
 use Illuminate\Support\Stringable;
 
-interface RuleHanlderInterface
+interface RuleHandlerInterface
 {
     public function validate(Stringable $value): bool;
     public function setNext(self $next): self;

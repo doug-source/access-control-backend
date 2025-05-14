@@ -10,9 +10,9 @@ use Illuminate\Support\Stringable;
 use Illuminate\Support\Str;
 use Closure;
 
-abstract class RuleHandler implements RuleHanlderInterface
+abstract class RuleHandler implements RuleHandlerInterface
 {
-    protected ?RuleHanlderInterface $next;
+    protected ?RuleHandlerInterface $next;
 
     /**
      * Constructor of this class
@@ -23,7 +23,7 @@ abstract class RuleHandler implements RuleHanlderInterface
         protected readonly string $msgRemain = '',
     ) {}
 
-    public function setNext(?RuleHanlderInterface $next): RuleHanlderInterface
+    public function setNext(?RuleHandlerInterface $next): RuleHandlerInterface
     {
         $this->next = $next;
         return $this;
