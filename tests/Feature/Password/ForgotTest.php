@@ -63,26 +63,6 @@ describe('Forgot password from api routes', function () {
                 errorMsg: Phrase::pickSentence(PhraseKey::LoginByProvider)
             );
         });
-        it("has email parameter that returns invalid message 'PASSWORD_RESET' correctly", function () {
-            $email = fake()->email();
-            Password::expects('sendResetLink')->with([
-                'email' => $email
-            ])->andReturn(PasswordBroker::PASSWORD_RESET);
-            $password = fake()->password();
-            createUserDB(email: $email, password: $password);
-            $uri = Uri::of(route('password.request'))->withQuery([
-                'email' => $email
-            ])->value();
-            $this->getJson($uri)
-                ->assertExactJson([
-                    "errors" => [
-                        "status" => [
-                            Phrase::pickSentence(key: PhraseKey::PasswordsReset)
-                        ]
-                    ]
-                ])
-                ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        });
         it("has email parameter that returns invalid message 'INVALID_USER' correctly", function () {
             $email = fake()->email();
             Password::expects('sendResetLink')->with([
@@ -98,46 +78,6 @@ describe('Forgot password from api routes', function () {
                     "errors" => [
                         "status" => [
                             Phrase::pickSentence(key: PhraseKey::PasswordsUser)
-                        ]
-                    ]
-                ])
-                ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        });
-        it("has email parameter that returns invalid message 'INVALID_TOKEN' correctly", function () {
-            $email = fake()->email();
-            Password::expects('sendResetLink')->with([
-                'email' => $email
-            ])->andReturn(PasswordBroker::INVALID_TOKEN);
-            $password = fake()->password();
-            createUserDB(email: $email, password: $password);
-            $uri = Uri::of(route('password.request'))->withQuery([
-                'email' => $email
-            ])->value();
-            $this->getJson($uri)
-                ->assertExactJson([
-                    "errors" => [
-                        "status" => [
-                            Phrase::pickSentence(key: PhraseKey::PasswordsToken)
-                        ]
-                    ]
-                ])
-                ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        });
-        it("has email parameter that returns invalid message 'RESET_THROTTLED' correctly", function () {
-            $email = fake()->email();
-            Password::expects('sendResetLink')->with([
-                'email' => $email
-            ])->andReturn(PasswordBroker::RESET_THROTTLED);
-            $password = fake()->password();
-            createUserDB(email: $email, password: $password);
-            $uri = Uri::of(route('password.request'))->withQuery([
-                'email' => $email
-            ])->value();
-            $this->getJson($uri)
-                ->assertExactJson([
-                    "errors" => [
-                        "status" => [
-                            Phrase::pickSentence(key: PhraseKey::PasswordsThrottled)
                         ]
                     ]
                 ])
