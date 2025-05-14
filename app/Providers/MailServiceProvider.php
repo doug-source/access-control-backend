@@ -62,7 +62,8 @@ final class MailServiceProvider extends ServiceProvider
                     UrlExternal::build(
                         path: config('app.frontend.uri.change-password.form'),
                         query: [
-                            'token' => $token
+                            'token' => $token,
+                            'email' => $notifiable->email
                         ]
                     )->value()
                 )

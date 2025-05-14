@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\{
     EmailVerifyController,
     ForgotPasswordController,
     RegisterRequestsController,
+    ResetPasswordController,
     SocialiteController,
     UserController
 };
@@ -72,4 +73,9 @@ Route::middleware('guest')->group(function () {
         '/forgot-password',
         [ForgotPasswordController::class, 'askForgotPass']
     )->name('password.request');
+
+    Route::post(
+        '/reset-password',
+        [ResetPasswordController::class, 'reset']
+    )->name('password.update');
 });
