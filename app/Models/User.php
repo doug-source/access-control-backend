@@ -34,14 +34,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Relationship between users and providers tables
-     */
-    public function providers()
-    {
-        return $this->hasMany(Provider::class, 'user_id', 'id');
-    }
-
-    /**
      * Format datetime properties based on current locale
      *
      * @return string
@@ -73,5 +65,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getUpdatedAtFormattedAttribute()
     {
         return $this->getPropertyFormatted('updated_at');
+    }
+
+
+    /**
+     * Relationship between users and providers tables
+     */
+    public function providers()
+    {
+        return $this->hasMany(Provider::class, 'user_id', 'id');
     }
 }
