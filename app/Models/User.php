@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\App;
@@ -74,5 +75,23 @@ class User extends Authenticatable implements MustVerifyEmail
     public function providers()
     {
         return $this->hasMany(Provider::class, 'user_id', 'id');
+    }
+
+    /**
+     * Relationship with database table abilities
+     */
+    public function abilities(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Ability::class
+        )->withPivot('include')->withTimestamps()->using(AbilityUser::class);
+    }
+
+    /**
+     * Relationship with database table roles
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class)->withTimestamps();
     }
 }
