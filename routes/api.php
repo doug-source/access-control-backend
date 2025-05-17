@@ -22,6 +22,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         '/registers/requests',
         [RegisterRequestsController::class, 'index']
     )->name('register.request.index');
+    Route::get(
+        '/registers/requests/{registerRequestID}',
+        [RegisterRequestsController::class, 'show']
+    )->name('register.request.show');
     Route::delete(
         '/registers/requests/{registerRequestID}',
         [RegisterRequestsController::class, 'destroy']

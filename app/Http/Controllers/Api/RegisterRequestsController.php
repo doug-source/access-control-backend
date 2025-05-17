@@ -13,9 +13,12 @@ use App\Library\Registration\{
 };
 use App\Models\RegisterPermission;
 use App\Services\Register\RegisterServiceInterface;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class RegisterRequestsController extends Controller
 {
+    use AuthorizesRequests;
+
     public function __construct(private readonly RegisterServiceInterface $registerService)
     {
         $this->registerService->setHandlers(
@@ -34,6 +37,23 @@ class RegisterRequestsController extends Controller
                 perPage: $request->input('group', 3),
                 email: $request->input('email')
             )
+        );
+    }
+
+    /**
+     * Display one RegisterRequest instance
+     */
+    public function show(CheckRequest $request)
+    {
+        $registerRequest = RegisterRequest::find($request->validated('registerRequestID'));
+        return ResponseBuilder::successJSON(
+            data: [
+                'id' => $registerRequest->id,
+                'email' => $registerRequest->email,
+                'phone' => $registerRequest->phone,
+                'createdAt' => $registerRequest->created_at_formatted,
+                'updatedAt' => $registerRequest->updated_at_formatted,
+            ]
         );
     }
 
