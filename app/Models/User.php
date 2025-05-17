@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\FormatDatetimeProperty;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,7 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, FormatDatetimeProperty;
 
     protected $fillable = [
         'name',
@@ -32,20 +33,6 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    /**
-     * Format datetime properties based on current locale
-     *
-     * @return string
-     */
-    protected function getPropertyFormatted(string $prop)
-    {
-        $locale = App::getLocale();
-        if ($locale === 'pt_BR') {
-            return $this->$prop->format('d/m/Y');
-        }
-        return $this->$prop->format('m/d/Y');
     }
 
     /**
