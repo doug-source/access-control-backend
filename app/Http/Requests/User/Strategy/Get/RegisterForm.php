@@ -7,7 +7,7 @@ namespace App\Http\Requests\User\Strategy\Get;
 use App\Http\Requests\Checker;
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
-use App\Library\Enums\RegisterPermissionColumnSize;
+use App\Library\Enums\ColumnSize\RegisterPermissionSize;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -20,7 +20,7 @@ class RegisterForm implements Checker
 
     public function __construct()
     {
-        $this->tokenColumnSize = RegisterPermissionColumnSize::TOKEN->get();
+        $this->tokenColumnSize = RegisterPermissionSize::TOKEN->get();
     }
 
     public function all(FormRequest $formRequest, array $requestInputs): array

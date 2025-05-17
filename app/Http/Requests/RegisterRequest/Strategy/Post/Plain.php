@@ -7,7 +7,7 @@ namespace App\Http\Requests\RegisterRequest\Strategy\Post;
 use App\Http\Requests\Checker;
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
-use App\Library\Enums\RegisterRequestColumnSize;
+use App\Library\Enums\ColumnSize\RegisterRequestSize;
 use App\Rules\PhoneValid;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -18,8 +18,8 @@ class Plain implements Checker
 
     public function __construct()
     {
-        $this->emailMaxSize = RegisterRequestColumnSize::EMAIL->get();
-        $this->phoneMaxSize = RegisterRequestColumnSize::PHONE->get();
+        $this->emailMaxSize = RegisterRequestSize::EMAIL->get();
+        $this->phoneMaxSize = RegisterRequestSize::PHONE->get();
     }
 
     public function all(FormRequest $formRequest, array $requestInputs): array

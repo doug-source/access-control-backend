@@ -2,7 +2,7 @@
 
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
-use App\Library\Enums\RegisterRequestColumnSize;
+use App\Library\Enums\ColumnSize\RegisterRequestSize;
 use App\Library\Converters\Phone as PhoneConverter;
 use App\Models\RegisterPermission;
 use App\Models\RegisterRequest;
@@ -23,7 +23,7 @@ describe('RegisterRequest store request', function () {
             assertFailedResponse($response, 'email', Phrase::pickSentence(PhraseKey::EmailInvalid));
         });
         it('has email parameter overflowing the column size', function () {
-            $maxColumnSize = RegisterRequestColumnSize::EMAIL->get();
+            $maxColumnSize = RegisterRequestSize::EMAIL->get();
             $email = generateOverflowInvalidEmail($maxColumnSize);
 
             $response = $this->postJson(route('register.request.store', [
@@ -36,7 +36,7 @@ describe('RegisterRequest store request', function () {
                 'email' => fake()->email(),
                 'phone' => 123456789012
             ]));
-            $phoneMaxSixe = RegisterRequestColumnSize::PHONE->get();
+            $phoneMaxSixe = RegisterRequestSize::PHONE->get();
             assertFailedResponse($response, 'phone', Phrase::pickSentence(PhraseKey::MaxSizeInvalid, " ({$phoneMaxSixe})"));
         });
         it('has invalid phone parameter', function () {

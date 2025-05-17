@@ -3,8 +3,8 @@
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PasswordRules;
 use App\Library\Enums\PhraseKey;
-use App\Library\Enums\RegisterPermissionColumnSize;
-use App\Library\Enums\UserColumnSize;
+use App\Library\Enums\ColumnSize\RegisterPermissionSize;
+use App\Library\Enums\ColumnSize\UserSize;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\RegisterPermission;
 use Illuminate\Http\Response;
@@ -20,7 +20,7 @@ describe('User store request', function () {
             assertFailedResponse($response, 'name', Phrase::pickSentence(PhraseKey::ParameterRequired));
         });
         it('has name parameter overflowing the column size', function () {
-            $maxSize = UserColumnSize::NAME->get();
+            $maxSize = UserSize::NAME->get();
             $response = $this->postJson(route('users.store'), [
                 'name' => generateWordBySize($maxSize + 1)
             ]);
@@ -40,7 +40,7 @@ describe('User store request', function () {
             assertFailedResponse($response, 'email', Phrase::pickSentence(PhraseKey::EmailInvalid));
         });
         it('has email parameter overflowing the column size', function () {
-            $maxSize = UserColumnSize::EMAIL->get();
+            $maxSize = UserSize::EMAIL->get();
             $response = $this->postJson(route('users.store'), [
                 'name' => fake()->name(),
                 'email' => generateOverflowInvalidEmail($maxSize + 1)
@@ -176,7 +176,7 @@ describe('User store request', function () {
         it('has phone parameter overflowing the column size', function () {
             $permission = RegisterPermission::factory(count: 1)->create()->first();
             $password = 'ABCDef12@';
-            $phoneMaxSize = UserColumnSize::PHONE->get();
+            $phoneMaxSize = UserSize::PHONE->get();
             $phone = generateWordBySize(size: $phoneMaxSize + 1, letter: '1');
             $response = $this->postJson(route('users.store'), [
                 'name' => fake()->name(),
@@ -200,7 +200,7 @@ describe('User store request', function () {
             assertFailedResponse($response, 'token', Phrase::pickSentence(PhraseKey::ParameterRequired));
         });
         it('has token parameter overflowing the column size', function () {
-            $tokenMaxSize = RegisterPermissionColumnSize::TOKEN->get();
+            $tokenMaxSize = RegisterPermissionSize::TOKEN->get();
             $permission = RegisterPermission::factory(count: 1)->create()->first();
             $password = 'ABCDef12@';
             $response = $this->postJson(route('users.store'), [

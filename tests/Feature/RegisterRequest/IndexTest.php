@@ -3,7 +3,7 @@
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
 use Illuminate\Http\Response;
-use App\Library\Enums\UserColumnSize;
+use App\Library\Enums\ColumnSize\UserSize;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -68,7 +68,7 @@ describe('RegisterRequest index request', function () {
             assertFailedResponse($responseRegReq, 'group', Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)"));
         });
         it('has email parameter greater then maximun size', function () {
-            $maxColumnSize = UserColumnSize::EMAIL->get();
+            $maxColumnSize = UserSize::EMAIL->get();
             $email = generateOverflowInvalidEmail($maxColumnSize);
 
             $token = login($this);

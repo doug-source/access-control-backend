@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Library\Enums;
+namespace App\Library\Enums\ColumnSize;
 
-enum UserColumnSize
+enum UserSize
 {
     case EMAIL;
     case NAME;
@@ -13,9 +13,9 @@ enum UserColumnSize
     public function get(): int
     {
         return match ($this) {
-            UserColumnSize::EMAIL,
-            UserColumnSize::NAME => 250,
-            UserColumnSize::PHONE => 11
+            UserSize::EMAIL,
+            UserSize::NAME => 250,
+            UserSize::PHONE => 11
         };
     }
 }

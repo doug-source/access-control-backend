@@ -12,8 +12,8 @@ use App\Library\Chains\Password\Handlers\QtySpecialChars;
 use App\Library\Chains\Password\Handlers\QtyUppercase;
 use App\Library\Enums\PasswordRules;
 use App\Library\Enums\PhraseKey;
-use App\Library\Enums\RegisterPermissionColumnSize;
-use App\Library\Enums\UserColumnSize;
+use App\Library\Enums\ColumnSize\RegisterPermissionSize;
+use App\Library\Enums\ColumnSize\UserSize;
 use App\Rules\PasswordValid;
 use App\Rules\PhoneValid;
 use App\Rules\RegisterPermissionValid;
@@ -31,10 +31,10 @@ final class Plain implements Checker
 
     public function __construct(FormRequest $formRequest)
     {
-        $this->nameMaxSize = UserColumnSize::NAME->get();
-        $this->emailMaxSize = UserColumnSize::EMAIL->get();
-        $this->phoneMaxSize = UserColumnSize::PHONE->get();
-        $this->tokenMaxSize = RegisterPermissionColumnSize::TOKEN->get();
+        $this->nameMaxSize = UserSize::NAME->get();
+        $this->emailMaxSize = UserSize::EMAIL->get();
+        $this->phoneMaxSize = UserSize::PHONE->get();
+        $this->tokenMaxSize = RegisterPermissionSize::TOKEN->get();
 
         $this->email = $formRequest->input('email');
         $this->token = $formRequest->input('token');

@@ -3,7 +3,7 @@
 use App\Library\Builders\Phrase;
 use App\Library\Builders\UrlExternal;
 use App\Library\Enums\PhraseKey;
-use App\Library\Enums\RegisterPermissionColumnSize;
+use App\Library\Enums\ColumnSize\RegisterPermissionSize;
 use App\Models\RegisterPermission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
@@ -23,7 +23,7 @@ describe('User form create request', function () {
             assertFailedResponse($response, 'token', Phrase::pickSentence(PhraseKey::ParameterRequired));
         });
         it('has token parameter overflowing the column size', function () {
-            $maxSize = RegisterPermissionColumnSize::TOKEN->get();
+            $maxSize = RegisterPermissionSize::TOKEN->get();
             $url = URL::temporarySignedRoute(
                 name: 'users.create',
                 expiration: now()->addMinutes(15),
