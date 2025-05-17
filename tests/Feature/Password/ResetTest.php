@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Library\Builders\Phrase;
+use App\Library\Enums\ColumnSize\UserSize;
 use App\Library\Enums\PasswordRules;
 use App\Library\Enums\PhraseKey;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -80,7 +81,7 @@ describe('Reset password from api routes', function () {
                 errorMsg: Phrase::pickSentence(PhraseKey::PassConfirmInvalid)
             );
         });
-        it('has password with size invalid', function () {
+        it('has password with minimum size invalid', function () {
             $uri = Uri::of(route('password.update'))->value();
             $password = fake()->password(maxLength: 3);
             assertFailedResponse(
@@ -92,6 +93,21 @@ describe('Reset password from api routes', function () {
                 ]),
                 errorKey: 'password',
                 errorMsg: Phrase::pickSentence(PhraseKey::MinSizeInvalid)
+            );
+        });
+        it('has password with maximum size invalid', function () {
+            $uri = Uri::of(route('password.update'))->value();
+            $initial = 'Aa1!';
+            $password = $initial . generateWordBySize((UserSize::PASSWORD->get() - mb_strlen($initial)) + 1);
+            assertFailedResponse(
+                response: $this->postJson($uri, [
+                    'token' => 'whatever',
+                    'email' => 'test@test.com',
+                    'password' => $password,
+                    'password_confirmation' => $password,
+                ]),
+                errorKey: 'password',
+                errorMsg: Phrase::pickSentence(PhraseKey::MaxSizeInvalid)
             );
         });
         it('has password no letters', function () {

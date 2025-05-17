@@ -9,13 +9,15 @@ enum UserSize
     case EMAIL;
     case NAME;
     case PHONE;
+    case PASSWORD;
 
     public function get(): int
     {
         return match ($this) {
             UserSize::EMAIL,
-            UserSize::NAME => 250,
-            UserSize::PHONE => 11
+            UserSize::PASSWORD,
+            UserSize::NAME => 255,
+            UserSize::PHONE => 11,
         };
     }
 }

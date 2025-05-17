@@ -1,5 +1,6 @@
 <?php
 
+use App\Library\Enums\ColumnSize\UserSize;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('password')->nullable(TRUE)->change();
+            $table->string('password', UserSize::PASSWORD->get())->nullable(TRUE)->change();
         });
     }
 
@@ -22,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('password')->nullable(FALSE)->change();
+            $table->string('password', UserSize::PASSWORD->get())->nullable(FALSE)->change();
         });
     }
 };

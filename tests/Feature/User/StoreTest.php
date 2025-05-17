@@ -90,7 +90,7 @@ describe('User store request', function () {
             ]);
             assertFailedResponse($response, 'password', Phrase::pickSentence(PhraseKey::PassConfirmInvalid));
         });
-        it('has password with size invalid', function () {
+        it('has password with mininum size invalid', function () {
             $permission = RegisterPermission::factory(count: 1)->create()->first();
             $password = 'abc';
             $response = $this->postJson(route('users.store'), [
@@ -100,6 +100,18 @@ describe('User store request', function () {
                 'password_confirmation' => $password
             ]);
             assertFailedResponse($response, 'password', Phrase::pickSentence(PhraseKey::MinSizeInvalid));
+        });
+        it('has password with maximum size invalid', function () {
+            $permission = RegisterPermission::factory(count: 1)->create()->first();
+            $initial = 'Aa1!';
+            $password = $initial . generateWordBySize((UserSize::PASSWORD->get() - mb_strlen($initial)) + 1);
+            $response = $this->postJson(route('users.store'), [
+                'name' => fake()->name(),
+                'email' => $permission->email,
+                'password' => $password,
+                'password_confirmation' => $password
+            ]);
+            assertFailedResponse($response, 'password', Phrase::pickSentence(PhraseKey::MaxSizeInvalid));
         });
         it('has password no letters', function () {
             $permission = RegisterPermission::factory(count: 1)->create()->first();

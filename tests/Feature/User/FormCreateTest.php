@@ -8,7 +8,6 @@ use App\Models\RegisterPermission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Uri;
 
 uses(RefreshDatabase::class);
 

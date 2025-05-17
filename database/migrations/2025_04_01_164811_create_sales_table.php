@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('users_id');
             $table->unsignedBigInteger('inventories_id');
-            $table->double('price')->unsigned();
+            $table->decimal('price')->unsigned();
             $table->unsignedInteger('quantity');
             $table->timestamps();
         });

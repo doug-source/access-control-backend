@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('register_permissions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('email')->unique();
+            $table->string('email', RegisterPermissionSize::EMAIL->get())->unique();
             $table->string('phone', RegisterPermissionSize::PHONE->get())->nullable();
             $table->string('token', RegisterPermissionSize::TOKEN->get())->nullable(FALSE);
             $table->timestamp("expiration_data")->nullable(FALSE);

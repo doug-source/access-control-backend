@@ -2,6 +2,8 @@
 
 namespace App\Library\Enums;
 
+use App\Library\Enums\ColumnSize\UserSize;
+
 enum PasswordRules
 {
     case QtySpecialChars;
@@ -10,6 +12,7 @@ enum PasswordRules
     case QtyUppercase;
     case QtyLowercase;
     case MinSize;
+    case MaxSize;
 
     public function get(): int
     {
@@ -19,7 +22,8 @@ enum PasswordRules
             PasswordRules::QtyLetters,
             PasswordRules::QtyUppercase,
             PasswordRules::QtyLowercase => 1,
-            PasswordRules::MinSize => 8
+            PasswordRules::MinSize => 8,
+            PasswordRules::MaxSize => UserSize::PASSWORD->get(),
         };
     }
 }

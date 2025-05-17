@@ -6,8 +6,8 @@ namespace App\Http\Requests\RegisterRequest\Strategy\Get;
 
 use App\Http\Requests\Checker;
 use App\Library\Builders\Phrase;
+use App\Library\Enums\ColumnSize\RegisterRequestSize;
 use App\Library\Enums\PhraseKey;
-use App\Library\Enums\ColumnSize\UserSize;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -19,7 +19,7 @@ final class Plain implements Checker
 
     public function __construct()
     {
-        $this->emailColumnSize = UserSize::EMAIL->get();
+        $this->emailColumnSize = RegisterRequestSize::EMAIL->get();
     }
 
     public function all(FormRequest $formRequest, array $requestInputs): array

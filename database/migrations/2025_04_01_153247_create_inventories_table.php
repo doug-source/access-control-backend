@@ -1,5 +1,6 @@
 <?php
 
+use App\Library\Enums\ColumnSize\InventorySize;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('users_id');
             $table->unsignedBigInteger('products_id');
             $table->unsignedInteger('quantity');
-            $table->double('price')->unsigned();
-            $table->string('image', 100)->nullable();
+            $table->decimal('price')->unsigned();
+            $table->string('image', InventorySize::IMAGE->get())->nullable();
             $table->timestamps();
         });
         Schema::table('inventories', function (Blueprint $table) {

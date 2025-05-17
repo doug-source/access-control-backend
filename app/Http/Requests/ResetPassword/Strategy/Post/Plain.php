@@ -6,6 +6,7 @@ namespace App\Http\Requests\ResetPassword\Strategy\Post;
 
 use App\Http\Requests\Checker;
 use App\Library\Builders\Phrase;
+use App\Library\Chains\Password\Handlers\MaxSize;
 use App\Library\Chains\Password\Handlers\MinSize;
 use App\Library\Chains\Password\Handlers\QtyDigits;
 use App\Library\Chains\Password\Handlers\QtyLetters;
@@ -30,7 +31,10 @@ final class Plain implements Checker
     {
         return [
             'token' => 'required',
-            'email' => 'required|email',
+            'email' => [
+                'required',
+                'email',
+            ],
             'password' => [
                 'bail',
                 'required',
@@ -41,7 +45,8 @@ final class Plain implements Checker
                     new QtyUppercase(PasswordRules::QtyUppercase->get()),
                     new QtyLowercase(PasswordRules::QtyLowercase->get()),
                     new QtyDigits(PasswordRules::QtyDigits->get()),
-                    new QtySpecialChars(PasswordRules::QtySpecialChars->get())
+                    new QtySpecialChars(PasswordRules::QtySpecialChars->get()),
+                    new MaxSize(PasswordRules::MaxSize->get()),
                 )
             ]
         ];
