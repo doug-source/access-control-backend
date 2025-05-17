@@ -81,4 +81,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Role::class)->withTimestamps();
     }
+
+    /**
+     * Define if this instance has super-admin role
+     */
+    public function isSuperAdmin()
+    {
+        return $this->roles()->where('name', 'super-admin')->exists() === TRUE;
+    }
 }
