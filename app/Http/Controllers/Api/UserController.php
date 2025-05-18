@@ -10,12 +10,9 @@ use App\Library\Converters\Phone as PhoneConverter;
 use App\Models\RegisterPermission;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class UserController extends Controller
 {
-    use AuthorizesRequests;
-
     public function __construct(private readonly RegisterServiceInterface $registerService)
     {
         // ...
@@ -27,12 +24,10 @@ class UserController extends Controller
     public function store(CheckRequest $request)
     {
         $registerPermission = RegisterPermission::where('email', $request->email)->first();
-        $phone = PhoneConverter::clear($registerPermission->phone ?? $request->phone);
-        $fields = [...$request->only(['name', 'email', 'password']), 'phone' => $phone];
-
-        $this->authorize('delete', $registerPermission);
         RegisterPermission::destroy($registerPermission->id);
 
+        $phone = PhoneConverter::clear($registerPermission->phone ?? $request->phone);
+        $fields = [...$request->only(['name', 'email', 'password']), 'phone' => $phone];
         $user = User::create($fields);
         event(new Registered($user));
         // $this->applyDefaultUserRole($user);
