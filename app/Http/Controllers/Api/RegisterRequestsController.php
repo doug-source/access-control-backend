@@ -32,6 +32,7 @@ class RegisterRequestsController extends Controller
      */
     public function index(CheckRequest $request)
     {
+        $this->authorize('viewAny', RegisterRequest::class);
         return ResponseBuilder::successJSON(
             $this->searchRegisterRequests(
                 perPage: $request->input('group', 3),
@@ -46,6 +47,7 @@ class RegisterRequestsController extends Controller
     public function show(CheckRequest $request)
     {
         $registerRequest = RegisterRequest::find($request->validated('registerRequestID'));
+        $this->authorize('view', $registerRequest);
         return ResponseBuilder::successJSON(
             data: [
                 'id' => $registerRequest->id,
@@ -75,6 +77,7 @@ class RegisterRequestsController extends Controller
      */
     public function destroy(CheckRequest $request)
     {
+        $this->authorize('delete', RegisterRequest::class);
         RegisterRequest::destroy($request->validated('registerRequestID'));
         return ResponseBuilder::successJSON();
     }
@@ -86,6 +89,7 @@ class RegisterRequestsController extends Controller
     {
         $registerRequestID = $request->validated('registerRequestID');
         $registerRequest = RegisterRequest::find($registerRequestID);
+        $this->authorize('delete', RegisterRequest::class);
         RegisterRequest::destroy($registerRequestID);
         $token = TokenBuilder::build();
         $expire = config('app.register.expire');
