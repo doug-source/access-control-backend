@@ -17,6 +17,15 @@ class RegisterPermission extends Model
         'expiration_data',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'expiration_data' => 'datetime',
+        ];
+    }
+
     /**
      * Format the created_at to view
      *

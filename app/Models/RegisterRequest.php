@@ -16,6 +16,14 @@ class RegisterRequest extends Model
         'phone',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
+
     /**
      * Sanitize the phone number column value
      */
