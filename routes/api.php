@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\{
     AuthController,
     EmailVerifyController,
     ForgotPasswordController,
+    RegisterPermissionController,
     RegisterRequestsController,
     ResetPasswordController,
     SocialiteController,
@@ -34,6 +35,15 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         '/registers/requests/{registerRequestID}/approval',
         [RegisterRequestsController::class, 'approve']
     )->name('register.request.approval');
+
+    Route::get(
+        '/registers/permissions',
+        [RegisterPermissionController::class, 'index']
+    )->name('register.permission.index');
+    Route::get(
+        '/registers/permissions/{registerPermissionID}',
+        [RegisterPermissionController::class, 'show']
+    )->name('register.permission.show');
 });
 /**
  * Used by user authenticated - no email verification
