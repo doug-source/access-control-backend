@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
 use App\Mail\RegisterPermission as RegisterPermissionMail;
@@ -39,39 +41,66 @@ describe('RegisterRequest approval request', function () {
             $token = login($this);
             $response = $this->deleteJson(route('register.request.approval', ['registerRequestID' => 1]), [
                 'Authorization' => "Bearer {$token}",
-                'Accept' => 'application/json',
             ]);
             assertFailedResponse($response, 'registerRequestID', Phrase::pickSentence(PhraseKey::ParameterInvalid));
+        });
+        it('executes by user no super-admin role', function () {
+            $registerRequest = RegisterRequest::factory(count: 1)->createOne([
+                'email' => fake()->email(),
+                'phone' => '12345678901'
+            ]);
+            $email = fake()->email();
+            $password = 'Test123!';
+            $token = login(scope: $this, email: $email, password: $password);
+
+            $this->deleteJson(route('register.request.approval', ['registerRequestID' => $registerRequest->id]), [
+                'Authorization' => "Bearer {$token}",
+            ])
+                ->assertForbidden()
+                ->assertJson([
+                    'message' => 'This action is unauthorized.'
+                ]);
         });
     });
     describe('receives successful because', function () {
         it('moves the register request to register permission into database', function () {
+            $registerRequest = RegisterRequest::factory(count: 1)->createOne([
+                'email' => fake()->email(),
+                'phone' => '12345678901',
+            ]);
             $email = fake()->email();
-            $phone = '12345678901';
-            $this->postJson(route('register.request.store', [
-                'email' => $email,
-                'phone' => $phone
-            ]));
-
-            $token = login($this);
-            $registerRequest = getRegisterRequest($this, $token, $email);
+            $token = login(scope: $this, email: $email);
+            createSuperAdminRelationship(
+                findUserFromDB(email: $email)
+            );
+            $this->assertDatabaseHas('register_requests', [
+                'id' => $registerRequest->id,
+                'email' => $registerRequest->email,
+                'phone' => $registerRequest->phone,
+            ]);
             $this->deleteJson(route('register.request.approval', ['registerRequestID' => $registerRequest->id]), [
                 'Authorization' => "Bearer {$token}",
                 'Accept' => 'application/json',
             ])->assertStatus(Response::HTTP_OK);
             $this->assertDatabaseMissing('register_requests', [
                 'id' => $registerRequest->id,
+                'email' => $registerRequest->email,
+                'phone' => $registerRequest->phone,
             ]);
             $this->assertDatabaseHas('register_permissions', [
-                'email' => $email,
-                'phone' => $phone
+                'email' => $registerRequest->email,
+                'phone' => $registerRequest->phone,
             ]);
         });
         it('send email after register permission was created', function () {
-            Mail::fake();
             $registerRequest = RegisterRequest::factory(count: 1)->create()->first();
+            Mail::fake();
+            $email = fake()->email();
+            $token = login(scope: $this, email: $email);
+            createSuperAdminRelationship(
+                findUserFromDB(email: $email)
+            );
 
-            $token = login($this);
             $this->deleteJson(route('register.request.approval', ['registerRequestID' => $registerRequest->id]), [
                 'Authorization' => "Bearer {$token}",
                 'Accept' => 'application/json',

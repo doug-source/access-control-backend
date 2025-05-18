@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Library\Builders\Phrase;
 use App\Library\Enums\ColumnSize\RegisterRequestSize;
 use App\Library\Enums\PhraseKey;
+use App\Models\RegisterRequest;
 use Illuminate\Http\Response;
+use Illuminate\Support\Uri;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -72,42 +76,71 @@ describe('RegisterRequest index request', function () {
             $email = generateOverflowInvalidEmail($maxColumnSize);
 
             $token = login($this);
-            $route = route('register.request.index');
-            $qs = http_build_query([
+            $uri = Uri::of(route('register.request.index'))->withQuery([
                 'page' => 1,
                 'group' => 1,
                 'email' => $email->toString()
-            ]);
-
-            $responseRegReq = $this->getJson("{$route}?{$qs}", [
+            ])->value();
+            $responseRegReq = $this->getJson($uri, [
                 'Authorization' => "Bearer {$token}",
                 'Accept' => 'application/json',
             ]);
             assertFailedResponse($responseRegReq, 'email', Phrase::pickSentence(PhraseKey::MaxSizeInvalid, " ({$maxColumnSize})"));
         });
+        it('executes by user no super-admin role', function () {
+            RegisterRequest::factory(count: 1)->createOne([
+                'email' => fake()->email(),
+                'phone' => '12345678901'
+            ]);
+            $email = fake()->email();
+            $password = 'Test123!';
+            $token = login(scope: $this, email: $email, password: $password);
+
+            $uri = Uri::of(route('register.request.index'))->withQuery([
+                'page' => '1',
+                'group' => '1',
+            ])->value();
+            $this->getJson($uri, [
+                'Authorization' => "Bearer $token"
+            ])
+                ->assertForbidden()
+                ->assertJson([
+                    'message' => 'This action is unauthorized.'
+                ]);
+        });
     });
     describe('receives successful because', function () {
         it('has complete parameters', function () {
-            $token = login($this);
-            $route = route('register.request.index');
-            $qs = http_build_query([
-                'page' => 1,
-                'group' => 1,
-                'email' => fake()->email()
-            ]);
-            $this->getJson("{$route}?{$qs}", [
+            $email = fake()->email();
+            $token = login(scope: $this, email: $email);
+            createSuperAdminRelationship(
+                findUserFromDB(email: $email)
+            );
+            $uri = Uri::of(route('register.request.index'))
+                ->withQuery([
+                    'page' => 1,
+                    'group' => 1,
+                    'email' => $email
+                ])->value();
+
+            $this->getJson($uri, [
                 'Authorization' => "Bearer {$token}",
                 'Accept' => 'application/json',
             ])->assertStatus(200);
         });
         it('has no email parameter', function () {
-            $token = login($this);
-            $route = route('register.request.index');
-            $qs = http_build_query([
-                'page' => 1,
-                'group' => 1,
-            ]);
-            $this->getJson("{$route}?{$qs}", [
+            $email = fake()->email();
+            $token = login(scope: $this, email: $email);
+            createSuperAdminRelationship(
+                findUserFromDB(email: $email)
+            );
+            $uri = Uri::of(route('register.request.index'))
+                ->withQuery([
+                    'page' => 1,
+                    'group' => 1,
+                ])->value();
+
+            $this->getJson($uri, [
                 'Authorization' => "Bearer {$token}",
                 'Accept' => 'application/json',
             ])->assertStatus(200);

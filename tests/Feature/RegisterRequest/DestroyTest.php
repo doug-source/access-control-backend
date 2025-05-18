@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
 use App\Models\RegisterRequest;
@@ -18,7 +20,6 @@ describe('RegisterRequest destroy request', function () {
             $token = login($this);
             $response = $this->deleteJson(route('register.request.destroy', ['registerRequestID' => 'whatever']), [
                 'Authorization' => "Bearer {$token}",
-                'Accept' => 'application/json',
             ]);
             assertFailedResponse($response, 'registerRequestID', Phrase::pickSentence(PhraseKey::ParameterInvalid));
         });
@@ -26,7 +27,6 @@ describe('RegisterRequest destroy request', function () {
             $token = login($this);
             $response = $this->deleteJson(route('register.request.destroy', ['registerRequestID' => 0]), [
                 'Authorization' => "Bearer {$token}",
-                'Accept' => 'application/json',
             ]);
             assertFailedResponse($response, 'registerRequestID', Phrase::pickSentence(PhraseKey::ParameterInvalid));
         });
@@ -37,9 +37,25 @@ describe('RegisterRequest destroy request', function () {
             $token = login($this);
             $response = $this->deleteJson(route('register.request.destroy', ['registerRequestID' => 1]), [
                 'Authorization' => "Bearer {$token}",
-                'Accept' => 'application/json',
             ]);
             assertFailedResponse($response, 'registerRequestID', Phrase::pickSentence(PhraseKey::ParameterInvalid));
+        });
+        it('executes by user no super-admin role', function () {
+            $registerRequest = RegisterRequest::factory(count: 1)->createOne([
+                'email' => fake()->email(),
+                'phone' => '12345678901'
+            ]);
+            $email = fake()->email();
+            $password = 'Test123!';
+            $token = login(scope: $this, email: $email, password: $password);
+
+            $this->deleteJson(route('register.request.destroy', ['registerRequestID' => $registerRequest->id]), [
+                'Authorization' => "Bearer {$token}",
+            ])
+                ->assertForbidden()
+                ->assertJson([
+                    'message' => 'This action is unauthorized.'
+                ]);
         });
     });
     describe('receives successful because', function () {
@@ -50,7 +66,10 @@ describe('RegisterRequest destroy request', function () {
                 'email' => $email,
                 'phone' => $phone,
             ])->first();
-            $token = login($this);
+            $token = login(scope: $this, email: $email);
+            $userModel = findUserFromDB(email: $email);
+            createSuperAdminRelationship($userModel);
+
             $this->assertDatabaseHas('register_requests', [
                 'id' => $registerRequest->id,
                 'email' => $email,
@@ -58,7 +77,6 @@ describe('RegisterRequest destroy request', function () {
             ]);
             $this->deleteJson(route('register.request.destroy', ['registerRequestID' => $registerRequest->id]), [
                 'Authorization' => "Bearer {$token}",
-                'Accept' => 'application/json',
             ]);
             $this->assertDatabaseMissing('register_requests', [
                 'id' => $registerRequest->id,

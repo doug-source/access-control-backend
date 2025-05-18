@@ -11,6 +11,7 @@
 |
 */
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\{
@@ -99,6 +100,11 @@ function buildSocialite(
     return $user;
 }
 
+function findUserFromDB(string $email): ?User
+{
+    return User::firstWhere('email', $email);
+}
+
 /**
  * Execute the login
  */
@@ -112,6 +118,14 @@ function login(mixed $scope, ?string $email = NULL, ?string $password = NULL)
         'password' => $passwordUsed
     ]);
     return Str::after($responseLogin->baseResponse->original['user']['token'], '|');
+}
+
+function createSuperAdminRelationship(User $user)
+{
+    $role = Role::factory(count: 1)->createOne([
+        'name' => 'super-admin'
+    ]);
+    $user->roles()->attach($role->id);
 }
 
 /**
@@ -145,24 +159,4 @@ function generateOverflowInvalidEmail(int $maxSize)
     return $sufix->prepend(
         generateWordBySize($maxSize - $sufix->length() + 1)
     );
-}
-
-/**
- * Search the register request from database
- */
-function getRegisterRequest($scope, $tokenAuthorization, ?string $email = NULL)
-{
-    $route = route('register.request.index');
-    $qs = http_build_query([
-        'page' => 1,
-        'group' => 1,
-        'email' => is_null($email) ? fake()->email() : $email
-    ]);
-    $response = $scope->getJson("{$route}?{$qs}", [
-        'Authorization' => "Bearer {$tokenAuthorization}",
-        'Accept' => 'application/json',
-    ]);
-    $output = $response->json();
-    [$registerRequest] = $output['data'];
-    return (object) $registerRequest;
 }
