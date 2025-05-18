@@ -102,13 +102,14 @@ function buildSocialite(
 /**
  * Execute the login
  */
-function login(mixed $scope)
+function login(mixed $scope, ?string $email = NULL, ?string $password = NULL)
 {
-    $password = fake()->password();
-    $user = createUserDB(password: $password, email: fake()->email());
+    $emailUsed = $email ?: fake()->email();
+    $passwordUsed = $password ?: fake()->password();
+    $user = createUserDB(password: $passwordUsed, email: $emailUsed);
     $responseLogin = $scope->postJson(route('auth.login'), [
         'email' => $user->email,
-        'password' => $password
+        'password' => $passwordUsed
     ]);
     return Str::after($responseLogin->baseResponse->original['user']['token'], '|');
 }
