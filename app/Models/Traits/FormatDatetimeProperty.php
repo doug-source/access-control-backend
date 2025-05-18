@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Traits;
 
-use Illuminate\Support\Facades\App;
+use App\Library\Builders\DatetimeFormat as DatetimeFormatBuilder;
 
 trait FormatDatetimeProperty
 {
@@ -13,12 +13,8 @@ trait FormatDatetimeProperty
      *
      * @return string
      */
-    protected function getPropertyFormatted(string $prop)
+    protected function getPropertyFormatted($prop)
     {
-        $locale = App::getLocale();
-        if ($locale === 'pt_BR') {
-            return $this->$prop->format('d/m/Y');
-        }
-        return $this->$prop->format('m/d/Y');
+        return DatetimeFormatBuilder::formatToDate($this->$prop);
     }
 }
