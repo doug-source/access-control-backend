@@ -101,6 +101,7 @@ class RegisterRequestsController extends Controller
         if ($registerRequest->phone) {
             $fields['phone'] = $registerRequest->phone;
         }
+        $this->authorize('create', RegisterPermission::class);
         RegisterPermission::create($fields);
         $this->registerService->sendApprovalMail($registerRequest->email, $token);
 

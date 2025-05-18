@@ -6,14 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterPermission\CheckRequest;
 use App\Library\Builders\Response as ResponseBuilder;
 use App\Models\RegisterPermission;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class RegisterPermissionController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
     public function index(CheckRequest $request)
     {
+        $this->authorize('viewAny', RegisterPermission::class);
         return ResponseBuilder::successJSON(
             $this->searchRegisterPermissions(
                 perPage: $request->input('group', 3),
@@ -28,6 +32,7 @@ class RegisterPermissionController extends Controller
     public function show(CheckRequest $request)
     {
         $registerPermission = RegisterPermission::find($request->validated('registerPermissionID'));
+        $this->authorize('view', $registerPermission);
         return ResponseBuilder::successJSON(
             data: [
                 'id' => $registerPermission->id,
