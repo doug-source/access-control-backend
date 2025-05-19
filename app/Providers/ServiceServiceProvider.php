@@ -18,6 +18,30 @@ use Illuminate\Support\ServiceProvider;
 
 final class ServiceServiceProvider extends ServiceProvider
 {
+    /** @var array{0: string, 1: string}[] */
+    private array $bindables = [
+        [
+            RegisterServiceInterface::class,
+            RegisterService::class
+        ],
+        [
+            EmailVerifiedServiceInterface::class,
+            EmailVerifiedService::class
+        ],
+        [
+            PasswordServiceInterfacer::class,
+            PasswordService::class
+        ],
+        [
+            RegisterPermissionRepository::class,
+            RegisterPermissionRepository::class,
+        ],
+        [
+            RegisterRequestRepository::class,
+            RegisterRequestRepository::class,
+        ],
+    ];
+
     /**
      * Register services.
      */
@@ -31,25 +55,8 @@ final class ServiceServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->app->bind(
-            RegisterServiceInterface::class,
-            RegisterService::class
-        );
-        $this->app->bind(
-            EmailVerifiedServiceInterface::class,
-            EmailVerifiedService::class
-        );
-        $this->app->bind(
-            PasswordServiceInterfacer::class,
-            PasswordService::class
-        );
-        $this->app->bind(
-            RegisterPermissionRepository::class,
-            RegisterPermissionRepository::class,
-        );
-        $this->app->bind(
-            RegisterRequestRepository::class,
-            RegisterRequestRepository::class,
+        collect($this->bindables)->each(
+            fn($arrBind) => $this->app->bind(...$arrBind)
         );
     }
 }
