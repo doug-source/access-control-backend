@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Library\Builders\Response as ResponseBuilder;
-use App\Services\Register\RegisterServiceInterface;
+use App\Services\Register\Contracts\RegisterServiceInterface;
 use App\Http\Requests\User\CheckRequest;
 use App\Library\Converters\Phone as PhoneConverter;
 use App\Repositories\RegisterPermissionRepository;

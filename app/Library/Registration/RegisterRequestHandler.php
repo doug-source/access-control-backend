@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Library\Registration;
 
-use App\Services\Register\RegisterServiceInterface;
+use App\Services\Register\Contracts\RegisterServiceInterface;
 
 final class RegisterRequestHandler implements HandlerInterface
 {

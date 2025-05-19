@@ -14,7 +14,7 @@ use App\Library\Registration\{
 use App\Models\RegisterPermission;
 use App\Repositories\RegisterPermissionRepository;
 use App\Repositories\RegisterRequestRepository;
-use App\Services\Register\RegisterServiceInterface;
+use App\Services\Register\Contracts\RegisterServiceInterface;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Response;
 

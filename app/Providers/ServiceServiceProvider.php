@@ -14,7 +14,7 @@ use App\Services\Auth\{
 use App\Services\Password\Constracts\PasswordServiceInterfacer;
 use App\Services\Password\PasswordService;
 use App\Services\Register\RegisterService;
-use App\Services\Register\RegisterServiceInterface;
+use App\Services\Register\Contracts\RegisterServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 final class ServiceServiceProvider extends ServiceProvider

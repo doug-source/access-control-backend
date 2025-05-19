@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Register;
+namespace App\Services\Register\Contracts;
 
 use App\Library\Registration\HandlerInterface;
 use App\Models\{

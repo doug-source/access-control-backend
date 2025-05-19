@@ -13,7 +13,7 @@ use App\Models\{
     RegisterRequest,
     User
 };
-use App\Services\Register\RegisterServiceInterface;
+use App\Services\Register\Contracts\RegisterServiceInterface;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegisterPermission as MailRegisterPermission;
 use App\Repositories\RegisterPermissionRepository;

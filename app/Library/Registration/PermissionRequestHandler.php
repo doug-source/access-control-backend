@@ -6,7 +6,7 @@ namespace App\Library\Registration;
 
 use App\Library\Builders\Token as TokenBuilder;
 use App\Library\Registration\HandlerInterface;
-use App\Services\Register\RegisterServiceInterface;
+use App\Services\Register\Contracts\RegisterServiceInterface;
 use Carbon\Carbon;
 
 final class PermissionRequestHandler implements HandlerInterface
