@@ -7,13 +7,16 @@ namespace App\Http\Requests\User;
 use App\Http\Requests\VerifyRequest;
 use Illuminate\Support\Facades\Request;
 use App\Http\Requests\User\Strategy\CheckerFactory;
+use App\Repositories\RegisterPermissionRepository;
 use Illuminate\Support\Uri;
 
 final class CheckRequest extends VerifyRequest
 {
-    public function __construct()
+    public function __construct(RegisterPermissionRepository $permissionRepository)
     {
-        parent::__construct(new CheckerFactory());
+        parent::__construct(
+            factory: new CheckerFactory($permissionRepository),
+        );
     }
 
     public function authorize(): bool

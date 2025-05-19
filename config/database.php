@@ -171,4 +171,16 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | General settings
+    |--------------------------------------------------------------------------
+    |
+    | General settings used by application
+    |
+    */
+    'paginate' => [
+        'perPage' => env('PAGINATE_PER_PAGE_DEFAULT', '3'),
+    ]
+
 ];

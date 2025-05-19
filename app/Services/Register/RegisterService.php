@@ -17,6 +17,7 @@ use App\Services\Register\RegisterServiceInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegisterPermission as MailRegisterPermission;
+use App\Repositories\RegisterPermissionRepository;
 use Illuminate\Support\Facades\URL;
 use \Illuminate\Support\Carbon;
 
@@ -28,7 +29,7 @@ final class RegisterService implements RegisterServiceInterface
     public function __construct(
         private readonly User $user,
         private readonly RegisterRequest $registerRequest,
-        private readonly RegisterPermission $registerPermission,
+        private readonly RegisterPermissionRepository $permissionRepository
     ) {
         // ...
     }
@@ -45,7 +46,7 @@ final class RegisterService implements RegisterServiceInterface
 
     public function findRegisterPermissionByEmail(string $email): ?RegisterPermission
     {
-        return $this->registerPermission->newQuery()->where('email', $email)->first();
+        return $this->permissionRepository->findByEmail($email);
     }
 
     public function createRegisterRequest(string $email, ?string $phone): void
@@ -67,7 +68,7 @@ final class RegisterService implements RegisterServiceInterface
 
     public function updateRegisterPermission(int $id, string $token, Carbon $expirationData): void
     {
-        $this->registerPermission->newQuery()->where('id', $id)->update([
+        $this->permissionRepository->update(id: $id, attributes: [
             'token' => $token,
             'expiration_data' => $expirationData
         ]);

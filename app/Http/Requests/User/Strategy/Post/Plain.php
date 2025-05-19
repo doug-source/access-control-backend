@@ -15,6 +15,7 @@ use App\Library\Enums\PasswordRules;
 use App\Library\Enums\PhraseKey;
 use App\Library\Enums\ColumnSize\RegisterPermissionSize;
 use App\Library\Enums\ColumnSize\UserSize;
+use App\Repositories\RegisterPermissionRepository;
 use App\Rules\PasswordValid;
 use App\Rules\PhoneValid;
 use App\Rules\RegisterPermissionValid;
@@ -22,6 +23,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 final class Plain implements Checker
 {
+    private RegisterPermissionRepository $permissionRepository;
+
     private int $nameMaxSize;
     private int $emailMaxSize;
     private int $phoneMaxSize;
@@ -30,8 +33,12 @@ final class Plain implements Checker
     private ?string $email = NULL;
     private ?string $token = NULL;
 
-    public function __construct(FormRequest $formRequest)
-    {
+    public function __construct(
+        FormRequest $formRequest,
+        RegisterPermissionRepository $permissionRepository,
+    ) {
+        $this->permissionRepository = $permissionRepository;
+
         $this->nameMaxSize = UserSize::NAME->get();
         $this->emailMaxSize = UserSize::EMAIL->get();
         $this->phoneMaxSize = UserSize::PHONE->get();
@@ -84,7 +91,10 @@ final class Plain implements Checker
                 'bail',
                 'required',
                 "max:{$this->tokenMaxSize}",
-                new RegisterPermissionValid($this->email, $this->token)
+                new RegisterPermissionValid(
+                    allowed: $this->permissionRepository->findByEmail($this->email),
+                    token: $this->token,
+                )
             ],
         ];
     }

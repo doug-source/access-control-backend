@@ -7,15 +7,18 @@ use App\Library\Builders\Response as ResponseBuilder;
 use App\Services\Register\RegisterServiceInterface;
 use App\Http\Requests\User\CheckRequest;
 use App\Library\Converters\Phone as PhoneConverter;
-use App\Models\RegisterPermission;
 use App\Models\User;
+use App\Repositories\RegisterPermissionRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
-    public function __construct(private readonly RegisterServiceInterface $registerService)
-    {
+    public function __construct(
+        private readonly RegisterServiceInterface $registerService,
+        private readonly RegisterPermissionRepository $permissionRepository
+    ) {
         // ...
     }
 
@@ -24,8 +27,8 @@ class UserController extends Controller
      */
     public function store(CheckRequest $request)
     {
-        $registerPermission = RegisterPermission::where('email', $request->email)->first();
-        RegisterPermission::destroy($registerPermission->id);
+        $registerPermission = $this->permissionRepository->findByEmail($request->email);
+        $this->permissionRepository->delete($registerPermission->id);
 
         $phone = PhoneConverter::clear($registerPermission->phone ?? $request->phone);
         $fields = [...$request->only(['name', 'email', 'password']), 'phone' => $phone];

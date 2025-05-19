@@ -11,20 +11,16 @@ use Carbon\Carbon;
 
 class RegisterPermissionValid implements ValidationRule
 {
-    /** @var \Illuminate\Database\Eloquent\Model|object|static|null */
-    private $allowed;
-
-    private ?string $token;
-
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct(?string $email, ?string $token)
-    {
-        $this->allowed = !is_null($email) ? RegisterPermission::where('email', $email)->first() : null;
-        $this->token = $token;
+    public function __construct(
+        private ?RegisterPermission $allowed,
+        private ?string $token,
+    ) {
+        // ...
     }
 
     /**

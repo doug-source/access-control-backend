@@ -6,11 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterPermission\CheckRequest;
 use App\Library\Builders\Response as ResponseBuilder;
 use App\Models\RegisterPermission;
+use App\Repositories\RegisterPermissionRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class RegisterPermissionController extends Controller
 {
     use AuthorizesRequests;
+
+    public function __construct(private readonly RegisterPermissionRepository $repository)
+    {
+        // ...
+    }
 
     /**
      * Display a listing of the resource.
@@ -19,9 +25,9 @@ class RegisterPermissionController extends Controller
     {
         $this->authorize('viewAny', RegisterPermission::class);
         return ResponseBuilder::successJSON(
-            data: $this->searchRegisterPermissions(
-                perPage: $request->input('group', 3),
-                email: $request->input('email')
+            data: $this->repository->paginate(
+                perPage: $request->input('group', config('database.paginate.perPage')),
+                email: $request->input('email'),
             )
         );
     }
@@ -31,7 +37,7 @@ class RegisterPermissionController extends Controller
      */
     public function show(CheckRequest $request)
     {
-        $registerPermission = RegisterPermission::find($request->validated('registerPermissionID'));
+        $registerPermission = $this->repository->find($request->validated('registerPermissionID'));
         $this->authorize('view', $registerPermission);
         return ResponseBuilder::successJSON(
             data: [
@@ -43,21 +49,5 @@ class RegisterPermissionController extends Controller
                 'expirationData' => $registerPermission->expiration_data_formatted,
             ]
         );
-    }
-
-    /**
-     * Query the RegisterPermission instance list
-     *
-     * @return  \Illuminate\Database\Eloquent\Collection
-     */
-    private function searchRegisterPermissions($perPage = 3, ?string $email = NULL/* , $paginate = FALSE */)
-    {
-        $query = RegisterPermission::select('id', 'email', 'phone', 'created_at');
-        if ($email) {
-            $query = $query->where([
-                ['email', 'like', "%{$email}%"]
-            ]);
-        }
-        return $query->paginate($perPage);
     }
 }

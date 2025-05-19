@@ -12,6 +12,7 @@ use App\Library\Registration\{
     PermissionRequestHandler
 };
 use App\Models\RegisterPermission;
+use App\Repositories\RegisterPermissionRepository;
 use App\Services\Register\RegisterServiceInterface;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Response;
@@ -20,8 +21,10 @@ class RegisterRequestsController extends Controller
 {
     use AuthorizesRequests;
 
-    public function __construct(private readonly RegisterServiceInterface $registerService)
-    {
+    public function __construct(
+        private readonly RegisterServiceInterface $registerService,
+        private readonly RegisterPermissionRepository $permissionRepository
+    ) {
         $this->registerService->setHandlers(
             new RegisterRequestHandler($this->registerService),
             new PermissionRequestHandler($this->registerService)
@@ -105,7 +108,7 @@ class RegisterRequestsController extends Controller
             $fields['phone'] = $registerRequest->phone;
         }
         $this->authorize('create', RegisterPermission::class);
-        RegisterPermission::create($fields);
+        $this->permissionRepository->create(attributes: $fields);
         $this->registerService->sendApprovalMail($registerRequest->email, $token);
 
         return ResponseBuilder::successJSON();
