@@ -3,6 +3,7 @@
 use App\Library\Builders\Phrase;
 use App\Library\Builders\Response;
 use App\Library\Enums\PhraseKey;
+use Illuminate\Http\Response as HttpResponse;
 
 describe('Response Builder', function () {
     it('runs invalidJSON correctly', function () {
@@ -20,7 +21,7 @@ describe('Response Builder', function () {
         $response = Response::successJSON(complete: TRUE);
         expect($response->original)->toMatchArray([
             'message' => 'OK',
-            'status' => 200,
+            'status' => HttpResponse::HTTP_OK,
             'data' => null,
         ]);
     });
@@ -34,7 +35,7 @@ describe('Response Builder', function () {
         $response = Response::successJSON(data: $data, complete: TRUE);
         expect($response->original)->toMatchArray([
             'message' => 'OK',
-            'status' => 200,
+            'status' => HttpResponse::HTTP_OK,
             'data' => $data,
         ]);
     });
