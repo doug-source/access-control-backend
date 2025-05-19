@@ -31,7 +31,7 @@ class AuthController extends Controller
             );
         }
 
-        return ResponseBuilder::successJSON([
+        return ResponseBuilder::successJSON(data: [
             'user' => LoginOutputBuilder::generate($this->emailVerifiedService, $request->user())
         ]);
     }

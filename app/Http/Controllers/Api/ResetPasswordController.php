@@ -35,6 +35,6 @@ class ResetPasswordController extends Controller
         if ($status['ok'] === FALSE) {
             return ResponseBuilder::invalidJSON($status['message']);
         }
-        return ResponseBuilder::successJSON($status['message']);
+        return ResponseBuilder::successJSON(data: $status['message']);
     }
 }

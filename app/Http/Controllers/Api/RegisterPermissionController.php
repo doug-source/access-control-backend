@@ -19,7 +19,7 @@ class RegisterPermissionController extends Controller
     {
         $this->authorize('viewAny', RegisterPermission::class);
         return ResponseBuilder::successJSON(
-            $this->searchRegisterPermissions(
+            data: $this->searchRegisterPermissions(
                 perPage: $request->input('group', 3),
                 email: $request->input('email')
             )

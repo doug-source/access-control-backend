@@ -34,7 +34,7 @@ class RegisterRequestsController extends Controller
     {
         $this->authorize('viewAny', RegisterRequest::class);
         return ResponseBuilder::successJSON(
-            $this->searchRegisterRequests(
+            data: $this->searchRegisterRequests(
                 perPage: $request->input('group', 3),
                 email: $request->input('email')
             )

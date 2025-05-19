@@ -19,7 +19,7 @@ class SocialiteController extends Controller
     {
         $user = $request->user();
         $user->currentAccessToken()->delete();
-        return ResponseBuilder::successJSON([
+        return ResponseBuilder::successJSON(data: [
             'user' => LoginOutputBuilder::generate($this->emailVerifiedService, $request->user())
         ]);
     }
