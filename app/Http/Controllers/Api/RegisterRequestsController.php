@@ -13,6 +13,7 @@ use App\Library\Registration\{
 };
 use App\Models\RegisterPermission;
 use App\Repositories\RegisterPermissionRepository;
+use App\Repositories\RegisterRequestRepository;
 use App\Services\Register\RegisterServiceInterface;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Response;
@@ -23,7 +24,8 @@ class RegisterRequestsController extends Controller
 
     public function __construct(
         private readonly RegisterServiceInterface $registerService,
-        private readonly RegisterPermissionRepository $permissionRepository
+        private readonly RegisterPermissionRepository $permissionRepository,
+        private readonly RegisterRequestRepository $regRequestRepository,
     ) {
         $this->registerService->setHandlers(
             new RegisterRequestHandler($this->registerService),
@@ -38,8 +40,8 @@ class RegisterRequestsController extends Controller
     {
         $this->authorize('viewAny', RegisterRequest::class);
         return ResponseBuilder::successJSON(
-            data: $this->searchRegisterRequests(
-                perPage: $request->input('group', 3),
+            data: $this->regRequestRepository->paginate(
+                perPage: $request->input('group', config('database.paginate.perPage')),
                 email: $request->input('email')
             )
         );
@@ -50,7 +52,7 @@ class RegisterRequestsController extends Controller
      */
     public function show(CheckRequest $request)
     {
-        $registerRequest = RegisterRequest::find($request->validated('registerRequestID'));
+        $registerRequest = $this->regRequestRepository->find($request->validated('registerRequestID'));
         $this->authorize('view', $registerRequest);
         return ResponseBuilder::successJSON(
             data: [
@@ -84,7 +86,7 @@ class RegisterRequestsController extends Controller
     public function destroy(CheckRequest $request)
     {
         $this->authorize('delete', RegisterRequest::class);
-        RegisterRequest::destroy($request->validated('registerRequestID'));
+        $this->regRequestRepository->delete($request->validated('registerRequestID'));
         return ResponseBuilder::successJSON();
     }
 
@@ -94,9 +96,9 @@ class RegisterRequestsController extends Controller
     public function approve(CheckRequest $request)
     {
         $registerRequestID = $request->validated('registerRequestID');
-        $registerRequest = RegisterRequest::find($registerRequestID);
+        $registerRequest = $this->regRequestRepository->find($registerRequestID);
         $this->authorize('delete', RegisterRequest::class);
-        RegisterRequest::destroy($registerRequestID);
+        $this->regRequestRepository->delete($registerRequestID);
         $token = TokenBuilder::build();
         $expire = config('app.register.expire');
         $fields = [
@@ -112,21 +114,5 @@ class RegisterRequestsController extends Controller
         $this->registerService->sendApprovalMail($registerRequest->email, $token);
 
         return ResponseBuilder::successJSON();
-    }
-
-    /**
-     * Query the RegisterRequest instance list
-     *
-     * @return  \Illuminate\Database\Eloquent\Collection
-     */
-    protected function searchRegisterRequests($perPage = 3, ?string $email = NULL/* , $paginate = FALSE */)
-    {
-        $query = RegisterRequest::select('id', 'email', 'phone', 'created_at');
-        if ($email) {
-            $query = $query->where([
-                ['email', 'like', "%{$email}%"]
-            ]);
-        }
-        return $query->paginate($perPage);
     }
 }

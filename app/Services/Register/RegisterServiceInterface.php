@@ -9,7 +9,6 @@ use App\Models\{
     RegisterPermission,
     RegisterRequest
 };
-use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Support\Carbon;
 
 interface RegisterServiceInterface
@@ -37,7 +36,7 @@ interface RegisterServiceInterface
     /**
      * Update the Model instance's phone into database
      */
-    public function updateModelPhone(Model $model, ?string $phone): void;
+    public function updateModelPhone(RegisterRequest|RegisterPermission $model, ?string $phone): void;
 
     /**
      * Update an existent Register Permission instance into database

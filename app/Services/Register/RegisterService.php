@@ -14,12 +14,12 @@ use App\Models\{
     User
 };
 use App\Services\Register\RegisterServiceInterface;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegisterPermission as MailRegisterPermission;
 use App\Repositories\RegisterPermissionRepository;
 use Illuminate\Support\Facades\URL;
 use \Illuminate\Support\Carbon;
+use App\Repositories\RegisterRequestRepository;
 
 final class RegisterService implements RegisterServiceInterface
 {
@@ -28,7 +28,7 @@ final class RegisterService implements RegisterServiceInterface
 
     public function __construct(
         private readonly User $user,
-        private readonly RegisterRequest $registerRequest,
+        private readonly RegisterRequestRepository $regRequestRepository,
         private readonly RegisterPermissionRepository $permissionRepository
     ) {
         // ...
@@ -41,7 +41,7 @@ final class RegisterService implements RegisterServiceInterface
 
     public function findRegisterRequestByEmail(string $email): ?RegisterRequest
     {
-        return $this->registerRequest->newQuery()->where('email', $email)->first();
+        return $this->regRequestRepository->findByEmail($email);
     }
 
     public function findRegisterPermissionByEmail(string $email): ?RegisterPermission
@@ -51,19 +51,26 @@ final class RegisterService implements RegisterServiceInterface
 
     public function createRegisterRequest(string $email, ?string $phone): void
     {
-        $this->registerRequest->newInstance(attributes: [
-            'email' => $email,
-            'phone' => $phone
-        ])->save();
+        $this->regRequestRepository->create(
+            attributes: [
+                'email' => $email,
+                'phone' => $phone
+            ]
+        );
     }
 
-    public function updateModelPhone(Model $model, ?string $phone): void
+    public function updateModelPhone(RegisterRequest|RegisterPermission $model, ?string $phone): void
     {
         if ($model->phone === PhoneConverter::clear($phone)) {
             return;
         }
-        $model->phone = $phone;
-        $model->save();
+        $repository = $model instanceof RegisterRequest ? $this->regRequestRepository : $this->permissionRepository;
+        $repository->update(
+            id: $model->id,
+            attributes: [
+                'phone' => $phone
+            ]
+        );
     }
 
     public function updateRegisterPermission(int $id, string $token, Carbon $expirationData): void

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Repositories\RegisterPermissionRepository;
+use App\Repositories\RegisterRequestRepository;
 use App\Services\Auth\{
     Contracts\EmailVerifiedServiceInterface,
     EmailVerifiedService
@@ -45,6 +46,10 @@ final class ServiceServiceProvider extends ServiceProvider
         $this->app->bind(
             RegisterPermissionRepository::class,
             RegisterPermissionRepository::class,
+        );
+        $this->app->bind(
+            RegisterRequestRepository::class,
+            RegisterRequestRepository::class,
         );
     }
 }
