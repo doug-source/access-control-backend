@@ -5,11 +5,17 @@ namespace App\Http\Requests\Auth\Strategy\Post;
 use App\Http\Requests\Checker;
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
+use App\Repositories\UserRepository;
 use App\Rules\UserNoProvider;
 use Illuminate\Foundation\Http\FormRequest;
 
 class Login implements Checker
 {
+    public function __construct(private readonly UserRepository $userRepository)
+    {
+        // ...
+    }
+
     public function all(FormRequest $formRequest, array $requestInputs): array
     {
         return [
@@ -23,7 +29,7 @@ class Login implements Checker
             'email' => [
                 'required',
                 'email',
-                new UserNoProvider()
+                new UserNoProvider(userRepository: $this->userRepository)
             ],
             'password' => 'required',
         ];

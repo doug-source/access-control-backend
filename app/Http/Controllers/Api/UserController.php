@@ -7,7 +7,6 @@ use App\Library\Builders\Response as ResponseBuilder;
 use App\Services\Register\RegisterServiceInterface;
 use App\Http\Requests\User\CheckRequest;
 use App\Library\Converters\Phone as PhoneConverter;
-use App\Models\User;
 use App\Repositories\RegisterPermissionRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Auth\Events\Registered;
@@ -17,7 +16,8 @@ class UserController extends Controller
 {
     public function __construct(
         private readonly RegisterServiceInterface $registerService,
-        private readonly RegisterPermissionRepository $permissionRepository
+        private readonly RegisterPermissionRepository $permissionRepository,
+        private readonly UserRepository $userRepository,
     ) {
         // ...
     }
@@ -32,7 +32,7 @@ class UserController extends Controller
 
         $phone = PhoneConverter::clear($registerPermission->phone ?? $request->phone);
         $fields = [...$request->only(['name', 'email', 'password']), 'phone' => $phone];
-        $user = User::create($fields);
+        $user = $this->userRepository->create(attributes: $fields);
         event(new Registered($user));
         // $this->applyDefaultUserRole($user);
 

@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Repositories\RegisterPermissionRepository;
 use App\Repositories\RegisterRequestRepository;
+use App\Repositories\UserRepository;
 use App\Services\Auth\{
     Contracts\EmailVerifiedServiceInterface,
     EmailVerifiedService
@@ -39,6 +40,10 @@ final class ServiceServiceProvider extends ServiceProvider
         [
             RegisterRequestRepository::class,
             RegisterRequestRepository::class,
+        ],
+        [
+            UserRepository::class,
+            UserRepository::class,
         ],
     ];
 

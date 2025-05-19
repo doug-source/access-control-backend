@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\EmailVerify\Strategy\Post;
 
 use App\Http\Requests\Checker;
+use App\Repositories\UserRepository;
 use App\Rules\EmailVerifyResendValid;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -14,9 +15,12 @@ final class Resend implements Checker
 {
     private Authenticatable $user;
 
-    public function __construct()
+    private UserRepository $userRepository;
+
+    public function __construct(UserRepository $userRepository)
     {
         $this->user = Auth::user();
+        $this->userRepository = $userRepository;
     }
 
     public function all(FormRequest $formRequest, array $requestInputs): array
@@ -31,7 +35,7 @@ final class Resend implements Checker
     {
         return [
             'status' => [
-                new EmailVerifyResendValid()
+                new EmailVerifyResendValid(userRepository: $this->userRepository)
             ]
         ];
     }

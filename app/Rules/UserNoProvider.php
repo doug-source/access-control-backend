@@ -4,12 +4,17 @@ namespace App\Rules;
 
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
-use App\Models\User;
+use App\Repositories\UserRepository;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 class UserNoProvider implements ValidationRule
 {
+    public function __construct(private readonly UserRepository $userRepository)
+    {
+        // ...
+    }
+
     /**
      * Run the validation rule.
      *
@@ -17,7 +22,7 @@ class UserNoProvider implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $user = User::where('email', $value)->first();
+        $user = $this->userRepository->findByEmail($value);
         if ($user && !$user->providers()->getResults()->isEmpty()) {
             $fail(Phrase::pickSentence(PhraseKey::LoginByProvider));
         }

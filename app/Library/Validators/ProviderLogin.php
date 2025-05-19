@@ -5,6 +5,7 @@ namespace App\Library\Validators;
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
 use App\Library\Validators\Contracts\CustomValidatorInterface;
+use App\Repositories\UserRepository;
 use App\Rules\ProviderUserLinked;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -14,14 +15,17 @@ final class ProviderLogin implements CustomValidatorInterface
     /** @var string */
     protected $provider;
 
+    protected UserRepository $userRepository;
+
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($provider)
+    public function __construct($provider, UserRepository $userRepository)
     {
         $this->provider = $provider;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -34,7 +38,10 @@ final class ProviderLogin implements CustomValidatorInterface
         $validator = Validator::make(['provider' => $this->provider], [
             'provider' => [
                 Rule::in($providers),
-                new ProviderUserLinked($this->provider)
+                new ProviderUserLinked(
+                    provider: $this->provider,
+                    userRepository: $this->userRepository
+                )
             ]
         ], [
             'provider.in' => Phrase::pickSentence(PhraseKey::ProviderInvalid)

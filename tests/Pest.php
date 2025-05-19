@@ -13,6 +13,7 @@
 
 use App\Models\Role;
 use App\Models\User;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\{
     Facades\Socialite,
@@ -102,7 +103,7 @@ function buildSocialite(
 
 function findUserFromDB(string $email): ?User
 {
-    return User::firstWhere('email', $email);
+    return (new UserRepository())->findByEmail(email: $email);
 }
 
 /**

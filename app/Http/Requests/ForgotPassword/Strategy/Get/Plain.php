@@ -7,11 +7,17 @@ namespace App\Http\Requests\ForgotPassword\Strategy\Get;
 use App\Http\Requests\Checker;
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
+use App\Repositories\UserRepository;
 use App\Rules\UserNoProvider;
 use Illuminate\Foundation\Http\FormRequest;
 
 final class Plain implements Checker
 {
+    public function __construct(private readonly UserRepository $userRepository)
+    {
+        // ...
+    }
+
     public function all(FormRequest $formRequest, array $requestInputs): array
     {
         return [
@@ -27,7 +33,7 @@ final class Plain implements Checker
                 'required',
                 'email',
                 'exists:users,email',
-                new UserNoProvider()
+                new UserNoProvider(userRepository: $this->userRepository)
             ]
         ];
     }

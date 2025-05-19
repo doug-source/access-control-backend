@@ -2,7 +2,7 @@
 
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
-use App\Models\User;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -99,7 +99,7 @@ describe('Email Verification from api routes', function () {
             $this->getJson($url, [
                 'Authorization' => "Bearer {$token}"
             ])->assertOk();
-            expect(User::find($userModel->id)?->hasVerifiedEmail())->toBe(TRUE);
+            expect((new UserRepository())->find($userModel->id)?->hasVerifiedEmail())->toBe(TRUE);
         });
         it('sends verification.verify route request with email validated', function () {
             $password = 'whatever';
@@ -119,7 +119,7 @@ describe('Email Verification from api routes', function () {
             $this->getJson($url, [
                 'Authorization' => "Bearer {$token}"
             ])->assertOk();
-            expect(User::find($userModel->id)?->hasVerifiedEmail())->toBe(TRUE);
+            expect((new UserRepository())->find($userModel->id)?->hasVerifiedEmail())->toBe(TRUE);
         });
     });
 });

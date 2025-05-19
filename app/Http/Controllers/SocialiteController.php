@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Library\Builders\UrlExternal;
 // use App\Library\Builders\Response as ResponseBuilder;
 use App\Library\Validators\ProviderLogin as ProviderLoginValidator;
-use App\Models\User;
+use App\Repositories\UserRepository;
 // use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\RedirectResponse;
 // use Illuminate\Http\Request;
@@ -16,6 +16,11 @@ use Laravel\Socialite\Contracts\User as UserProvided;
 
 class SocialiteController extends Controller
 {
+    public function __construct(private readonly UserRepository $userRepository)
+    {
+        // ...
+    }
+
     /**
      * Execute the provider's redirect logic
      */
@@ -45,7 +50,10 @@ class SocialiteController extends Controller
      */
     private function handleProvideCallbackToLogin($provider)
     {
-        $errors = (new ProviderLoginValidator($provider))->validate();
+        $errors = (new ProviderLoginValidator(
+            provider: $provider,
+            userRepository: $this->userRepository
+        ))->validate();
         if ($errors) {
             return UrlExternal::build(query: [
                 'errormsg' => array_pop($errors)
@@ -148,7 +156,7 @@ class SocialiteController extends Controller
      */
     protected function providerUserResponse(UserProvided $userProvided): RedirectResponse
     {
-        $user = User::where('email', $userProvided->getEmail())->first();
+        $user = $this->userRepository->findByEmail(email: $userProvided->getEmail());
         return UrlExternal::build(
             query: [
                 'provided' => $user->createToken('Sanctum+Socialite+temporary')->plainTextToken
