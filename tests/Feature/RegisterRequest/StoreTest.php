@@ -7,6 +7,7 @@ use App\Library\Converters\Phone as PhoneConverter;
 use App\Models\RegisterPermission;
 use App\Models\RegisterRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Response;
 
 uses(RefreshDatabase::class);
 
@@ -53,14 +54,14 @@ describe('RegisterRequest store request', function () {
             $this->postJson(route('register.request.store', [
                 'email' => $registerRequest->email,
                 'phone' => $registerRequest->phone
-            ]))->assertStatus(200);
+            ]))->assertStatus(Response::HTTP_CREATED);
         });
         it('has already a register request instance into database (different phone)', function () {
             $registerRequest = RegisterRequest::factory(count: 1)->create()->first();
             $this->postJson(route('register.request.store', [
                 'email' => $registerRequest->email,
                 'phone' => '12345678901'
-            ]))->assertStatus(200);
+            ]))->assertStatus(Response::HTTP_CREATED);
         });
         it('has already a register permission instance into database', function () {
             $permission = RegisterPermission::factory(count: 1)->create([
@@ -69,7 +70,7 @@ describe('RegisterRequest store request', function () {
             $this->postJson(route('register.request.store', [
                 'email' => $permission->email,
                 'phone' => $permission->phone
-            ]))->assertStatus(200);
+            ]))->assertStatus(Response::HTTP_CREATED);
             $this->assertDatabaseMissing('register_permissions', [
                 'expiration_data' => $permission->expiration_data,
                 'token' => $permission->token
@@ -81,7 +82,7 @@ describe('RegisterRequest store request', function () {
             $this->postJson(route('register.request.store', [
                 'email' => $email,
                 'phone' => $phone
-            ]))->assertStatus(200);
+            ]))->assertStatus(Response::HTTP_CREATED);
 
             $this->assertDatabaseHas('register_requests', [
                 'email' => $email,
@@ -92,7 +93,7 @@ describe('RegisterRequest store request', function () {
             $email = fake()->email();
             $this->postJson(route('register.request.store', [
                 'email' => $email,
-            ]))->assertStatus(200);
+            ]))->assertStatus(Response::HTTP_CREATED);
 
             $this->assertDatabaseHas('register_requests', [
                 'email' => $email,

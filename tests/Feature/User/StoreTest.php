@@ -264,16 +264,16 @@ describe('User store request', function () {
             $password = 'ABCDef12@';
             $uri = Uri::of(route('users.store'))->withQuery([
                 'token' => $permission->token
-            ]);
+            ])->value();
             $userName = fake()->name();
-            $this->postJson($uri->value(), [
+            $this->postJson($uri, [
                 'name' => $userName,
                 'email' => $permission->email,
                 'phone' => $permission->phone,
                 'password' => $password,
                 'password_confirmation' => $password,
                 'token' => $permission->token
-            ])->assertStatus(Response::HTTP_OK);
+            ])->assertStatus(Response::HTTP_CREATED);
 
             $this->assertDatabaseHas('users', [
                 'name' => $userName,

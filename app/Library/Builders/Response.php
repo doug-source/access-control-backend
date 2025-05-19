@@ -22,17 +22,18 @@ final class Response
      *
      * @param mixed|null $data
      */
-    public static function successJSON($data = NULL, bool $complete = false)
+    public static function successJSON($data = NULL, int $status = HttpResponse::HTTP_OK, bool $complete = false)
     {
         if ($complete) {
             return response()->json(
                 data: [
                     'message' => 'OK',
-                    'status' => 200,
+                    'status' => $status,
                     'data' => $data
                 ],
+                status: $status
             );
         }
-        return response()->json(data: $data);
+        return response()->json(data: $data, status: $status);
     }
 }

@@ -10,6 +10,7 @@ use App\Library\Converters\Phone as PhoneConverter;
 use App\Models\RegisterPermission;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -32,6 +33,8 @@ class UserController extends Controller
         event(new Registered($user));
         // $this->applyDefaultUserRole($user);
 
-        return ResponseBuilder::successJSON();
+        return ResponseBuilder::successJSON(
+            status: Response::HTTP_CREATED
+        );
     }
 }

@@ -14,6 +14,7 @@ use App\Library\Registration\{
 use App\Models\RegisterPermission;
 use App\Services\Register\RegisterServiceInterface;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Response;
 
 class RegisterRequestsController extends Controller
 {
@@ -69,7 +70,9 @@ class RegisterRequestsController extends Controller
             $this->registerService->handleRegister($email, $request->input('phone'));
         }
 
-        return ResponseBuilder::successJSON();
+        return ResponseBuilder::successJSON(
+            status: Response::HTTP_CREATED
+        );
     }
 
     /**
