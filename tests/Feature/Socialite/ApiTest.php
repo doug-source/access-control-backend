@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Provider;
+use App\Services\User\Contracts\AbilityServiceInterface;
 use Illuminate\Support\Str;
 use Illuminate\Support\Uri;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -43,7 +44,8 @@ describe('Socialite from api routes', function () {
                                 ->has('token')
                                 ->whereNot('token', $token)
                                 ->where('email', $userModel->email)
-                                ->where('emailVerified', TRUE);
+                                ->where('emailVerified', TRUE)
+                                ->etc();
                         });
                 });
         });
@@ -53,6 +55,7 @@ describe('Socialite from api routes', function () {
                 email: 'someone@test.com',
                 emailVerified: FALSE
             );
+            createSuperAdminRelationship($userModel);
             Provider::factory(count: 1)->create([
                 'user_id' => $userModel->id
             ]);
@@ -69,13 +72,15 @@ describe('Socialite from api routes', function () {
                 ->assertJson(function (AssertableJson $json) use ($userModel, $token) {
                     $json
                         ->has('user', function (AssertableJson $json) use ($userModel, $token) {
+                            $abilities = app(AbilityServiceInterface::class)->abilitiesFromUser($userModel)->pluck('name')->all();
                             $json
                                 ->where('id', $userModel->id)
                                 ->where('name', $userModel->name)
                                 ->has('token')
                                 ->whereNot('token', $token)
                                 ->where('email', $userModel->email)
-                                ->where('emailVerified', FALSE);
+                                ->where('emailVerified', FALSE)
+                                ->where('abilities', $abilities);
                         });
                 });
         });

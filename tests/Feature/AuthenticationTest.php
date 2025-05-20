@@ -4,9 +4,9 @@ use App\Library\Builders\Phrase;
 use App\Library\Enums\PasswordRules;
 use App\Library\Enums\PhraseKey;
 use App\Models\Provider;
-use Illuminate\Support\Str;
+use App\Services\User\Contracts\AbilityServiceInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Testing\Fluent\AssertableJson;
 
 uses(RefreshDatabase::class);
 
@@ -71,12 +71,31 @@ describe('Authentication', function () {
     });
     describe('succeed because', function () {
         it('has complete parameters during login', function () {
-            authenticate(
+            $password = fake()->password(minLength: PasswordRules::MinSize->get());
+            createSuperAdminRelationship(
+                createUserDB(email: 'someone@test.com', password: $password)
+            );
+            ['user' => $userModel, 'token' => $token, 'response' => $response] = authenticate(
                 scope: $this,
                 email: 'someone@test.com',
-                password: fake()->password(minLength: PasswordRules::MinSize->get())
+                password: $password,
+                create: FALSE,
             );
-            $this->assertAuthenticated();
+            $response
+                ->assertOk()
+                ->assertJson(function (AssertableJson $json) use ($userModel, $token) {
+                    $json
+                        ->has('user', function (AssertableJson $json) use ($userModel, $token) {
+                            $abilities = app(AbilityServiceInterface::class)->abilitiesFromUser($userModel)->pluck('name')->all();
+                            $json
+                                ->where('id', $userModel->id)
+                                ->where('name', $userModel->name)
+                                ->where('token', $token)
+                                ->where('email', $userModel->email)
+                                ->where('emailVerified', TRUE)
+                                ->where('abilities', $abilities);
+                        });
+                });
         });
         it('has complete parameters during logout', function () {
             ['token' => $token] = authenticate(

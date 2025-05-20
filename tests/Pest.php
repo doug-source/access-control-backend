@@ -11,6 +11,7 @@
 |
 */
 
+use App\Models\Ability;
 use App\Models\Role;
 use App\Models\User;
 use App\Repositories\UserRepository;
@@ -129,9 +130,11 @@ function authenticate(mixed $scope, ?string $email = NULL, ?string $password = N
 
 function createSuperAdminRelationship(User $user)
 {
+    $abilities = Ability::factory(count: 3)->create();
     $role = Role::factory(count: 1)->createOne([
         'name' => 'super-admin'
     ]);
+    $role->abilities()->attach($abilities->pluck('id')->all());
     $user->roles()->attach($role->id);
 }
 

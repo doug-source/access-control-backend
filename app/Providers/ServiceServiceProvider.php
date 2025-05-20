@@ -17,6 +17,8 @@ use App\Services\Password\Constracts\PasswordServiceInterfacer;
 use App\Services\Password\PasswordService;
 use App\Services\Register\RegisterService;
 use App\Services\Register\Contracts\RegisterServiceInterface;
+use App\Services\User\AbilityService;
+use App\Services\User\Contracts\AbilityServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 final class ServiceServiceProvider extends ServiceProvider
@@ -48,9 +50,13 @@ final class ServiceServiceProvider extends ServiceProvider
             UserRepository::class,
         ],
         [
+            AbilityServiceInterface::class,
+            AbilityService::class
+        ],
+        [
             LoginOutputServiceInterface::class,
             LoginOutputService::class
-        ]
+        ],
     ];
 
     /**
