@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\{
+    AbilityController,
     AuthController,
     EmailVerifyController,
     ForgotPasswordController,
@@ -63,6 +64,8 @@ Route::middleware('auth:sanctum')->group(function () {
         '/email/verification-notification',
         [EmailVerifyController::class, 'resend']
     )->middleware('throttle:6,1')->name('verification.send');
+
+    Route::get('/abilities', [AbilityController::class, 'index'])->name('ability.index');
 });
 
 // ---------------------------------------------------------------------------------------

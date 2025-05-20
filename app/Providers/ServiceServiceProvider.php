@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Repositories\AbilityRepository;
 use App\Repositories\RegisterPermissionRepository;
 use App\Repositories\RegisterRequestRepository;
 use App\Repositories\UserRepository;
@@ -52,6 +53,10 @@ final class ServiceServiceProvider extends ServiceProvider
         [
             AbilityServiceInterface::class,
             AbilityService::class
+        ],
+        [
+            AbilityRepository::class,
+            AbilityRepository::class,
         ],
         [
             LoginOutputServiceInterface::class,
