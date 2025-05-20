@@ -66,6 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
     )->middleware('throttle:6,1')->name('verification.send');
 
     Route::get('/abilities', [AbilityController::class, 'index'])->name('ability.index');
+    Route::get('/abilities/{ability}', [AbilityController::class, 'show'])->name('ability.show');
 });
 
 // ---------------------------------------------------------------------------------------

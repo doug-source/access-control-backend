@@ -28,4 +28,13 @@ class AbilityController extends Controller
             name: $request->input('name')
         );
     }
+
+    /**
+     * Display one Ability instance
+     */
+    public function show(Ability $ability)
+    {
+        $this->authorize('view', $ability);
+        return $ability->ui;
+    }
 }

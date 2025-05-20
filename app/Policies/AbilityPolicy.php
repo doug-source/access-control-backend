@@ -2,7 +2,9 @@
 
 namespace App\Policies;
 
+use App\Models\Ability;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
 final class AbilityPolicy
 {
@@ -10,6 +12,14 @@ final class AbilityPolicy
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
+    {
+        return $user->isSuperAdmin();
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user, Ability $ability): bool
     {
         return $user->isSuperAdmin();
     }
