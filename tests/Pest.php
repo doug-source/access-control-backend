@@ -101,24 +101,30 @@ function buildSocialite(
     return $user;
 }
 
-function findUserFromDB(string $email): ?User
-{
-    return (new UserRepository())->findByEmail(email: $email);
-}
-
 /**
- * Execute the login
+ * Execute the authentication
+ *
+ * @return array{user: App\Models\User, response: Illuminate\Testing\TestResponse, token: string}
  */
-function login(mixed $scope, ?string $email = NULL, ?string $password = NULL)
+function authenticate(mixed $scope, ?string $email = NULL, ?string $password = NULL, bool $create = TRUE)
 {
     $emailUsed = $email ?: fake()->email();
     $passwordUsed = $password ?: fake()->password();
-    $user = createUserDB(password: $passwordUsed, email: $emailUsed);
+    $user = $create ? createUserDB(
+        password: $passwordUsed,
+        email: $emailUsed
+    ) : (new UserRepository())->findByEmail($emailUsed);
+
     $responseLogin = $scope->postJson(route('auth.login'), [
         'email' => $user->email,
         'password' => $passwordUsed
     ]);
-    return Str::after($responseLogin->baseResponse->original['user']['token'], '|');
+
+    return [
+        'user' => $user,
+        'response' => $responseLogin,
+        'token' => $responseLogin->json()['user']['token']
+    ];
 }
 
 function createSuperAdminRelationship(User $user)

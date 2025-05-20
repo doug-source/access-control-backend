@@ -24,9 +24,7 @@ describe('RegisterPermission index request', function () {
                 ]);
         });
         it('has route parameter not integer', function () {
-            $email = fake()->email();
-            $password = 'Test123!';
-            $token = login(scope: $this, email: $email, password: $password);
+            ['token' => $token] = authenticate(scope: $this, password: 'Test123!');
             $route = route('register.request.show', [
                 'registerRequestID' => 'whatever',
             ]);
@@ -39,9 +37,7 @@ describe('RegisterPermission index request', function () {
             );
         });
         it("has route parameter's value lower then minimal size", function () {
-            $email = fake()->email();
-            $password = 'Test123!';
-            $token = login(scope: $this, email: $email, password: $password);
+            ['token' => $token] = authenticate(scope: $this, password: 'Test123!');
             $route = route('register.request.show', [
                 'registerRequestID' => '0',
             ]);
@@ -54,9 +50,8 @@ describe('RegisterPermission index request', function () {
             );
         });
         it("has route parameter's value not included into database", function () {
-            $email = fake()->email();
-            $password = 'Test123!';
-            $token = login(scope: $this, email: $email, password: $password);
+            ['token' => $token] = authenticate(scope: $this, password: 'Test123!');
+
             $route = route('register.request.show', [
                 'registerRequestID' => '1',
             ]);
@@ -68,15 +63,13 @@ describe('RegisterPermission index request', function () {
                 errorMsg: Phrase::pickSentence(PhraseKey::ParameterInvalid),
             );
         });
-        it('executes by user no super-admin role', function () {
+        it('executes with user no super-admin role', function () {
+            ['token' => $token] = authenticate(scope: $this, password: 'Test123!');
+
             $registerRequest = RegisterRequest::factory(count: 1)->createOne([
                 'email' => fake()->email(),
                 'phone' => '12345678901'
             ]);
-            $email = fake()->email();
-            $password = 'Test123!';
-            $token = login(scope: $this, email: $email, password: $password);
-
             $route = route('register.request.show', [
                 'registerRequestID' => $registerRequest->id,
             ]);
@@ -91,22 +84,20 @@ describe('RegisterPermission index request', function () {
     });
     describe('succeed because', function () {
         it('has complete parameters in right way', function () {
+            ['token' => $token, 'user' => $user] = authenticate(scope: $this, password: 'Test123!');
+            createSuperAdminRelationship($user);
+
             $registerRequest = RegisterRequest::factory(count: 1)->createOne([
                 'email' => fake()->email(),
                 'phone' => '12345678901'
             ]);
-            $email = fake()->email();
-            $password = 'Test123!';
-            $token = login(scope: $this, email: $email, password: $password);
-            createSuperAdminRelationship(user: findUserFromDB($email));
-
             $route = route('register.request.show', [
                 'registerRequestID' => $registerRequest->id,
             ]);
             $this->getJson($route, [
                 'Authorization' => "Bearer $token"
             ])
-                ->assertStatus(Response::HTTP_OK)
+                ->assertOk()
                 ->assertExactJson([
                     "id" => 1,
                     "email" => $registerRequest->email,

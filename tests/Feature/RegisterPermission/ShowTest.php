@@ -24,11 +24,10 @@ describe('RegisterPermission index request', function () {
                 ]);
         });
         it('has route parameter not integer', function () {
+            ['token' => $token] = authenticate(scope: $this);
             $route = route('register.permission.show', [
                 'registerPermissionID' => 'whatever',
             ]);
-            $email = fake()->email();
-            $token = login(scope: $this, email: $email);
             assertFailedResponse(
                 response: $this->getJson($route, [
                     'Authorization' => "Bearer {$token}",
@@ -38,11 +37,10 @@ describe('RegisterPermission index request', function () {
             );
         });
         it("has route parameter's value lower then minimal size", function () {
+            ['token' => $token] = authenticate(scope: $this);
             $route = route('register.permission.show', [
                 'registerPermissionID' => '0',
             ]);
-            $email = fake()->email();
-            $token = login(scope: $this, email: $email);
             assertFailedResponse(
                 response: $this->getJson($route, [
                     'Authorization' => "Bearer {$token}",
@@ -52,11 +50,10 @@ describe('RegisterPermission index request', function () {
             );
         });
         it("has route parameter's value not included into database", function () {
+            ['token' => $token] = authenticate(scope: $this);
             $route = route('register.permission.show', [
                 'registerPermissionID' => '1',
             ]);
-            $email = fake()->email();
-            $token = login(scope: $this, email: $email);
             assertFailedResponse(
                 response: $this->getJson($route, [
                     'Authorization' => "Bearer {$token}",
@@ -66,14 +63,11 @@ describe('RegisterPermission index request', function () {
             );
         });
         it('executes by user no super-admin role', function () {
+            ['token' => $token] = authenticate(scope: $this, password: 'Test123!');
             $registerPermission = RegisterPermission::factory(count: 1)->createOne([
                 'email' => fake()->email(),
                 'phone' => '12345678901'
             ]);
-            $email = fake()->email();
-            $password = 'Test123!';
-            $token = login(scope: $this, email: $email, password: $password);
-
             $route = route('register.permission.show', [
                 'registerPermissionID' => $registerPermission->id,
             ]);
@@ -88,15 +82,13 @@ describe('RegisterPermission index request', function () {
     });
     describe('succeed because', function () {
         it('has complete parameters in right way', function () {
+            ['token' => $token, 'user' => $user] = authenticate(scope: $this, password: 'Test123!');
+            createSuperAdminRelationship(user: $user);
+
             $registerPermission = RegisterPermission::factory(count: 1)->createOne([
                 'email' => fake()->email(),
                 'phone' => '12345678901'
             ]);
-            $email = fake()->email();
-            $password = 'Test123!';
-            $token = login(scope: $this, email: $email, password: $password);
-            createSuperAdminRelationship(user: findUserFromDB($email));
-
             $route = route('register.permission.show', [
                 'registerPermissionID' => $registerPermission->id,
             ]);

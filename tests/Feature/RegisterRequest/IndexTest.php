@@ -19,82 +19,113 @@ describe('RegisterRequest index request', function () {
             $response->assertStatus(Response::HTTP_UNAUTHORIZED);
         });
         it('has no page parameter', function () {
-            $token = login($this);
-            $responseRegReq = $this->getJson(route('register.request.index'), [
-                'Authorization' => "Bearer {$token}",
-                'Accept' => 'application/json',
-            ]);
-            assertFailedResponse($responseRegReq, 'page', Phrase::pickSentence(PhraseKey::ParameterRequired));
+            ['token' => $token] = authenticate(scope: $this);
+            assertFailedResponse(
+                response: $this->getJson(route('register.request.index'), [
+                    'Authorization' => "Bearer {$token}",
+                    'Accept' => 'application/json',
+                ]),
+                errorKey: 'page',
+                errorMsg: Phrase::pickSentence(PhraseKey::ParameterRequired)
+            );
         });
         it('has invalid page parameter', function () {
-            $token = login($this);
-            $route = route('register.request.index');
-            $responseRegReq = $this->getJson("{$route}?page=any", [
-                'Authorization' => "Bearer {$token}",
-                'Accept' => 'application/json',
-            ]);
-            assertFailedResponse($responseRegReq, 'page', Phrase::pickSentence(PhraseKey::ParameterInvalid));
+            ['token' => $token] = authenticate(scope: $this);
+            $uri = Uri::of(route('register.request.index'))->withQuery([
+                'page' => 'whatever'
+            ])->value();
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer {$token}",
+                    'Accept' => 'application/json',
+                ]),
+                errorKey: 'page',
+                errorMsg: Phrase::pickSentence(PhraseKey::ParameterInvalid)
+            );
         });
         it('has page parameter lower then minimal size', function () {
-            $token = login($this);
-            $route = route('register.request.index');
-            $responseRegReq = $this->getJson("{$route}?page=0", [
-                'Authorization' => "Bearer {$token}",
-                'Accept' => 'application/json',
-            ]);
-            assertFailedResponse($responseRegReq, 'page', Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)"));
+            ['token' => $token] = authenticate(scope: $this);
+            $uri = Uri::of(route('register.request.index'))->withQuery([
+                'page' => '0'
+            ])->value();
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer {$token}",
+                    'Accept' => 'application/json',
+                ]),
+                errorKey: 'page',
+                errorMsg: Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)")
+            );
         });
         it('has no group parameter', function () {
-            $token = login($this);
-            $route = route('register.request.index');
-            $responseRegReq = $this->getJson("{$route}?page=1", [
-                'Authorization' => "Bearer {$token}",
-                'Accept' => 'application/json',
-            ]);
-            assertFailedResponse($responseRegReq, 'group', Phrase::pickSentence(PhraseKey::ParameterRequired));
+            ['token' => $token] = authenticate(scope: $this);
+            $uri = Uri::of(route('register.request.index'))->withQuery([
+                'page' => '1'
+            ])->value();
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer {$token}",
+                    'Accept' => 'application/json',
+                ]),
+                errorKey: 'group',
+                errorMsg: Phrase::pickSentence(PhraseKey::ParameterRequired)
+            );
         });
         it('has invalid group parameter', function () {
-            $token = login($this);
-            $route = route('register.request.index');
-            $responseRegReq = $this->getJson("{$route}?page=1&group=any", [
-                'Authorization' => "Bearer {$token}",
-                'Accept' => 'application/json',
-            ]);
-            assertFailedResponse($responseRegReq, 'group', Phrase::pickSentence(PhraseKey::ParameterInvalid));
+            ['token' => $token] = authenticate(scope: $this);
+            $uri = Uri::of(route('register.request.index'))->withQuery([
+                'page' => '1',
+                'group' => 'whatever'
+            ])->value();
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer {$token}",
+                    'Accept' => 'application/json',
+                ]),
+                errorKey: 'group',
+                errorMsg: Phrase::pickSentence(PhraseKey::ParameterInvalid)
+            );
         });
         it('has group parameter lower then minimal size', function () {
-            $token = login($this);
-            $route = route('register.request.index');
-            $responseRegReq = $this->getJson("{$route}?page=1&group=0", [
-                'Authorization' => "Bearer {$token}",
-                'Accept' => 'application/json',
-            ]);
-            assertFailedResponse($responseRegReq, 'group', Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)"));
+            ['token' => $token] = authenticate(scope: $this);
+            $uri = Uri::of(route('register.request.index'))->withQuery([
+                'page' => '1',
+                'group' => '0'
+            ])->value();
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer {$token}",
+                    'Accept' => 'application/json',
+                ]),
+                errorKey: 'group',
+                errorMsg: Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)")
+            );
         });
         it('has email parameter greater then maximun size', function () {
             $maxColumnSize = RegisterRequestSize::EMAIL->get();
-            $email = generateOverflowInvalidEmail($maxColumnSize);
-
-            $token = login($this);
+            $email = generateOverflowInvalidEmail($maxColumnSize)->toString();
             $uri = Uri::of(route('register.request.index'))->withQuery([
                 'page' => 1,
                 'group' => 1,
-                'email' => $email->toString()
+                'email' => $email
             ])->value();
-            $responseRegReq = $this->getJson($uri, [
-                'Authorization' => "Bearer {$token}",
-                'Accept' => 'application/json',
-            ]);
-            assertFailedResponse($responseRegReq, 'email', Phrase::pickSentence(PhraseKey::MaxSizeInvalid, " ({$maxColumnSize})"));
+
+            ['token' => $token] = authenticate(scope: $this);
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer {$token}",
+                    'Accept' => 'application/json',
+                ]),
+                errorKey: 'email',
+                errorMsg: Phrase::pickSentence(PhraseKey::MaxSizeInvalid, " ({$maxColumnSize})")
+            );
         });
         it('executes by user no super-admin role', function () {
             RegisterRequest::factory(count: 1)->createOne([
                 'email' => fake()->email(),
                 'phone' => '12345678901'
             ]);
-            $email = fake()->email();
-            $password = 'Test123!';
-            $token = login(scope: $this, email: $email, password: $password);
+            ['token' => $token] = authenticate(scope: $this, password: 'Test123!');
 
             $uri = Uri::of(route('register.request.index'))->withQuery([
                 'page' => '1',
@@ -109,37 +140,29 @@ describe('RegisterRequest index request', function () {
                 ]);
         });
     });
-    describe('receives successful because', function () {
+    describe('succeed because', function () {
         it('has complete parameters', function () {
-            $email = fake()->email();
-            $token = login(scope: $this, email: $email);
-            createSuperAdminRelationship(
-                findUserFromDB(email: $email)
-            );
-            $uri = Uri::of(route('register.request.index'))
-                ->withQuery([
-                    'page' => 1,
-                    'group' => 1,
-                    'email' => $email
-                ])->value();
+            ['token' => $token, 'user' => $user] = authenticate(scope: $this);
+            createSuperAdminRelationship($user);
 
+            $uri = Uri::of(route('register.request.index'))->withQuery([
+                'page' => 1,
+                'group' => 1,
+                'email' => fake()->email()
+            ])->value();
             $this->getJson($uri, [
                 'Authorization' => "Bearer {$token}",
                 'Accept' => 'application/json',
-            ])->assertStatus(200);
+            ])->assertOk();
         });
         it('has no email parameter', function () {
-            $email = fake()->email();
-            $token = login(scope: $this, email: $email);
-            createSuperAdminRelationship(
-                findUserFromDB(email: $email)
-            );
-            $uri = Uri::of(route('register.request.index'))
-                ->withQuery([
-                    'page' => 1,
-                    'group' => 1,
-                ])->value();
+            ['token' => $token, 'user' => $user] = authenticate(scope: $this);
+            createSuperAdminRelationship($user);
 
+            $uri = Uri::of(route('register.request.index'))->withQuery([
+                'page' => 1,
+                'group' => 1,
+            ])->value();
             $this->getJson($uri, [
                 'Authorization' => "Bearer {$token}",
                 'Accept' => 'application/json',

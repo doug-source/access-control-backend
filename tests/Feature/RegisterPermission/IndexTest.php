@@ -19,81 +19,90 @@ describe('RegisterPermission index request', function () {
             $response->assertStatus(Response::HTTP_UNAUTHORIZED);
         });
         it('has no page parameter', function () {
-            $email = fake()->email();
-            $token = login(scope: $this, email: $email);
-            $responseRegReq = $this->getJson(route('register.permission.index'), [
-                'Authorization' => "Bearer {$token}",
-            ]);
-            assertFailedResponse($responseRegReq, 'page', Phrase::pickSentence(PhraseKey::ParameterRequired));
+            ['token' => $token] = authenticate(scope: $this);
+            assertFailedResponse(
+                response: $this->getJson(route('register.permission.index'), [
+                    'Authorization' => "Bearer {$token}",
+                ]),
+                errorKey: 'page',
+                errorMsg: Phrase::pickSentence(PhraseKey::ParameterRequired)
+            );
         });
         it('has invalid page parameter', function () {
-            $email = fake()->email();
-            $token = login(scope: $this, email: $email);
+            ['token' => $token] = authenticate(scope: $this);
             $uri = Uri::of(route('register.permission.index'))->withQuery(['page' => 'whatever'])->value();
-            $responseRegReq = $this->getJson($uri, [
-                'Authorization' => "Bearer {$token}",
-            ]);
-            assertFailedResponse($responseRegReq, 'page', Phrase::pickSentence(PhraseKey::ParameterInvalid));
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer {$token}",
+                ]),
+                errorKey: 'page',
+                errorMsg: Phrase::pickSentence(PhraseKey::ParameterInvalid)
+            );
         });
         it('has page parameter lower then minimal size', function () {
-            $email = fake()->email();
-            $token = login(scope: $this, email: $email);
+            ['token' => $token] = authenticate(scope: $this);
             $uri = Uri::of(route('register.permission.index'))->withQuery(['page' => '0'])->value();
-            $responseRegReq = $this->getJson($uri, [
-                'Authorization' => "Bearer {$token}",
-            ]);
-            assertFailedResponse($responseRegReq, 'page', Phrase::pickSentence(PhraseKey::MinSizeInvalid, ' (1)'));
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer {$token}",
+                ]),
+                errorKey: 'page',
+                errorMsg: Phrase::pickSentence(PhraseKey::MinSizeInvalid, ' (1)')
+            );
         });
         it('has no group parameter', function () {
-            $email = fake()->email();
-            $token = login(scope: $this, email: $email);
+            ['token' => $token] = authenticate(scope: $this);
             $uri = Uri::of(route('register.permission.index'))->withQuery(['page' => '1'])->value();
-            $responseRegReq = $this->getJson($uri, [
-                'Authorization' => "Bearer {$token}",
-            ]);
-            assertFailedResponse($responseRegReq, 'group', Phrase::pickSentence(PhraseKey::ParameterRequired));
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer {$token}",
+                ]),
+                errorKey: 'group',
+                errorMsg: Phrase::pickSentence(PhraseKey::ParameterRequired)
+            );
         });
         it('has invalid group parameter', function () {
-            $email = fake()->email();
-            $token = login(scope: $this, email: $email);
+            ['token' => $token] = authenticate(scope: $this);
             $uri = Uri::of(route('register.permission.index'))->withQuery(['page' => '1', 'group' => 'whatever'])->value();
-            $responseRegReq = $this->getJson($uri, [
-                'Authorization' => "Bearer {$token}",
-            ]);
-            assertFailedResponse($responseRegReq, 'group', Phrase::pickSentence(PhraseKey::ParameterInvalid));
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer {$token}",
+                ]),
+                errorKey: 'group',
+                errorMsg: Phrase::pickSentence(PhraseKey::ParameterInvalid)
+            );
         });
         it('has group parameter lower then minimal size', function () {
-            $email = fake()->email();
-            $token = login(scope: $this, email: $email);
+            ['token' => $token] = authenticate(scope: $this);
             $uri = Uri::of(route('register.permission.index'))->withQuery(['page' => '1', 'group' => '0'])->value();
-            $responseRegReq = $this->getJson($uri, [
-                'Authorization' => "Bearer {$token}",
-            ]);
-            assertFailedResponse($responseRegReq, 'group', Phrase::pickSentence(PhraseKey::MinSizeInvalid, ' (1)'));
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer {$token}",
+                ]),
+                errorKey: 'group',
+                errorMsg: Phrase::pickSentence(PhraseKey::MinSizeInvalid, ' (1)')
+            );
         });
         it('has email parameter greater then maximun size', function () {
+            ['token' => $token, 'user' => $user] = authenticate(scope: $this);
+            createSuperAdminRelationship($user);
             $maxColumnSize = RegisterPermissionSize::EMAIL->get();
-            $email = generateOverflowInvalidEmail($maxColumnSize)->toString();
-
-            $token = login(scope: $this, email: $email);
-            createSuperAdminRelationship(
-                findUserFromDB(email: $email)
+            $emailOverflowed = generateOverflowInvalidEmail($maxColumnSize)->toString();
+            $uri = Uri::of(route('register.permission.index'))->withQuery(['page' => '1', 'group' => '1', 'email' => $emailOverflowed])->value();
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer {$token}",
+                ]),
+                errorKey: 'email',
+                errorMsg: Phrase::pickSentence(PhraseKey::MaxSizeInvalid, " ($maxColumnSize)")
             );
-            $uri = Uri::of(route('register.permission.index'))->withQuery(['page' => '1', 'group' => '1', 'email' => $email])->value();
-            $responseRegReq = $this->getJson($uri, [
-                'Authorization' => "Bearer {$token}",
-            ]);
-            assertFailedResponse($responseRegReq, 'email', Phrase::pickSentence(PhraseKey::MaxSizeInvalid, " ($maxColumnSize)"));
         });
         it('executes by user no super-admin role', function () {
             RegisterPermission::factory(count: 1)->createOne([
                 'email' => fake()->email(),
                 'phone' => '12345678901'
             ]);
-            $email = fake()->email();
-            $password = 'Test123!';
-            $token = login(scope: $this, email: $email, password: $password);
-
+            ['token' => $token] = authenticate(scope: $this, password: 'Test123!');
             $uri = Uri::of(route('register.permission.index'))->withQuery([
                 'page' => '1',
                 'group' => '1',
@@ -110,11 +119,8 @@ describe('RegisterPermission index request', function () {
     describe('succeed because', function () {
         it('has complete parameters', function () {
             $registerPermission = RegisterPermission::factory(count: 1)->createOne();
-            $email = fake()->email();
-            $token = login(scope: $this, email: $email);
-            createSuperAdminRelationship(
-                findUserFromDB(email: $email)
-            );
+            ['token' => $token, 'user' => $user] = authenticate(scope: $this);
+            createSuperAdminRelationship($user);
             $uri = Uri::of(route('register.permission.index'))->withQuery(['page' => '1', 'group' => '1', 'email' => $registerPermission->email])->value();
             $this->getJson($uri, [
                 'Authorization' => "Bearer {$token}",

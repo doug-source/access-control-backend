@@ -20,11 +20,13 @@ describe('Email Verification from api routes', function () {
                 email: 'someone@test.com',
                 emailVerified: FALSE
             );
-            $responseLogin = $this->postJson(route('auth.login'), [
-                'email' => $userModel->email,
-                'password' => $password
-            ]);
-            $token = $responseLogin->json()['user']['token'];
+            ['token' => $token] = authenticate(
+                scope: $this,
+                email: $userModel->email,
+                password: $password,
+                create: FALSE
+            );
+
             // TO-DO: Change by commom user profile access in future
             $this->getJson(route('register.request.index'), [
                 'Authorization' => "Bearer {$token}"
@@ -40,24 +42,20 @@ describe('Email Verification from api routes', function () {
                 password: $password,
                 email: 'someone@test.com',
             );
-            $responseLogin = $this->postJson(route('auth.login'), [
-                'email' => $userModel->email,
-                'password' => $password
-            ]);
-            $token = $responseLogin->json()['user']['token'];
-            $this->postJson(route('verification.send'), [
-                'Authorization' => "Bearer {$token}"
-            ])
-                ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-                ->assertExactJson([
-                    "message" => Phrase::pickSentence(PhraseKey::EmailAlreadyVerified),
-                    "errors" =>  [
-                        "status" => [
-                            Phrase::pickSentence(PhraseKey::EmailAlreadyVerified)
-                        ]
-                    ]
-                ])
-            ;
+            ['token' => $token] = authenticate(
+                scope: $this,
+                email: $userModel->email,
+                password: $password,
+                create: FALSE
+            );
+
+            assertFailedResponse(
+                response: $this->postJson(route('verification.send'), [
+                    'Authorization' => "Bearer {$token}"
+                ]),
+                errorKey: 'status',
+                errorMsg: Phrase::pickSentence(PhraseKey::EmailAlreadyVerified)
+            );
         });
     });
     describe('receives successful because', function () {
@@ -70,11 +68,12 @@ describe('Email Verification from api routes', function () {
                 emailVerified: FALSE
             );
             Notification::assertNothingSent();
-            $responseLogin = $this->postJson(route('auth.login'), [
-                'email' => $userModel->email,
-                'password' => $password
-            ]);
-            $token = $responseLogin->json()['user']['token'];
+            ['token' => $token] = authenticate(
+                scope: $this,
+                email: $userModel->email,
+                password: $password,
+                create: FALSE
+            );
             $this->postJson(route('verification.send'), [
                 'Authorization' => "Bearer {$token}"
             ])->assertStatus(Response::HTTP_OK);
@@ -87,11 +86,13 @@ describe('Email Verification from api routes', function () {
                 email: 'someone@test.com',
                 emailVerified: FALSE
             );
-            $responseLogin = $this->postJson(route('auth.login'), [
-                'email' => $userModel->email,
-                'password' => $password
-            ]);
-            $token = $responseLogin->json()['user']['token'];
+            ['token' => $token] = authenticate(
+                scope: $this,
+                email: $userModel->email,
+                password: $password,
+                create: FALSE
+            );
+
             $url = URL::signedRoute('verification.verify', [
                 'id' => $userModel->id,
                 'hash' => sha1($userModel->getEmailForVerification())
@@ -107,11 +108,13 @@ describe('Email Verification from api routes', function () {
                 password: $password,
                 email: 'someone@test.com',
             );
-            $responseLogin = $this->postJson(route('auth.login'), [
-                'email' => $userModel->email,
-                'password' => $password
-            ]);
-            $token = $responseLogin->json()['user']['token'];
+            ['token' => $token] = authenticate(
+                scope: $this,
+                email: $userModel->email,
+                password: $password,
+                create: FALSE
+            );
+
             $url = URL::signedRoute('verification.verify', [
                 'id' => $userModel->id,
                 'hash' => sha1($userModel->getEmailForVerification())
