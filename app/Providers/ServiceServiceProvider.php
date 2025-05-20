@@ -9,7 +9,9 @@ use App\Repositories\RegisterRequestRepository;
 use App\Repositories\UserRepository;
 use App\Services\Auth\{
     Contracts\EmailVerifiedServiceInterface,
-    EmailVerifiedService
+    Contracts\LoginOutputServiceInterface,
+    EmailVerifiedService,
+    LoginOutputService
 };
 use App\Services\Password\Constracts\PasswordServiceInterfacer;
 use App\Services\Password\PasswordService;
@@ -45,6 +47,10 @@ final class ServiceServiceProvider extends ServiceProvider
             UserRepository::class,
             UserRepository::class,
         ],
+        [
+            LoginOutputServiceInterface::class,
+            LoginOutputService::class
+        ]
     ];
 
     /**

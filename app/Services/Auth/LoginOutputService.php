@@ -2,17 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Library\Builders;
+namespace App\Services\Auth;
 
 use App\Services\Auth\Contracts\EmailVerifiedServiceInterface;
+use App\Services\Auth\Contracts\LoginOutputServiceInterface;
 use Illuminate\Support\Str;
 
-final class LoginOutput
+final class LoginOutputService implements LoginOutputServiceInterface
 {
-    /**
-     * Generate the output required to user's authentication
-     */
-    public static function generate(EmailVerifiedServiceInterface $emailVerifiedService, $user): array
+    public function generate(EmailVerifiedServiceInterface $emailVerifiedService, $user): array
     {
         return [
             'id' => $user->id,
@@ -23,7 +21,7 @@ final class LoginOutput
                 subject: $user->createToken('auth-app')->plainTextToken
             ),
             'email' => $user->email,
-            'emailVerified' => $emailVerifiedService->userHasEmailVerified()
+            'emailVerified' => $emailVerifiedService->userHasEmailVerified(),
         ];
     }
 }

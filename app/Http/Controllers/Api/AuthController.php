@@ -4,18 +4,22 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\CheckRequest;
-use App\Library\Builders\LoginOutput as LoginOutputBuilder;
 use App\Library\Builders\Phrase;
 use App\Library\Builders\Response as ResponseBuilder;
 use App\Library\Enums\PhraseKey;
-use App\Services\Auth\Contracts\EmailVerifiedServiceInterface;
+use App\Services\Auth\Contracts\{
+    EmailVerifiedServiceInterface,
+    LoginOutputServiceInterface
+};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function __construct(private EmailVerifiedServiceInterface $emailVerifiedService)
-    {
+    public function __construct(
+        private EmailVerifiedServiceInterface $emailVerifiedService,
+        private LoginOutputServiceInterface $loginOutputService,
+    ) {
         // ...
     }
 
@@ -32,7 +36,7 @@ class AuthController extends Controller
         }
 
         return ResponseBuilder::successJSON(data: [
-            'user' => LoginOutputBuilder::generate($this->emailVerifiedService, $request->user())
+            'user' => $this->loginOutputService->generate($this->emailVerifiedService, $request->user())
         ]);
     }
 
