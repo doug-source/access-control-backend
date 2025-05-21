@@ -4,6 +4,7 @@
     "email": "e-mail",
     "password": "senha",
     "confirmation": "confirmação",
+    "name": "nome",
     "invalid-m": "inválido",
     "invalid-f": "inválida",
     "log-in": "login",
@@ -30,6 +31,8 @@
     "verified": "verificado",
     "allowed-m": "permitido",
     "allowed-f": "permitida",
+    "used-m": "utilizado",
+    "used-f": "utilizada",
 
     "subject-required": ":subject :required",
     "subject-invalid": ":subject :invalid",
@@ -65,5 +68,6 @@
     "forgot-password-text": "você está recebendo este :email porque recebemos uma solicitação de :reset-password da sua conta",
     "forgot-password-action": "redefina sua :password",
 
-    "link-not-allowed": "vínculo não :allowed"
+    "link-not-allowed": "vínculo não :allowed",
+    "value-already-used": ":subject já :used"
 }

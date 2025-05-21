@@ -25,6 +25,14 @@ final class AbilityPolicy
     }
 
     /**
+     * Determine whether the user can create the model.
+     */
+    public function create(User $user): bool
+    {
+        return $user->isSuperAdmin();
+    }
+
+    /**
      * Determine whether the user can update the model.
      */
     public function update(User $user, Ability $ability)

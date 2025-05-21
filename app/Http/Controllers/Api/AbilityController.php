@@ -42,6 +42,23 @@ class AbilityController extends Controller
     }
 
     /**
+     * Persist one resource instance
+     */
+    public function store(CheckRequest $request)
+    {
+        $this->authorize('create', Ability::class);
+        $ability = $this->abilityRepository->create([
+            'name' => $request->input('name')
+        ]);
+        return ResponseBuilder::successJSON(
+            status: Response::HTTP_CREATED,
+            headers: [
+                'Location' => route('ability.show', ['ability' => $ability->id])
+            ]
+        );
+    }
+
+    /**
      * Update the resource's data
      */
     public function update(CheckRequest $request, Ability $ability)

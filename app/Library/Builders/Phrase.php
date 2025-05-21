@@ -163,7 +163,11 @@ final class Phrase
             ])),
             PhraseKey::LinkNotAllowed => Str::of(__('link-not-allowed', [
                 'allowed' => __('allowed-m')
-            ]))
+            ])),
+            PhraseKey::NameAlreadyUsed => Str::of(__('value-already-used', [
+                'subject' => __('name'),
+                'used' => __('used-m')
+            ])),
         };
         if ($uppercase) {
             return $message->append($remain)->ucfirst();

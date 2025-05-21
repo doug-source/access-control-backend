@@ -9,8 +9,9 @@ use App\Http\Requests\{
     CheckerFactoryScheme
 };
 use App\Http\Requests\Ability\Strategy\{
+    Post\Plain as PostPlain,
     Patch\Plain as PatchPlain,
-    Delete\Plain as DeletePlain
+    Delete\Plain as DeletePlain,
 };
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -19,9 +20,11 @@ final class CheckerFactory implements CheckerFactoryScheme
 {
     public function getChecker(FormRequest $formRequest): ?Checker
     {
-        if (Str::of($formRequest->method())->lower()->toString() === 'patch') {
-            return new PatchPlain();
-        }
-        return new DeletePlain();
+        $method = Str::of($formRequest->method())->lower()->toString();
+        return match ($method) {
+            'patch' => new PatchPlain(),
+            'post' => new PostPlain(),
+            default => new DeletePlain(),
+        };
     }
 }

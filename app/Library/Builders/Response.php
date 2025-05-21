@@ -22,7 +22,7 @@ final class Response
      *
      * @param mixed|null $data
      */
-    public static function successJSON($data = NULL, int $status = HttpResponse::HTTP_OK, bool $complete = false)
+    public static function successJSON($data = NULL, int $status = HttpResponse::HTTP_OK, array $headers = [], bool $complete = false)
     {
         if ($complete) {
             return response()->json(
@@ -31,9 +31,10 @@ final class Response
                     'status' => $status,
                     'data' => $data
                 ],
-                status: $status
+                status: $status,
+                headers: $headers
             );
         }
-        return response()->json(data: $data, status: $status);
+        return response()->json(data: $data, status: $status, headers: $headers);
     }
 }

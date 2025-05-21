@@ -67,6 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/abilities', [AbilityController::class, 'index'])->name('ability.index');
     Route::get('/abilities/{ability}', [AbilityController::class, 'show'])->name('ability.show');
+    Route::post('/abilities', [AbilityController::class, 'store'])->name('ability.store');
     Route::patch('/abilities/{ability}', [AbilityController::class, 'update'])->name('ability.update');
     Route::delete('/abilities/{ability}', [AbilityController::class, 'destroy'])->name('ability.destroy');
 });

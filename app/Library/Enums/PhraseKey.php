@@ -49,4 +49,5 @@ enum PhraseKey
     case ForgotPasswordAction;
 
     case LinkNotAllowed;
+    case NameAlreadyUsed;
 }
