@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Requests\Ability\Strategy\Patch;
+
+use App\Http\Requests\Checker;
+use App\Library\Builders\Phrase;
+use App\Library\Enums\ColumnSize\AbilitySize;
+use App\Library\Enums\PhraseKey;
+use Illuminate\Foundation\Http\FormRequest;
+
+final class Plain implements Checker
+{
+    private int $maxColumnSize;
+
+    public function __construct()
+    {
+        $this->maxColumnSize = AbilitySize::NAME->get();
+    }
+
+    public function all(FormRequest $formRequest, array $requestInputs): array
+    {
+        return [
+            ...$requestInputs,
+        ];
+    }
+
+    public function rules(): array
+    {
+        return [
+            'name' => [
+                'bail',
+                'required',
+                "max:{$this->maxColumnSize}"
+            ]
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => Phrase::pickSentence(PhraseKey::ParameterRequired),
+            'name.max' => Phrase::pickSentence(PhraseKey::MaxSizeInvalid, " ({$this->maxColumnSize})")
+        ];
+    }
+}

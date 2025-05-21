@@ -23,4 +23,12 @@ final class AbilityPolicy
     {
         return $user->isSuperAdmin();
     }
+
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user, Ability $ability)
+    {
+        return $user->isSuperAdmin();
+    }
 }

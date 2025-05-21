@@ -1,5 +1,6 @@
 <?php
 
+use App\Library\Enums\ColumnSize\AbilitySize;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('abilities', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 50);
+            $table->string('name', AbilitySize::NAME->get());
             $table->timestamps();
         });
     }

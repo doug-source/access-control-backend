@@ -34,4 +34,15 @@ class AbilityRepository extends AbstractRepository
             });
         });
     }
+
+    /**
+     * Search an Ability instance by name
+     */
+    public function findByName(?string $name): ?Ability
+    {
+        if (is_null($name)) {
+            return NULL;
+        }
+        return $this->loadModel()::query()->firstWhere('name', $name);
+    }
 }

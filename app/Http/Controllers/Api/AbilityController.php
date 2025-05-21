@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Ability\CheckRequest;
+use App\Library\Builders\Response as ResponseBuilder;
 use App\Models\Ability;
 use App\Repositories\AbilityRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class AbilityController extends Controller
 {
@@ -30,11 +33,26 @@ class AbilityController extends Controller
     }
 
     /**
-     * Display one Ability instance
+     * Display one resource instance
      */
     public function show(Ability $ability)
     {
         $this->authorize('view', $ability);
         return $ability->ui;
+    }
+
+    /**
+     * Update the resource's data
+     */
+    public function update(CheckRequest $request, Ability $ability)
+    {
+        $this->authorize('update', $ability);
+        $name = $request->validated('name');
+        $this->abilityRepository->update($ability->id, [
+            'name' => $name
+        ]);
+        return ResponseBuilder::successJSON(
+            status: Response::HTTP_NO_CONTENT
+        );
     }
 }
