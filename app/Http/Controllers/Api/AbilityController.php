@@ -55,4 +55,14 @@ class AbilityController extends Controller
             status: Response::HTTP_NO_CONTENT
         );
     }
+
+    /**
+     * Remove the resource from database
+     */
+    public function destroy(CheckRequest $request, Ability $ability)
+    {
+        $this->authorize('delete', $ability);
+        $this->abilityRepository->delete($ability->id);
+        return ResponseBuilder::successJSON();
+    }
 }

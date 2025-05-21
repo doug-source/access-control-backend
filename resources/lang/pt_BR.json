@@ -28,6 +28,8 @@
     "login-with-password": ":login-in :with :password",
     "email-address": ":address de :email",
     "verified": "verificado",
+    "allowed-m": "permitido",
+    "allowed-f": "permitida",
 
     "subject-required": ":subject :required",
     "subject-invalid": ":subject :invalid",
@@ -61,5 +63,7 @@
     "forgot-password-expire-line": "este link de redefinição de :password expirará em",
     "forgot-password-otherwise-line": "se você não solicitou uma redefinição de :password, nenhuma ação adicional será necessária",
     "forgot-password-text": "você está recebendo este :email porque recebemos uma solicitação de :reset-password da sua conta",
-    "forgot-password-action": "redefina sua :password"
+    "forgot-password-action": "redefina sua :password",
+
+    "link-not-allowed": "vínculo não :allowed"
 }

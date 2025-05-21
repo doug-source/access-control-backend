@@ -47,4 +47,6 @@ enum PhraseKey
     case ForgotPasswordTitle;
     case ForgotPasswordText;
     case ForgotPasswordAction;
+
+    case LinkNotAllowed;
 }

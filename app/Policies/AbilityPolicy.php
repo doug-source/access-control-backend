@@ -31,4 +31,12 @@ final class AbilityPolicy
     {
         return $user->isSuperAdmin();
     }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, Ability $ability)
+    {
+        return $user->isSuperAdmin();
+    }
 }

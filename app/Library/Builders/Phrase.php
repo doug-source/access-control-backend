@@ -161,6 +161,9 @@ final class Phrase
             PhraseKey::ForgotPasswordAction => Str::of(__('forgot-password-action', [
                 'password' => __('password')
             ])),
+            PhraseKey::LinkNotAllowed => Str::of(__('link-not-allowed', [
+                'allowed' => __('allowed-m')
+            ]))
         };
         if ($uppercase) {
             return $message->append($remain)->ucfirst();

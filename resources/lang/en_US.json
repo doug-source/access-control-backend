@@ -28,6 +28,8 @@
     "login-with-password": ":login-in :with :password",
     "email-address": ":email :address",
     "verified": "verified",
+    "allowed-m": "allowed",
+    "allowed-f": "allowed",
 
     "subject-required": ":subject :required",
     "subject-invalid": ":invalid :subject",
@@ -61,5 +63,7 @@
     "forgot-password-expire-line": "this :password reset link will expire in",
     "forgot-password-otherwise-line": "if you did not request a :password reset, no further action is required",
     "forgot-password-text": "you are receiving this :email because we received a :reset-password request for your account",
-    "forgot-password-action": "reset your :password"
+    "forgot-password-action": "reset your :password",
+
+    "link-not-allowed": "link not :allowed"
 }
