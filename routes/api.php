@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\{
     RegisterPermissionController,
     RegisterRequestsController,
     ResetPasswordController,
+    RoleController,
     SocialiteController,
     UserController
 };
@@ -70,6 +71,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/abilities', [AbilityController::class, 'store'])->name('ability.store');
     Route::patch('/abilities/{ability}', [AbilityController::class, 'update'])->name('ability.update');
     Route::delete('/abilities/{ability}', [AbilityController::class, 'destroy'])->name('ability.destroy');
+
+    Route::get('/roles', [RoleController::class, 'index'])->name('role.index');
 });
 
 // ---------------------------------------------------------------------------------------

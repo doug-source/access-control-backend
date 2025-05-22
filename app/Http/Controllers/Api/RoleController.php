@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\Role;
+use App\Repositories\RoleRepository;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
+
+class RoleController extends Controller
+{
+    use AuthorizesRequests;
+
+    public function __construct(private RoleRepository $roleRepository)
+    {
+        // ...
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        $this->authorize('viewAny', Role::class);
+        return $this->roleRepository->paginate(
+            perPage: $request->input('group', config('database.paginate.perPage')),
+            name: $request->input('name')
+        );
+    }
+}
