@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\{
     AbilityController,
+    AbilityRoleController,
     AuthController,
     EmailVerifyController,
     ForgotPasswordController,
@@ -78,6 +79,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/roles', [RoleController::class, 'store'])->name('role.store');
     Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('role.update');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('role.destroy');
+    Route::get('/roles/{role}/abilities', [AbilityRoleController::class, 'index'])->name('role.ability.index');
 
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('user.show');

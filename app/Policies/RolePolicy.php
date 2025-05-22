@@ -47,4 +47,12 @@ class RolePolicy
     {
         return $user->isSuperAdmin();
     }
+
+    /**
+     * Determine whether the user can view any ability models.
+     */
+    public function viewAnyAbility(User $user, Role $role): bool
+    {
+        return $user->isSuperAdmin();
+    }
 }
