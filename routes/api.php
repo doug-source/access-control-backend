@@ -79,6 +79,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('role.destroy');
 
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('user.show');
 });
 
 // ---------------------------------------------------------------------------------------

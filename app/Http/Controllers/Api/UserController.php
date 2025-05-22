@@ -42,6 +42,15 @@ class UserController extends Controller
     }
 
     /**
+     * Display one resource instance
+     */
+    public function show(User $user)
+    {
+        $this->authorize('view', $user);
+        return $user->ui;
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(CheckRequest $request)
