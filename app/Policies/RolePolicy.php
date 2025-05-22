@@ -21,7 +21,7 @@ class RolePolicy
      */
     public function view(User $user, Role $role): bool
     {
-        return false;
+        return $user->isSuperAdmin();
     }
 
     /**

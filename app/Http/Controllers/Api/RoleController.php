@@ -28,4 +28,13 @@ class RoleController extends Controller
             name: $request->input('name')
         );
     }
+
+    /**
+     * Display one resource instance
+     */
+    public function show(Role $role)
+    {
+        $this->authorize('view', $role);
+        return $role->ui;
+    }
 }

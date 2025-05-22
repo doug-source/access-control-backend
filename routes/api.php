@@ -73,6 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/abilities/{ability}', [AbilityController::class, 'destroy'])->name('ability.destroy');
 
     Route::get('/roles', [RoleController::class, 'index'])->name('role.index');
+    Route::get('/roles/{role}', [RoleController::class, 'show'])->name('role.show');
 });
 
 // ---------------------------------------------------------------------------------------
