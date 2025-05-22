@@ -51,6 +51,16 @@ class UserController extends Controller
     }
 
     /**
+     * Remove the resource from database
+     */
+    public function destroy(User $user)
+    {
+        $this->authorize('delete', $user);
+        $this->userRepository->delete($user->id);
+        return ResponseBuilder::successJSON();
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(CheckRequest $request)

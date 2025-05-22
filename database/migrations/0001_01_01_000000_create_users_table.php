@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('phone', UserSize::PHONE->get())->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

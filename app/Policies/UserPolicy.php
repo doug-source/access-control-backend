@@ -44,7 +44,11 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return false;
+        $isSuperAdminRequester = $user->isSuperAdmin();
+        $isNotSameUser = $user->id !== $model->id;
+        $isNotSuperAdminModel = !$model->isSuperAdmin();
+
+        return $isSuperAdminRequester && $isNotSameUser && $isNotSuperAdminModel;
     }
 
     /**
