@@ -40,9 +40,6 @@ class DatabaseSeeder extends Seeder
                 'email' => $this->superAdmin['email'],
             ]
         );
-        $this->call(class: ProvidersTableSeeder::class, parameters: [
-            'email' => $this->superAdmin['email'],
-        ]);
         $this->call(
             class: RolesTableSeeder::class,
             parameters: [
