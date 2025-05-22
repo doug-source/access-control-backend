@@ -74,6 +74,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/roles', [RoleController::class, 'index'])->name('role.index');
     Route::get('/roles/{role}', [RoleController::class, 'show'])->name('role.show');
+    Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('role.update');
 });
 
 // ---------------------------------------------------------------------------------------

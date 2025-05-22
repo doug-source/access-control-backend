@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Role\CheckRequest;
+use App\Library\Builders\Response as ResponseBuilder;
 use App\Models\Role;
 use App\Repositories\RoleRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class RoleController extends Controller
 {
@@ -36,5 +39,20 @@ class RoleController extends Controller
     {
         $this->authorize('view', $role);
         return $role->ui;
+    }
+
+    /**
+     * Update the resource's data
+     */
+    public function update(CheckRequest $request, Role $role)
+    {
+        $this->authorize('update', $role);
+        $name = $request->validated('name');
+        $this->roleRepository->update($role->id, [
+            'name' => $name
+        ]);
+        return ResponseBuilder::successJSON(
+            status: Response::HTTP_NO_CONTENT
+        );
     }
 }
