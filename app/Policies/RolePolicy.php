@@ -29,7 +29,7 @@ class RolePolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isSuperAdmin();
     }
 
     /**
@@ -46,21 +46,5 @@ class RolePolicy
     public function delete(User $user, Role $role): bool
     {
         return $user->isSuperAdmin();
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Role $role): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Role $role): bool
-    {
-        return false;
     }
 }

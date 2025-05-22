@@ -42,6 +42,23 @@ class RoleController extends Controller
     }
 
     /**
+     * Persist one resource instance
+     */
+    public function store(CheckRequest $request)
+    {
+        $this->authorize('create', Role::class);
+        $role = $this->roleRepository->create([
+            'name' => $request->input('name')
+        ]);
+        return ResponseBuilder::successJSON(
+            status: Response::HTTP_CREATED,
+            headers: [
+                'Location' => route('role.show', ['role' => $role->id])
+            ]
+        );
+    }
+
+    /**
      * Update the resource's data
      */
     public function update(CheckRequest $request, Role $role)

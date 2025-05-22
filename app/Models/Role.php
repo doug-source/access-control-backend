@@ -11,6 +11,10 @@ class Role extends Model
 {
     use HasFactory, FormatDatetimeProperty;
 
+    protected $fillable = [
+        'name',
+    ];
+
     /**
      * Relationship with database table users
      */
