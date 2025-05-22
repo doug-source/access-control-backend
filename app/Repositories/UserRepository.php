@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -31,6 +32,26 @@ class UserRepository extends AbstractRepository
         ), function (LengthAwarePaginator $paginatedInstance) {
             return $paginatedInstance->getCollection()->transform(function (User $user) {
                 return $user->ui;
+            });
+        });
+    }
+
+    /**
+     * Query the User's Role instance pagination list
+     */
+    public function paginateRoles(User $user, $perPage = 3, ?string $name = NULL)
+    {
+        $query = $user->roles();
+        if ($name) {
+            $query = $query->where([
+                ['name', 'like', "%{$name}%"]
+            ]);
+        }
+        return tap($query->paginate(
+            perPage: $perPage,
+        ), function (LengthAwarePaginator $paginatedInstance) {
+            return $paginatedInstance->getCollection()->transform(function (Role $role) {
+                return $role->ui;
             });
         });
     }

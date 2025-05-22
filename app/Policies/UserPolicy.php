@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
@@ -49,6 +50,14 @@ class UserPolicy
         $isNotSuperAdminModel = !$model->isSuperAdmin();
 
         return $isSuperAdminRequester && $isNotSameUser && $isNotSuperAdminModel;
+    }
+
+    /**
+     * Determine whether the user can view any role models.
+     */
+    public function viewAnyRole(User $user, User $model): bool
+    {
+        return $user->isSuperAdmin();
     }
 
     /**
