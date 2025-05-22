@@ -55,4 +55,14 @@ class RoleController extends Controller
             status: Response::HTTP_NO_CONTENT
         );
     }
+
+    /**
+     * Remove the resource from database
+     */
+    public function destroy(CheckRequest $request, Role $role)
+    {
+        $this->authorize('delete', $role);
+        $this->roleRepository->delete($role->id);
+        return ResponseBuilder::successJSON();
+    }
 }

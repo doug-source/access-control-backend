@@ -10,6 +10,7 @@ use App\Http\Requests\{
 };
 use App\Http\Requests\Role\Strategy\{
     Patch\Plain as PatchPlain,
+    Delete\Plain as DeletePlain,
 };
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -21,6 +22,7 @@ final class CheckerFactory implements CheckerFactoryScheme
         $method = Str::of($formRequest->method())->lower()->toString();
         return match ($method) {
             'patch' => new PatchPlain(),
+            default => new DeletePlain(),
         };
     }
 }
