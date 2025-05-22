@@ -9,8 +9,11 @@ use Illuminate\Support\Facades\App;
 
 final class DatetimeFormat
 {
-    public static function formatToDate(Carbon $datetime): string
+    public static function formatToDate(?Carbon $datetime): ?string
     {
+        if (is_null($datetime)) {
+            return $datetime;
+        }
         $locale = App::getLocale();
         if ($locale === 'pt_BR') {
             return $datetime->format('d/m/Y');
