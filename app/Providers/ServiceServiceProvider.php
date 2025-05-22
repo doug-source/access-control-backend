@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Repositories\AbilityRepository;
-use App\Repositories\RegisterPermissionRepository;
-use App\Repositories\RegisterRequestRepository;
-use App\Repositories\UserRepository;
 use App\Services\Auth\{
     Contracts\EmailVerifiedServiceInterface,
     Contracts\LoginOutputServiceInterface,
@@ -39,24 +35,8 @@ final class ServiceServiceProvider extends ServiceProvider
             PasswordService::class
         ],
         [
-            RegisterPermissionRepository::class,
-            RegisterPermissionRepository::class,
-        ],
-        [
-            RegisterRequestRepository::class,
-            RegisterRequestRepository::class,
-        ],
-        [
-            UserRepository::class,
-            UserRepository::class,
-        ],
-        [
             AbilityServiceInterface::class,
             AbilityService::class
-        ],
-        [
-            AbilityRepository::class,
-            AbilityRepository::class,
         ],
         [
             LoginOutputServiceInterface::class,
