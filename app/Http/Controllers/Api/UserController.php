@@ -7,19 +7,38 @@ use App\Library\Builders\Response as ResponseBuilder;
 use App\Services\Register\Contracts\RegisterServiceInterface;
 use App\Http\Requests\User\CheckRequest;
 use App\Library\Converters\Phone as PhoneConverter;
+use App\Models\User;
 use App\Repositories\RegisterPermissionRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\Response;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\{
+    Request,
+    Response
+};
 
 class UserController extends Controller
 {
+    use AuthorizesRequests;
+
     public function __construct(
         private readonly RegisterServiceInterface $registerService,
         private readonly RegisterPermissionRepository $permissionRepository,
         private readonly UserRepository $userRepository,
     ) {
         // ...
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        $this->authorize('viewAny', User::class);
+        return $this->userRepository->paginate(
+            perPage: $request->input('group', config('database.paginate.perPage')),
+            name: $request->input('name')
+        );
     }
 
     /**

@@ -77,6 +77,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/roles', [RoleController::class, 'store'])->name('role.store');
     Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('role.update');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('role.destroy');
+
+    Route::get('/users', [UserController::class, 'index'])->name('user.index');
 });
 
 // ---------------------------------------------------------------------------------------

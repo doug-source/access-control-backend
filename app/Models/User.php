@@ -55,6 +55,34 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->getPropertyFormatted('updated_at');
     }
 
+    /**
+     * Format the email_verified_at to view
+     *
+     * @return string
+     */
+    public function getEmailVerifiedAtFormattedAttribute()
+    {
+        return $this->getPropertyFormatted('email_verified_at');
+    }
+
+    /**
+     * Format the summarized fields to view
+     *
+     * @return array{id: string, name: string, email: string, createdAt: string, updatedAt: string}
+     */
+    public function getUiAttribute(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'emailVerifiedAt' => $this->email_verified_at_formatted,
+            'createdAt' => $this->created_at_formatted,
+            'updatedAt' => $this->updated_at_formatted,
+        ];
+    }
+
 
     /**
      * Relationship between users and providers tables
