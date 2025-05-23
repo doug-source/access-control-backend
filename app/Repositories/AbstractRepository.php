@@ -28,7 +28,7 @@ abstract class AbstractRepository implements RepositoryInterface
     /**
      * Find a model by its primary key.
      */
-    public function find(int $id): Model
+    public function find(int $id): ?Model
     {
         return $this->loadModel()::query()->find($id);
     }
