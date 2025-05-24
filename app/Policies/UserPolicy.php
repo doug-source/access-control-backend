@@ -61,6 +61,14 @@ class UserPolicy
     }
 
     /**
+     * Determine whether the user can update any role models relative to another user.
+     */
+    public function updateRole(User $user): bool
+    {
+        return $user->isSuperAdmin();
+    }
+
+    /**
      * Determine whether the user can restore the model.
      */
     public function restore(User $user, User $model): bool

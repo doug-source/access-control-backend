@@ -168,6 +168,12 @@ final class Phrase
                 'subject' => __('name'),
                 'used' => __('used-m')
             ])),
+            PhraseKey::InvalidRoleRemotion => Str::of(__('invalid-role-remotion', [
+                'invalid' => __('invalid-f'),
+            ])),
+            PhraseKey::InvalidRoleInclusion => Str::of(__('invalid-role-inclusion', [
+                'invalid' => __('invalid-f'),
+            ])),
         };
         if ($uppercase) {
             return $message->append($remain)->ucfirst();

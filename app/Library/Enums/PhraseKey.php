@@ -50,4 +50,7 @@ enum PhraseKey
 
     case LinkNotAllowed;
     case NameAlreadyUsed;
+
+    case InvalidRoleRemotion;
+    case InvalidRoleInclusion;
 }

@@ -69,5 +69,8 @@
     "forgot-password-action": "redefina sua :password",
 
     "link-not-allowed": "vínculo não :allowed",
-    "value-already-used": ":subject já :used"
+    "value-already-used": ":subject já :used",
+
+    "invalid-role-remotion": "remoção :invalid de papel",
+    "invalid-role-inclusion": "adição :invalid de papel"
 }
