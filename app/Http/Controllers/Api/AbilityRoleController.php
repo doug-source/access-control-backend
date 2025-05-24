@@ -26,8 +26,8 @@ class AbilityRoleController extends Controller
         $this->authorize('viewAnyAbility', $role);
         return $this->roleRepository->paginateAbilities(
             role: $role,
-            perPage: $request->input('group', config('database.paginate.perPage')),
-            name: $request->input('name'),
+            perPage: $request->query('group', config('database.paginate.perPage')),
+            name: $request->query('name'),
         );
     }
 }

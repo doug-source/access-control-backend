@@ -41,8 +41,8 @@ class RegisterRequestsController extends Controller
         $this->authorize('viewAny', RegisterRequest::class);
         return ResponseBuilder::successJSON(
             data: $this->regRequestRepository->paginate(
-                perPage: $request->input('group', config('database.paginate.perPage')),
-                email: $request->input('email')
+                perPage: $request->query('group', config('database.paginate.perPage')),
+                email: $request->query('email')
             )
         );
     }

@@ -27,8 +27,8 @@ class AbilityController extends Controller
     {
         $this->authorize('viewAny', Ability::class);
         return $this->abilityRepository->paginate(
-            perPage: $request->input('group', config('database.paginate.perPage')),
-            name: $request->input('name')
+            perPage: $request->query('group', config('database.paginate.perPage')),
+            name: $request->query('name')
         );
     }
 

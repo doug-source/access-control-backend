@@ -27,8 +27,8 @@ class RoleController extends Controller
     {
         $this->authorize('viewAny', Role::class);
         return $this->roleRepository->paginate(
-            perPage: $request->input('group', config('database.paginate.perPage')),
-            name: $request->input('name')
+            perPage: $request->query('group', config('database.paginate.perPage')),
+            name: $request->query('name')
         );
     }
 

@@ -26,8 +26,8 @@ class RegisterPermissionController extends Controller
         $this->authorize('viewAny', RegisterPermission::class);
         return ResponseBuilder::successJSON(
             data: $this->repository->paginate(
-                perPage: $request->input('group', config('database.paginate.perPage')),
-                email: $request->input('email'),
+                perPage: $request->query('group', config('database.paginate.perPage')),
+                email: $request->query('email'),
             )
         );
     }
