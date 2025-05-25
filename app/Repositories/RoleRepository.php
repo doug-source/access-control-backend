@@ -6,12 +6,15 @@ namespace App\Repositories;
 
 use App\Models\Ability;
 use App\Models\Role;
+use App\Repositories\Traits\PickRoleUiProperty;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection as BaseCollection;
 
 final class RoleRepository extends AbstractRepository
 {
+    use PickRoleUiProperty;
+
     public function __construct()
     {
         parent::__construct(Role::class);
@@ -19,23 +22,23 @@ final class RoleRepository extends AbstractRepository
 
     /**
      * Query the Role instance pagination list
+     *
+     * @param array<int, int> $exclude
      */
-    public function paginate($perPage = 3, ?string $name = NULL): LengthAwarePaginator
+    public function paginate(int $page, int $group, ?string $name = NULL, array $exclude = []): LengthAwarePaginator
     {
-        $query = $this->loadModel()::query();
+        $query = $this->loadModel()::query()->whereNotIn('id', $exclude);
         if ($name) {
             $query = $query->where([
                 ['name', 'like', "%{$name}%"]
             ]);
         }
-        return tap($query->paginate(
-            perPage: $perPage,
+        return $this->pickRoleUi($query->paginate(
+            page: $page,
+            perPage: $group,
             columns: ['id', 'name', 'created_at', 'updated_at']
-        ), function (LengthAwarePaginator $paginatedInstance) {
-            return $paginatedInstance->getCollection()->transform(function (Role $role) {
-                return $role->ui;
-            });
-        });
+        ));
+
     }
 
     /**
