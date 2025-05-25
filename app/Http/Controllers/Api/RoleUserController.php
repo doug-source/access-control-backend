@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests\RoleUser\CheckRequest;
 use App\Library\Builders\Response as ResponseBuilder;
+use App\Library\Converters\ResponseIndex;
 use App\Services\User\Contracts\RoleServiceInterface;
 
 class RoleUserController extends Controller
@@ -29,10 +30,14 @@ class RoleUserController extends Controller
     public function index(Request $request, User $user)
     {
         $this->authorize('viewAnyRole', $user);
+        $query = ResponseIndex::handleQuery(
+            $request,
+            ['field' => 'name'],
+        );
         return $this->userRepository->paginateRoles(
             user: $user,
-            perPage: $request->query('group', config('database.paginate.perPage')),
-            name: $request->query('name'),
+            perPage: $query['group'],
+            name: $query['name'],
         );
     }
 
