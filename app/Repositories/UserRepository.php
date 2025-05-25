@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use App\Models\Role;
 use App\Models\User;
+use App\Repositories\Traits\PickRoleUiProperty;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserRepository extends AbstractRepository
 {
+    use PickRoleUiProperty;
+
     public function __construct()
     {
         parent::__construct(User::class);
@@ -37,9 +39,9 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Query the User's Role instance pagination list
+     * Make the User's Role instance list builder
      */
-    public function paginateRoles(User $user, $perPage = 3, ?string $name = NULL)
+    public function findRoles(User $user, int $page, int $group, ?string $name = NULL): LengthAwarePaginator
     {
         $query = $user->roles();
         if ($name) {
@@ -47,13 +49,10 @@ class UserRepository extends AbstractRepository
                 ['name', 'like', "%{$name}%"]
             ]);
         }
-        return tap($query->paginate(
-            perPage: $perPage,
-        ), function (LengthAwarePaginator $paginatedInstance) {
-            return $paginatedInstance->getCollection()->transform(function (Role $role) {
-                return $role->ui;
-            });
-        });
+        return $this->pickRoleUi($query->paginate(
+            page: $page,
+            perPage: $group,
+        ));
     }
 
     /**

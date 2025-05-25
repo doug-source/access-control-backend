@@ -9,11 +9,16 @@ use App\Services\User\Contracts\RoleServiceInterface;
 use App\Repositories\RoleRepository;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Database\Eloquent\Collection;
+use App\Models\User;
+use App\Repositories\UserRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 final class RoleService implements RoleServiceInterface
 {
-    public function __construct(private readonly RoleRepository $roleRepository)
-    {
+    public function __construct(
+        private readonly RoleRepository $roleRepository,
+        private readonly UserRepository $userRepository,
+    ) {
         // ...
     }
 
@@ -37,6 +42,25 @@ final class RoleService implements RoleServiceInterface
             fn(Role $role) => $namesToRemove->contains(
                 fn(string $roleName) => $roleName === $role->name
             )
+        );
+    }
+
+
+    public function findReferenceRoles(User $user, bool $owner, int $page, int $group, ?string $name = NULL): LengthAwarePaginator
+    {
+        if ($owner) {
+            return $this->userRepository->findRoles(
+                user: $user,
+                page: $page,
+                group: $group,
+                name: $name,
+            );
+        }
+        return $this->roleRepository->findRoleListFiltered(
+            page: $page,
+            group: $group,
+            exclude: $user->roles->pluck('id')->all(),
+            name: $name,
         );
     }
 }

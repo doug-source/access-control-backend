@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Repositories\UserRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,10 +16,8 @@ class RoleUserController extends Controller
 {
     use AuthorizesRequests;
 
-    public function __construct(
-        private readonly RoleServiceInterface $roleService,
-        private readonly UserRepository $userRepository,
-    ) {
+    public function __construct(private RoleServiceInterface $roleService)
+    {
         // ...
     }
 
@@ -32,11 +29,14 @@ class RoleUserController extends Controller
         $this->authorize('viewAnyRole', $user);
         $query = ResponseIndex::handleQuery(
             $request,
+            ['field' => 'owner', 'default' => 'yes'],
             ['field' => 'name'],
         );
-        return $this->userRepository->paginateRoles(
+        return $this->roleService->findReferenceRoles(
             user: $user,
-            perPage: $query['group'],
+            owner: $query['owner'] === 'no' ? false : true,
+            page: $query['page'],
+            group: $query['group'],
             name: $query['name'],
         );
     }

@@ -38,7 +38,29 @@ final class RoleRepository extends AbstractRepository
             perPage: $group,
             columns: ['id', 'name', 'created_at', 'updated_at']
         ));
+    }
 
+    /**
+     * Search the Role instance list based in include id list (and optionally exclude id list)
+     *
+     * @param array<int> $include
+     * @param array<int> $exclude
+     */
+    public function findRoleListFiltered(int $page, int $group, ?string $name = NULL, array $include = [], array $exclude = []): LengthAwarePaginator
+    {
+        $query = $this->loadModel()::query()->whereNotIn('id', $exclude);
+        if ($name) {
+            $query = $query->where([
+                ['name', 'like', "%{$name}%"]
+            ]);
+        }
+        if ($include) {
+            $query = $query->whereIn('id', $include);
+        }
+        return $this->pickRoleUi($query->paginate(
+            page: $page,
+            perPage: $group,
+        ));
     }
 
     /**
