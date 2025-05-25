@@ -24,7 +24,7 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(CheckRequest $request)
     {
         $this->authorize('viewAny', Role::class);
         $query = ResponseIndex::handleQuery($request, ['field' => 'name']);

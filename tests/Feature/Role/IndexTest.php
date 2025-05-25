@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Models\Ability;
+use App\Library\Builders\Phrase;
+use App\Library\Enums\PhraseKey;
 use App\Models\Role;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Support\Uri;
@@ -21,6 +22,72 @@ describe('Abilities from api routes', function () {
                 'Authorization' => "Bearer $token"
             ])
                 ->assertForbidden();
+        });
+        it('has invalid page parameter', function () {
+            $count = 2;
+            Role::factory(count: $count)->create();
+            ['token' => $token, 'user' => $user] = authenticate(scope: $this);
+            createSuperAdminRelationship($user);
+            $uri = Uri::of(route('role.index'))->withQuery([
+                'page' => 'whatever',
+                'group' => $count
+            ])->value();
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer $token"
+                ]),
+                errorKey: 'page',
+                errorMsg: Phrase::pickSentence(PhraseKey::ParameterInvalid)
+            );
+        });
+        it('has page parameter lower then minimal size', function () {
+            $count = 2;
+            Role::factory(count: $count)->create();
+            ['token' => $token, 'user' => $user] = authenticate(scope: $this);
+            createSuperAdminRelationship($user);
+            $uri = Uri::of(route('role.index'))->withQuery([
+                'page' => '0',
+                'group' => $count
+            ])->value();
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer $token"
+                ]),
+                errorKey: 'page',
+                errorMsg: Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)")
+            );
+        });
+        it('has invalid group parameter', function () {
+            Role::factory(count: 2)->create();
+            ['token' => $token, 'user' => $user] = authenticate(scope: $this);
+            createSuperAdminRelationship($user);
+            $uri = Uri::of(route('role.index'))->withQuery([
+                'page' => '1',
+                'group' => 'whatever'
+            ])->value();
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer $token"
+                ]),
+                errorKey: 'group',
+                errorMsg: Phrase::pickSentence(PhraseKey::ParameterInvalid)
+            );
+        });
+        it('has group parameter lower then minimal size', function () {
+            Role::factory(count: 2)->create();
+            ['token' => $token, 'user' => $user] = authenticate(scope: $this);
+            createSuperAdminRelationship($user);
+            $uri = Uri::of(route('role.index'))->withQuery([
+                'page' => '1',
+                'group' => '0'
+            ])->value();
+            assertFailedResponse(
+                response: $this->getJson($uri, [
+                    'Authorization' => "Bearer $token"
+                ]),
+                errorKey: 'group',
+                errorMsg: Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)")
+            );
         });
     });
     describe('succeed because', function () {
