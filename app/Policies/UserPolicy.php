@@ -61,6 +61,14 @@ class UserPolicy
     }
 
     /**
+     * Determine whether the user can view any ability models.
+     */
+    public function viewAnyAbility(User $user, User $model): bool
+    {
+        return $user->isSuperAdmin();
+    }
+
+    /**
      * Determine whether the user can update any role models relative to another user.
      */
     public function updateRole(User $user): bool

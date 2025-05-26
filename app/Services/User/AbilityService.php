@@ -4,15 +4,24 @@ declare(strict_types=1);
 
 namespace App\Services\User;
 
+use App\Library\Builders\Pagination as PaginationBuilder;
 use App\Models\Role;
 use App\Services\User\Contracts\AbilityServiceInterface;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Ability;
+use App\Repositories\AbilityRepository;
 use Illuminate\Support\Collection as SupportCollection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 final class AbilityService implements AbilityServiceInterface
 {
+    public function __construct(
+        private AbilityRepository $abilityRepository,
+    ) {
+        // ...
+    }
+
     public function abilitiesFromUser(User $user): SupportCollection
     {
         return $this->manageAbilities(
@@ -81,5 +90,23 @@ final class AbilityService implements AbilityServiceInterface
     private function dettachRoleAbilities(SupportCollection $abilities): SupportCollection
     {
         return $abilities->flatten(1);
+    }
+
+    public function findReferenceUserAbilities(User $user, bool $owner, int $page, int $group, ?string $name = NULL): LengthAwarePaginator
+    {
+        $results = $this->abilitiesFromUser($user);
+        if ($owner) {
+            return PaginationBuilder::paginate(
+                results: $results,
+                page: $page,
+                group: $group,
+            );
+        }
+        return $this->abilityRepository->paginate(
+            page: $page,
+            group: $group,
+            name: $name,
+            exclude: $results->pluck('id')->all(),
+        );
     }
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\{
     AbilityController,
     AbilityRoleController,
+    AbilityUserController,
     AuthController,
     EmailVerifyController,
     ForgotPasswordController,
@@ -79,11 +80,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/roles', [RoleController::class, 'store'])->name('role.store');
     Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('role.update');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('role.destroy');
+
     Route::get('/roles/{role}/abilities', [AbilityRoleController::class, 'index'])->name('role.ability.index');
 
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('user.show');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+
     Route::get(
         '/users/{user}/roles',
         [RoleUserController::class, 'index']
@@ -92,6 +95,11 @@ Route::middleware('auth:sanctum')->group(function () {
         '/users/{user}/roles',
         [RoleUserController::class, 'update']
     )->name('user.role.update')->where(['user' => '[0-9]+']);
+
+    Route::get(
+        '/users/{user}/abilities',
+        [AbilityUserController::class, 'index']
+    )->name('user.ability.index');
 });
 
 // ---------------------------------------------------------------------------------------
