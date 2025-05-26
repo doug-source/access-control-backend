@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Library\Converters\ResponseIndex;
 use App\Models\Role;
-use App\Repositories\RoleRepository;
+use App\Services\User\Contracts\AbilityServiceInterface;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,8 @@ class AbilityRoleController extends Controller
 {
     use AuthorizesRequests;
 
-    public function __construct(
-        private readonly RoleRepository $roleRepository,
-    ) {
+    public function __construct(private AbilityServiceInterface $abilityService)
+    {
         // ...
     }
 
@@ -24,10 +24,17 @@ class AbilityRoleController extends Controller
     public function index(Request $request, Role $role)
     {
         $this->authorize('viewAnyAbility', $role);
-        return $this->roleRepository->paginateAbilities(
+        $query = ResponseIndex::handleQuery(
+            $request,
+            ['field' => 'owner', 'default' => 'yes'],
+            ['field' => 'name'],
+        );
+        return $this->abilityService->findReferenceRoleAbilities(
             role: $role,
-            perPage: $request->query('group', config('database.paginate.perPage')),
-            name: $request->query('name'),
+            owner: $query['owner'] === 'no' ? false : true,
+            page: $query['page'],
+            group: $query['group'],
+            name: $query['name'],
         );
     }
 }

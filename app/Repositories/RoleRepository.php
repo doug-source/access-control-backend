@@ -66,7 +66,7 @@ final class RoleRepository extends AbstractRepository
     /**
      * Query the Role's Ability instance pagination list
      */
-    public function paginateAbilities(Role $role, $perPage = 3, ?string $name = NULL)
+    public function paginateAbilities(Role $role, int $page, int $group, ?string $name = NULL): LengthAwarePaginator
     {
         $query = $role->abilities();
         if ($name) {
@@ -75,7 +75,8 @@ final class RoleRepository extends AbstractRepository
             ]);
         }
         return tap($query->paginate(
-            perPage: $perPage,
+            page: $page,
+            perPage: $group,
         ), function (LengthAwarePaginator $paginatedInstance) {
             return $paginatedInstance->getCollection()->transform(function (Ability $ability) {
                 return $ability->ui;

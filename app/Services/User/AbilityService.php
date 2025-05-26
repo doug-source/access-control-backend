@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Ability;
 use App\Repositories\AbilityRepository;
+use App\Repositories\RoleRepository;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -18,6 +19,7 @@ final class AbilityService implements AbilityServiceInterface
 {
     public function __construct(
         private AbilityRepository $abilityRepository,
+        private RoleRepository $roleRepository,
     ) {
         // ...
     }
@@ -107,6 +109,24 @@ final class AbilityService implements AbilityServiceInterface
             group: $group,
             name: $name,
             exclude: $results->pluck('id')->all(),
+        );
+    }
+
+    public function findReferenceRoleAbilities(Role $role, bool $owner, int $page, int $group, ?string $name = NULL): LengthAwarePaginator
+    {
+        if ($owner) {
+            return $this->roleRepository->paginateAbilities(
+                role: $role,
+                page: $page,
+                group: $group,
+                name: $name,
+            );
+        }
+        return $this->abilityRepository->paginate(
+            page: $page,
+            group: $group,
+            name: $name,
+            exclude: $role->abilities->pluck('id')->all(),
         );
     }
 }

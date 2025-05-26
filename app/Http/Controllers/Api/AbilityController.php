@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Ability\CheckRequest;
 use App\Library\Builders\Response as ResponseBuilder;
+use App\Library\Converters\ResponseIndex;
 use App\Models\Ability;
 use App\Repositories\AbilityRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -26,9 +27,14 @@ class AbilityController extends Controller
     public function index(Request $request)
     {
         $this->authorize('viewAny', Ability::class);
+        $query = ResponseIndex::handleQuery(
+            $request,
+            ['field' => 'name'],
+        );
         return $this->abilityRepository->paginate(
-            perPage: $request->query('group', config('database.paginate.perPage')),
-            name: $request->query('name')
+            page: $query['page'],
+            group: $query['group'],
+            name: $query['name'],
         );
     }
 
