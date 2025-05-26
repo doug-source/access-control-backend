@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests\RoleUser\CheckRequest;
 use App\Library\Builders\Response as ResponseBuilder;
@@ -24,8 +23,9 @@ class RoleUserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, User $user)
+    public function index(CheckRequest $request)
     {
+        $user = $request->input('user');
         $this->authorize('viewAnyRole', $user);
         $query = ResponseIndex::handleQuery(
             $request,

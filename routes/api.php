@@ -84,7 +84,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('user.show');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('user.destroy');
-    Route::get('/users/{user}/roles', [RoleUserController::class, 'index'])->name('user.role.index');
+    Route::get(
+        '/users/{user}/roles',
+        [RoleUserController::class, 'index']
+    )->name('user.role.index')->where(['user' => '[0-9]+']);
     Route::patch(
         '/users/{user}/roles',
         [RoleUserController::class, 'update']
