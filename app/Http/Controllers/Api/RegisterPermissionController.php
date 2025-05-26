@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterPermission\CheckRequest;
 use App\Library\Builders\Response as ResponseBuilder;
+use App\Library\Converters\ResponseIndex;
 use App\Models\RegisterPermission;
 use App\Repositories\RegisterPermissionRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -24,10 +25,16 @@ class RegisterPermissionController extends Controller
     public function index(CheckRequest $request)
     {
         $this->authorize('viewAny', RegisterPermission::class);
+        $query = ResponseIndex::handleQuery(
+            $request,
+            ['field' => 'email'],
+        );
+
         return ResponseBuilder::successJSON(
             data: $this->repository->paginate(
-                perPage: $request->query('group', config('database.paginate.perPage')),
-                email: $request->query('email'),
+                page: $query['page'],
+                group: $query['group'],
+                email: $query['email'],
             )
         );
     }

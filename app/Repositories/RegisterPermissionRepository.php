@@ -18,7 +18,7 @@ final class RegisterPermissionRepository extends AbstractRepository
     /**
      * Query the RegisterPermission instance pagination list
      */
-    public function paginate($perPage = 3, ?string $email = NULL): LengthAwarePaginator
+    public function paginate(int $page, int $group, ?string $email = NULL): LengthAwarePaginator
     {
         $query = $this->loadModel()::query();
         if ($email) {
@@ -27,7 +27,8 @@ final class RegisterPermissionRepository extends AbstractRepository
             ]);
         }
         return $query->paginate(
-            perPage: $perPage,
+            page: $page,
+            perPage: $group,
             columns: ['id', 'email', 'phone', 'created_at']
         );
     }

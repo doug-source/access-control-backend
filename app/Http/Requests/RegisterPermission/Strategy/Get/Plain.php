@@ -33,8 +33,8 @@ final class Plain implements Checker
     public function rules(): array
     {
         return [
-            'page' => 'required|integer|min:1',
-            'group' => 'required|integer|min:1',
+            'page' => 'nullable|integer|min:1',
+            'group' => 'nullable|integer|min:1',
             'email' => "nullable|max:{$this->emailColumnSize}"
         ];
     }
@@ -42,10 +42,8 @@ final class Plain implements Checker
     public function messages(): array
     {
         return [
-            'page.required' => Phrase::pickSentence(PhraseKey::ParameterRequired),
             'page.integer' => Phrase::pickSentence(PhraseKey::ParameterInvalid),
             'page.min' => Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)"),
-            'group.required' => Phrase::pickSentence(PhraseKey::ParameterRequired),
             'group.integer' => Phrase::pickSentence(PhraseKey::ParameterInvalid),
             'group.min' => Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)"),
             'email.max' => Phrase::pickSentence(PhraseKey::MaxSizeInvalid, " ({$this->emailColumnSize})")
