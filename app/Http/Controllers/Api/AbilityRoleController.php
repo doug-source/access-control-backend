@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AbilityRole\CheckRequest;
 use App\Library\Converters\ResponseIndex;
 use App\Models\Role;
 use App\Services\User\Contracts\AbilityServiceInterface;
@@ -21,7 +22,7 @@ class AbilityRoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, Role $role)
+    public function index(CheckRequest $request, Role $role)
     {
         $this->authorize('viewAnyAbility', $role);
         $query = ResponseIndex::handleQuery(
