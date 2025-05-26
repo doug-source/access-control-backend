@@ -6,14 +6,14 @@ namespace App\Repositories;
 
 use App\Models\Ability;
 use App\Models\Role;
-use App\Repositories\Traits\PickRoleUiProperty;
+use App\Repositories\Traits\PickUiProperty;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection as BaseCollection;
 
 final class RoleRepository extends AbstractRepository
 {
-    use PickRoleUiProperty;
+    use PickUiProperty;
 
     public function __construct()
     {
@@ -33,7 +33,7 @@ final class RoleRepository extends AbstractRepository
                 ['name', 'like', "%{$name}%"]
             ]);
         }
-        return $this->pickRoleUi($query->paginate(
+        return $this->pickUiSummary($query->paginate(
             page: $page,
             perPage: $group,
             columns: ['id', 'name', 'created_at', 'updated_at']
@@ -57,7 +57,7 @@ final class RoleRepository extends AbstractRepository
         if ($include) {
             $query = $query->whereIn('id', $include);
         }
-        return $this->pickRoleUi($query->paginate(
+        return $this->pickUiSummary($query->paginate(
             page: $page,
             perPage: $group,
         ));

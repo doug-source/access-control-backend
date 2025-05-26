@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Contracts\UiSummary;
 use App\Models\Traits\FormatDatetimeProperty;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail
+final class User extends Authenticatable implements MustVerifyEmail, UiSummary
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable, FormatDatetimeProperty, SoftDeletes;
@@ -67,7 +68,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Format the summarized fields to view
+     * {@inheritDoc}
      *
      * @return array{id: string, name: string, email: string, createdAt: string, updatedAt: string}
      */

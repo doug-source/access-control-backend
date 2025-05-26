@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Contracts\UiSummary;
 use App\Models\Traits\FormatDatetimeProperty;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Role extends Model
+final class Role extends Model implements UiSummary
 {
     use HasFactory, FormatDatetimeProperty;
 
@@ -52,7 +53,7 @@ class Role extends Model
     }
 
     /**
-     * Format the summarized fields to view
+     * {@inheritDoc}
      *
      * @return array{id: string, name: string, createdAt: string, updatedAt: string}
      */

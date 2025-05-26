@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Models\User;
-use App\Repositories\Traits\PickRoleUiProperty;
+use App\Repositories\Traits\PickUiProperty;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserRepository extends AbstractRepository
 {
-    use PickRoleUiProperty;
+    use PickUiProperty;
 
     public function __construct()
     {
@@ -28,14 +28,10 @@ class UserRepository extends AbstractRepository
                 ['name', 'like', "%{$name}%"]
             ]);
         }
-        return tap($query->paginate(
+        return $this->pickUiSummary($query->paginate(
             perPage: $perPage,
             columns: ['id', 'name', 'email', 'phone', 'created_at', 'updated_at', 'email_verified_at']
-        ), function (LengthAwarePaginator $paginatedInstance) {
-            return $paginatedInstance->getCollection()->transform(function (User $user) {
-                return $user->ui;
-            });
-        });
+        ));
     }
 
     /**
@@ -49,7 +45,7 @@ class UserRepository extends AbstractRepository
                 ['name', 'like', "%{$name}%"]
             ]);
         }
-        return $this->pickRoleUi($query->paginate(
+        return $this->pickUiSummary($query->paginate(
             page: $page,
             perPage: $group,
         ));
