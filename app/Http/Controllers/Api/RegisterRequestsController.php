@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterRequest\CheckRequest;
 use App\Models\RegisterRequest;
 use App\Library\Builders\Response as ResponseBuilder;
 use App\Library\Builders\Token as TokenBuilder;
+use App\Library\Converters\ResponseIndex;
 use App\Library\Registration\{
     RegisterRequestHandler,
     PermissionRequestHandler
@@ -39,10 +40,16 @@ class RegisterRequestsController extends Controller
     public function index(CheckRequest $request)
     {
         $this->authorize('viewAny', RegisterRequest::class);
+        $query = ResponseIndex::handleQuery(
+            $request,
+            ['field' => 'email'],
+        );
+
         return ResponseBuilder::successJSON(
             data: $this->regRequestRepository->paginate(
-                perPage: $request->query('group', config('database.paginate.perPage')),
-                email: $request->query('email')
+                page: $query['page'],
+                group: $query['group'],
+                email: $query['email'],
             )
         );
     }

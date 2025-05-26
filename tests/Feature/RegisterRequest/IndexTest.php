@@ -18,17 +18,6 @@ describe('RegisterRequest index request', function () {
             $response = $this->getJson(route('register.request.index'));
             $response->assertStatus(Response::HTTP_UNAUTHORIZED);
         });
-        it('has no page parameter', function () {
-            ['token' => $token] = authenticate(scope: $this);
-            assertFailedResponse(
-                response: $this->getJson(route('register.request.index'), [
-                    'Authorization' => "Bearer {$token}",
-                    'Accept' => 'application/json',
-                ]),
-                errorKey: 'page',
-                errorMsg: Phrase::pickSentence(PhraseKey::ParameterRequired)
-            );
-        });
         it('has invalid page parameter', function () {
             ['token' => $token] = authenticate(scope: $this);
             $uri = Uri::of(route('register.request.index'))->withQuery([
@@ -55,20 +44,6 @@ describe('RegisterRequest index request', function () {
                 ]),
                 errorKey: 'page',
                 errorMsg: Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)")
-            );
-        });
-        it('has no group parameter', function () {
-            ['token' => $token] = authenticate(scope: $this);
-            $uri = Uri::of(route('register.request.index'))->withQuery([
-                'page' => '1'
-            ])->value();
-            assertFailedResponse(
-                response: $this->getJson($uri, [
-                    'Authorization' => "Bearer {$token}",
-                    'Accept' => 'application/json',
-                ]),
-                errorKey: 'group',
-                errorMsg: Phrase::pickSentence(PhraseKey::ParameterRequired)
             );
         });
         it('has invalid group parameter', function () {
