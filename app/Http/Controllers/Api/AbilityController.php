@@ -24,7 +24,7 @@ class AbilityController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(CheckRequest $request)
     {
         $this->authorize('viewAny', Ability::class);
         $query = ResponseIndex::handleQuery(

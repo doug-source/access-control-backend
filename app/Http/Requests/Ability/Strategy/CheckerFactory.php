@@ -9,10 +9,12 @@ use App\Http\Requests\{
     CheckerFactoryScheme
 };
 use App\Http\Requests\Ability\Strategy\{
+    Get\Plain as GetPlain,
     Post\Plain as PostPlain,
     Patch\Plain as PatchPlain,
     Delete\Plain as DeletePlain,
 };
+use Exception;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
@@ -24,7 +26,9 @@ final class CheckerFactory implements CheckerFactoryScheme
         return match ($method) {
             'patch' => new PatchPlain(),
             'post' => new PostPlain(),
-            default => new DeletePlain(),
+            'delete' => new DeletePlain(),
+            'get' => new GetPlain(),
+            default => throw new Exception("Validation not implemented", 1)
         };
     }
 }
