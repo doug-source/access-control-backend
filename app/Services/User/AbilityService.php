@@ -39,7 +39,7 @@ final class AbilityService implements AbilityServiceInterface
     }
 
     /**
-     * Merge the "to include" abilities into role's abilities collection and
+     * Group the "to include" abilities into role's abilities collection and
      * also remove those "to remove".
      *
      * @param array{included: Collection<int, Ability>, removed: Collection<int, Ability>} $filters
@@ -48,9 +48,9 @@ final class AbilityService implements AbilityServiceInterface
     private function manageAbilities(array $filters, SupportCollection $roleAbilities)
     {
         ['included' => $includeList, 'removed' => $removeList] = $filters;
-        $merged = $roleAbilities->merge($includeList->toArray());
+        $grouped = $roleAbilities->concat($includeList);
 
-        return $merged->reject(function (Ability $ability) use (&$removeList) {
+        return $grouped->reject(function (Ability $ability) use (&$removeList) {
             return $removeList->contains(function (Ability $removed) use (&$ability) {
                 return $removed->id === $ability->id;
             });
@@ -99,7 +99,7 @@ final class AbilityService implements AbilityServiceInterface
         $results = $this->abilitiesFromUser($user);
         if ($owner) {
             return PaginationBuilder::paginate(
-                results: $results,
+                results: $results->map(fn($ability) => $ability->ui),
                 page: $page,
                 group: $group,
             );
