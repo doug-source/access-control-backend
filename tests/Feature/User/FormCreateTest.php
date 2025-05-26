@@ -14,7 +14,7 @@ describe('User form create request', function () {
     describe('fails because', function () {
         it('has no token parameter', function () {
             $url = URL::temporarySignedRoute(
-                name: 'users.create',
+                name: 'user.create',
                 expiration: now()->addMinutes(15),
             );
             assertFailedResponse(
@@ -26,7 +26,7 @@ describe('User form create request', function () {
         it('has token parameter overflowing the column size', function () {
             $maxSize = RegisterPermissionSize::TOKEN->get();
             $url = URL::temporarySignedRoute(
-                name: 'users.create',
+                name: 'user.create',
                 expiration: now()->addMinutes(15),
                 parameters: ['token' => generateWordBySize($maxSize + 1)]
             );
@@ -38,7 +38,7 @@ describe('User form create request', function () {
         });
         it('has token parameter nonexistent into database', function () {
             $url = URL::temporarySignedRoute(
-                name: 'users.create',
+                name: 'user.create',
                 expiration: now()->addMinutes(15),
                 parameters: ['token' => fake()->password()]
             );
@@ -53,7 +53,7 @@ describe('User form create request', function () {
         it('has complete parameters', function () {
             $permission = RegisterPermission::factory(count: 1)->create()->first();
             $url = URL::temporarySignedRoute(
-                name: 'users.create',
+                name: 'user.create',
                 expiration: now()->addMinutes(15),
                 parameters: ['token' => $permission->token]
             );

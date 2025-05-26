@@ -20,7 +20,7 @@ class UserRepository extends AbstractRepository
     /**
      * Query the User instance pagination list
      */
-    public function paginate($perPage = 3, ?string $name = NULL): LengthAwarePaginator
+    public function paginate(int $page, int $group, ?string $name = NULL): LengthAwarePaginator
     {
         $query = $this->loadModel()::query();
         if ($name) {
@@ -29,7 +29,8 @@ class UserRepository extends AbstractRepository
             ]);
         }
         return $this->pickUiSummary($query->paginate(
-            perPage: $perPage,
+            page: $page,
+            perPage: $group,
             columns: ['id', 'name', 'email', 'phone', 'created_at', 'updated_at', 'email_verified_at']
         ));
     }

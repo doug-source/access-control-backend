@@ -22,7 +22,7 @@ Route::get(
 Route::get(
     '/users/create',
     [UserController::class, 'create']
-)->name('users.create')->middleware('signed');
+)->name('user.create')->middleware('signed');
 
 Route::get(
     '/login',

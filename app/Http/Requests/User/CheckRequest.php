@@ -8,6 +8,7 @@ use App\Http\Requests\VerifyRequest;
 use Illuminate\Support\Facades\Request;
 use App\Http\Requests\User\Strategy\CheckerFactory;
 use App\Repositories\RegisterPermissionRepository;
+use Exception;
 use Illuminate\Support\Uri;
 
 final class CheckRequest extends VerifyRequest
@@ -21,16 +22,18 @@ final class CheckRequest extends VerifyRequest
 
     public function authorize(): bool
     {
-
         $method = strtolower(Request::method());
-        $usersCreatePath = Uri::of(route('users.create'))->path();
-
-        if (
-            $method === 'get' &&
-            Request::getPathInfo() === "/{$usersCreatePath}"
-        ) {
-            return !$this->isLoggedIn();
+        switch ($method) {
+            case 'get':
+                return match ('/' . Uri::of(Request::getUri())->path()) {
+                    route(name: 'user.create', absolute: false) => !$this->isLoggedIn(),
+                    route(name: 'user.index', absolute: false) => $this->isLoggedIn(),
+                    default => throw new Exception('Validation not implemented', 1),
+                };
+            case 'post':
+                return !$this->isLoggedIn();
+            default:
+                throw new Exception('Validation not implemented', 1);
         }
-        return !$this->isLoggedIn();
     }
 }

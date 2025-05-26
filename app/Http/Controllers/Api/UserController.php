@@ -7,6 +7,7 @@ use App\Library\Builders\Response as ResponseBuilder;
 use App\Services\Register\Contracts\RegisterServiceInterface;
 use App\Http\Requests\User\CheckRequest;
 use App\Library\Converters\Phone as PhoneConverter;
+use App\Library\Converters\ResponseIndex;
 use App\Models\User;
 use App\Repositories\RegisterPermissionRepository;
 use App\Repositories\UserRepository;
@@ -32,12 +33,18 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(CheckRequest $request)
     {
         $this->authorize('viewAny', User::class);
+        $query = ResponseIndex::handleQuery(
+            $request,
+            ['field' => 'name'],
+        );
+
         return $this->userRepository->paginate(
-            perPage: $request->query('group', config('database.paginate.perPage')),
-            name: $request->query('name')
+            page: $query['page'],
+            group: $query['group'],
+            name: $query['name'],
         );
     }
 

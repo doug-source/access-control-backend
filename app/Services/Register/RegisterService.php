@@ -88,7 +88,7 @@ final class RegisterService implements RegisterServiceInterface
             'fromEmail' => config('mail.from.address'),
             'subject' => Phrase::pickSentence(PhraseKey::RegisterApproval),
             'url' => URL::temporarySignedRoute(
-                name: 'users.create',
+                name: 'user.create',
                 expiration: now()->addMinutes(15),
                 parameters: ['token' => $token]
             ),
