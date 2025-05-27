@@ -8,8 +8,8 @@ use App\Http\Requests\{
     Checker,
     CheckerFactoryScheme
 };
+use App\Http\Requests\Shared\Strategies\Get as GetPlain;
 use App\Http\Requests\Role\Strategy\{
-    Get\Plain as GetPlain,
     Post\Plain as PostPlain,
     Patch\Plain as PatchPlain,
     Delete\Plain as DeletePlain,

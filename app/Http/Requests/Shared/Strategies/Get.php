@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\User\Strategy\Get;
+namespace App\Http\Requests\Shared\Strategies;
 
 use App\Http\Requests\Checker;
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
 use Illuminate\Foundation\Http\FormRequest;
 
-final class Plain implements Checker
+class Get implements Checker
 {
     public function all(FormRequest $formRequest, array $requestInputs): array
     {

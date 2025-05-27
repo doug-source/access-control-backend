@@ -8,8 +8,8 @@ use App\Http\Requests\Checker;
 use App\Http\Requests\CheckerFactoryScheme;
 use App\Http\Requests\User\Strategy\Get\RegisterForm;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Shared\Strategies\Get as GetPlain;
 use App\Http\Requests\User\Strategy\{
-    Get\Plain as GetPlain,
     Post\Plain as PostPlain
 };
 use App\Repositories\RegisterPermissionRepository;
