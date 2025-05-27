@@ -9,8 +9,8 @@ use App\Http\Requests\{
     CheckerFactoryScheme,
     IdLinkable
 };
+use App\Http\Requests\Shared\Strategies\OwnerGet as GetPlain;
 use App\Http\Requests\RoleUser\Strategy\{
-    Get\Plain as GetPlain,
     Patch\Plain as PatchPlain,
 };
 use App\Repositories\UserRepository;

@@ -2,22 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\AbilityRole\Strategy\Get;
+namespace App\Http\Requests\Shared\Strategies;
 
-use App\Http\Requests\Checker;
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class Plain implements Checker
+final class OwnerGet extends Get
 {
     public function all(FormRequest $formRequest, array $requestInputs): array
     {
         return [
-            ...$requestInputs,
-            'page' => $formRequest->query('page'),
-            'group' => $formRequest->query('group'),
+            ...parent::all($formRequest, $requestInputs),
             'owner' => $formRequest->query('owner'),
         ];
     }
@@ -25,8 +22,7 @@ class Plain implements Checker
     public function rules(): array
     {
         return [
-            'page' => 'nullable|integer|min:1',
-            'group' => 'nullable|integer|min:1',
+            ...parent::rules(),
             'owner' => [
                 'nullable',
                 Rule::in(['yes', 'no']),
@@ -37,10 +33,7 @@ class Plain implements Checker
     public function messages(): array
     {
         return [
-            'page.integer' => Phrase::pickSentence(PhraseKey::ParameterInvalid),
-            'page.min' => Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)"),
-            'group.integer' => Phrase::pickSentence(PhraseKey::ParameterInvalid),
-            'group.min' => Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)"),
+            ...parent::messages(),
             'owner.in' => Phrase::pickSentence(PhraseKey::ParameterInvalid),
         ];
     }

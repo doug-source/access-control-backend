@@ -6,9 +6,8 @@ namespace App\Http\Requests\AbilityUser\Strategy;
 
 use App\Http\Requests\CheckerFactoryScheme;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Http\Requests\AbilityUser\Strategy\{
-    Get\Plain as GetPlain,
-};
+
+use App\Http\Requests\Shared\Strategies\OwnerGet as GetPlain;
 use App\Http\Requests\{
     Checker,
     IdLinkable

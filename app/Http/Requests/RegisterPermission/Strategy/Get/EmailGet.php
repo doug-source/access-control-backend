@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\RegisterPermission\Strategy\Get;
 
-use App\Http\Requests\Checker;
+use App\Http\Requests\Shared\Strategies\Get;
 use App\Library\Builders\Phrase;
 use App\Library\Enums\ColumnSize\RegisterPermissionSize;
 use App\Library\Enums\PhraseKey;
@@ -11,7 +11,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Used by RegisterPermission index
  */
-final class Plain implements Checker
+final class EmailGet extends Get
 {
     private int $emailColumnSize;
 
@@ -23,9 +23,7 @@ final class Plain implements Checker
     public function all(FormRequest $formRequest, array $requestInputs): array
     {
         return [
-            ...$requestInputs,
-            'page' => $formRequest->query('page'),
-            'group' => $formRequest->query('group'),
+            ...parent::all($formRequest, $requestInputs),
             'email' => $formRequest->query('email'),
         ];
     }
@@ -33,8 +31,7 @@ final class Plain implements Checker
     public function rules(): array
     {
         return [
-            'page' => 'nullable|integer|min:1',
-            'group' => 'nullable|integer|min:1',
+            ...parent::rules(),
             'email' => "nullable|max:{$this->emailColumnSize}"
         ];
     }
@@ -42,10 +39,7 @@ final class Plain implements Checker
     public function messages(): array
     {
         return [
-            'page.integer' => Phrase::pickSentence(PhraseKey::ParameterInvalid),
-            'page.min' => Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)"),
-            'group.integer' => Phrase::pickSentence(PhraseKey::ParameterInvalid),
-            'group.min' => Phrase::pickSentence(PhraseKey::MinSizeInvalid, " (1)"),
+            ...parent::messages(),
             'email.max' => Phrase::pickSentence(PhraseKey::MaxSizeInvalid, " ({$this->emailColumnSize})")
         ];
     }

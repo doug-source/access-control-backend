@@ -6,9 +6,7 @@ namespace App\Http\Requests\AbilityRole\Strategy;
 
 use App\Http\Requests\CheckerFactoryScheme;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Http\Requests\AbilityRole\Strategy\{
-    Get\Plain as GetPlain,
-};
+use App\Http\Requests\Shared\Strategies\OwnerGet as getPlain;
 use App\Http\Requests\Checker;
 use App\Http\Requests\IdLinkable;
 use App\Repositories\RoleRepository;
