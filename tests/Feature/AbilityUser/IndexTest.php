@@ -16,7 +16,7 @@ uses(RefreshDatabase::class);
 describe("User's Ability Index from api routes", function () {
     describe('fails because', function () {
         it('has no authentication', function () {
-            $this->getJson(route('user.ability.index', ['user' => 'whatever']))->assertUnauthorized();
+            $this->getJson(route('user.ability.index', ['user' => '1']))->assertUnauthorized();
         });
         it('has user no super-admin role authenticated', function () {
             Role::factory(count: 1)->createOne();
