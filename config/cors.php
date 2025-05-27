@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['POST, GET, OPTIONS, PATCH, PUT, DELETE'],
 
-    'allowed_origins' => ['http://192.168.1.23:5173', 'http://localhost:5173', 'http://localhost:4173'],
+    'allowed_origins' => explode(',', env('CORS_ALLOWED_ORIGINS', 'http://localhost:8080')),
 
     'allowed_origins_patterns' => [],
 
