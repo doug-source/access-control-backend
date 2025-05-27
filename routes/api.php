@@ -81,7 +81,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('role.update');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('role.destroy');
 
-    Route::get('/roles/{role}/abilities', [AbilityRoleController::class, 'index'])->name('role.ability.index');
+    Route::get(
+        '/roles/{role}/abilities',
+        [AbilityRoleController::class, 'index']
+    )->name('role.ability.index')->where(['user' => '[0-9]+']);
 
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('user.show');
@@ -99,7 +102,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get(
         '/users/{user}/abilities',
         [AbilityUserController::class, 'index']
-    )->name('user.ability.index');
+    )->name('user.ability.index')->where(['user' => '[0-9]+']);
 });
 
 // ---------------------------------------------------------------------------------------
