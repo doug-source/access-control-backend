@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Requests\User\CheckRequest;
+use Illuminate\Http\Response;
 
 class UserRemovedController extends Controller
 {
@@ -35,5 +36,18 @@ class UserRemovedController extends Controller
             name: $query['name'],
             trashed: true,
         );
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(int $id)
+    {
+        $user = $this->userRepository->findTrashed($id);
+        if (is_null($user)) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+        $this->authorize('view', $user);
+        return $user->ui;
     }
 }

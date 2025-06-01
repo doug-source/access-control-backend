@@ -64,4 +64,12 @@ class UserRepository extends AbstractRepository
         }
         return $this->loadModel()::query()->firstWhere('email', $email);
     }
+
+    /**
+     * Search an Soft-deleted User instance by id
+     */
+    public function findTrashed(int $id)
+    {
+        return User::onlyTrashed()->find($id);
+    }
 }
