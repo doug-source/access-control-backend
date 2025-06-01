@@ -43,6 +43,7 @@ class CheckerFactory implements CheckerFactoryScheme
         return match ('/' . Uri::of($formRequest->getUri())->path()) {
             route(name: 'user.create', absolute: false) => new RegisterForm(),
             route(name: 'user.index', absolute: false) => new GetPlain(),
+            route(name: 'user.removed.index', absolute: false) => new GetPlain(),
             default => throw new Exception('Checker not implemented', 1),
         };
     }

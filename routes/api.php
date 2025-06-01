@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\{
     RoleUserController,
     SocialiteController,
     UserController,
+    UserRemovedController,
 };
 use \Illuminate\Support\Facades\Route;
 
@@ -87,6 +88,7 @@ Route::middleware('auth:sanctum')->group(function () {
     )->name('role.ability.index')->where(['user' => '[0-9]+']);
 
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
+    Route::get('/users/removed', [UserRemovedController::class, 'index'])->name('user.removed.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('user.show');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 

@@ -20,9 +20,11 @@ class UserRepository extends AbstractRepository
     /**
      * Query the User instance pagination list
      */
-    public function paginate(int $page, int $group, ?string $name = NULL): LengthAwarePaginator
+    public function paginate(int $page, int $group, ?string $name = NULL, bool $trashed = false): LengthAwarePaginator
     {
-        $query = $this->loadModel()::query();
+        $model = $this->loadModel();
+        $query = $trashed ? $model::onlyTrashed() : $model::query();
+
         if ($name) {
             $query = $query->where([
                 ['name', 'like', "%{$name}%"]
