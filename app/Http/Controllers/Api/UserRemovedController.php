@@ -65,4 +65,18 @@ class UserRemovedController extends Controller
         $this->userRepository->forceDelete($user);
         return ResponseBuilder::successJSON();
     }
+
+    /**
+     * Restore a soft deleted resource from storage.
+     */
+    public function restore(CheckRequest $request)
+    {
+        $user = $this->userRepository->findTrashed($request->input('id'));
+        if (is_null($user)) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+        $this->authorize('restore', $user);
+        $this->userRepository->restore($user);
+        return ResponseBuilder::successJSON();
+    }
 }

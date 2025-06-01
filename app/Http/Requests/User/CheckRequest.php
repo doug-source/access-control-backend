@@ -32,7 +32,11 @@ final class CheckRequest extends VerifyRequest
                     default => throw new Exception('Validation not implemented', 1),
                 };
             case 'post':
-                return !$this->isLoggedIn();
+                return match ('/' . Uri::of(Request::getUri())->path()) {
+                    route(name: 'users.store', absolute: false) => !$this->isLoggedIn(),
+                    route(name: 'user.restore', absolute: false) => $this->isLoggedIn(),
+                    default => throw new Exception('Validation not implemented', 1),
+                };
             default:
                 throw new Exception('Validation not implemented', 1);
         }

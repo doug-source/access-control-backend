@@ -97,6 +97,7 @@ Route::middleware('auth:sanctum')->group(function () {
         '/users/removed/{user}',
         [UserRemovedController::class, 'destroy']
     )->name('user.removed.destroy')->where(['user' => '[0-9]+']);
+    Route::post('/users/restore', [UserRemovedController::class, 'restore'])->name('user.restore');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('user.show');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 

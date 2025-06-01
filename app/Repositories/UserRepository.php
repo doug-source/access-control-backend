@@ -89,4 +89,21 @@ class UserRepository extends AbstractRepository
         }
         return $user->forceDelete();
     }
+
+    /**
+     * Restore a Soft-delete User instance into database
+     */
+    public function restore(int|User $user)
+    {
+        if (is_int($user)) {
+            $user = $this->findTrashed($user);
+            if (is_null($user)) {
+                return false;
+            }
+        }
+        if (is_null($user->deleted_at)) {
+            return false;
+        }
+        return $user->restore();
+    }
 }

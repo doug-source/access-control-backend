@@ -81,7 +81,7 @@ class UserPolicy
      */
     public function restore(User $user, User $model): bool
     {
-        return false;
+        return $user->isSuperAdmin() && !is_null($model->deleted_at);
     }
 
     /**

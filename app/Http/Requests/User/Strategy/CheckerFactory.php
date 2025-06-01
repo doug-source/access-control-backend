@@ -10,7 +10,8 @@ use App\Http\Requests\User\Strategy\Get\RegisterForm;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Shared\Strategies\Get as GetPlain;
 use App\Http\Requests\User\Strategy\{
-    Post\Plain as PostPlain
+    Post\Plain as PostPlain,
+    Post\Restore as RestorePlain,
 };
 use App\Repositories\RegisterPermissionRepository;
 use Exception;
@@ -28,15 +29,12 @@ class CheckerFactory implements CheckerFactoryScheme
         $method = $formRequest->method();
         return match ($method) {
             'GET' => $this->selectGetChecker($formRequest),
-            'POST' => new PostPlain(
-                formRequest: $formRequest,
-                permissionRepository: $this->permissionRepository,
-            ),
+            'POST' => $this->selectPostChecker($formRequest),
         };
     }
 
     /**
-     * Select the checker according to uri
+     * Select the get checker according to uri
      */
     private function selectGetChecker(FormRequest $formRequest): Checker
     {
@@ -44,6 +42,21 @@ class CheckerFactory implements CheckerFactoryScheme
             route(name: 'user.create', absolute: false) => new RegisterForm(),
             route(name: 'user.index', absolute: false) => new GetPlain(),
             route(name: 'user.removed.index', absolute: false) => new GetPlain(),
+            default => throw new Exception('Checker not implemented', 1),
+        };
+    }
+
+    /**
+     * Select the post checker according to uri
+     */
+    private function selectPostChecker(FormRequest $formRequest): Checker
+    {
+        return match ('/' . Uri::of($formRequest->getUri())->path()) {
+            route(name: 'users.store', absolute: false) => new PostPlain(
+                formRequest: $formRequest,
+                permissionRepository: $this->permissionRepository,
+            ),
+            route(name: 'user.restore', absolute: false) => new RestorePlain(),
             default => throw new Exception('Checker not implemented', 1),
         };
     }
