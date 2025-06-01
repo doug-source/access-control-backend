@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Requests\User\CheckRequest;
+use App\Library\Builders\Response as ResponseBuilder;
 use Illuminate\Http\Response;
 
 class UserRemovedController extends Controller
@@ -49,5 +50,19 @@ class UserRemovedController extends Controller
         }
         $this->authorize('view', $user);
         return $user->ui;
+    }
+
+    /**
+     * Remove forced the specified soft deleted resource from storage.
+     */
+    public function destroy(int $id)
+    {
+        $user = $this->userRepository->findTrashed($id);
+        if (is_null($user)) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+        $this->authorize('forceDelete', $user);
+        $this->userRepository->forceDelete($user);
+        return ResponseBuilder::successJSON();
     }
 }

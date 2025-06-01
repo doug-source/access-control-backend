@@ -66,10 +66,27 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * Search an Soft-deleted User instance by id
+     * Search a Soft-deleted User instance by id
      */
     public function findTrashed(int $id)
     {
         return User::onlyTrashed()->find($id);
+    }
+
+    /**
+     * Remove a Soft-delete User instance from database
+     */
+    public function forceDelete(int|User $user)
+    {
+        if (is_int($user)) {
+            $user = $this->findTrashed($user);
+            if (is_null($user)) {
+                return false;
+            }
+        }
+        if (is_null($user->deleted_at)) {
+            return false;
+        }
+        return $user->forceDelete();
     }
 }
