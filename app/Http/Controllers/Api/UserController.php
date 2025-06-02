@@ -76,10 +76,11 @@ class UserController extends Controller
         $this->permissionRepository->delete($registerPermission->id);
 
         $phone = PhoneConverter::clear($registerPermission->phone ?? $request->phone);
-        $fields = [...$request->only(['name', 'email', 'password']), 'phone' => $phone];
-        $user = $this->userRepository->create(attributes: $fields);
+        $user = $this->userRepository->create(attributes: [
+            ...$request->only(['name', 'email', 'password']),
+            'phone' => $phone,
+        ]);
         event(new Registered($user));
-        // $this->applyDefaultUserRole($user);
 
         return ResponseBuilder::successJSON(
             status: Response::HTTP_CREATED
