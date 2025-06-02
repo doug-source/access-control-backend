@@ -10,6 +10,7 @@ use App\Http\Requests\User\Strategy\Get\RegisterForm;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Shared\Strategies\Get as GetPlain;
 use App\Http\Requests\User\Strategy\{
+    Post\Fast as FastPostPlain,
     Post\Plain as PostPlain,
     Post\Restore as RestorePlain,
 };
@@ -57,6 +58,9 @@ class CheckerFactory implements CheckerFactoryScheme
                 permissionRepository: $this->permissionRepository,
             ),
             route(name: 'user.restore', absolute: false) => new RestorePlain(),
+            route(name: 'user.fast.store', absolute: false) => new FastPostPlain(
+                formRequest: $formRequest
+            ),
             default => throw new Exception('Checker not implemented', 1),
         };
     }

@@ -2,9 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Role;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
+// use Illuminate\Auth\Access\Response;
 
 class UserPolicy
 {
@@ -29,7 +28,7 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->isSuperAdmin();
     }
 
     /**

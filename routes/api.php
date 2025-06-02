@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\{
     AbilityUserController,
     AuthController,
     EmailVerifyController,
+    FastUserController,
     ForgotPasswordController,
     RegisterPermissionController,
     RegisterRequestsController,
@@ -114,6 +115,11 @@ Route::middleware('auth:sanctum')->group(function () {
         '/users/{user}/abilities',
         [AbilityUserController::class, 'index']
     )->name('user.ability.index')->where(['user' => '[0-9]+']);
+
+    Route::post(
+        '/users/fast/store',
+        [FastUserController::class, 'store']
+    )->name('user.fast.store');
 });
 
 // ---------------------------------------------------------------------------------------

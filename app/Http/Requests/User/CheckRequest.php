@@ -35,6 +35,7 @@ final class CheckRequest extends VerifyRequest
                 return match ('/' . Uri::of(Request::getUri())->path()) {
                     route(name: 'users.store', absolute: false) => !$this->isLoggedIn(),
                     route(name: 'user.restore', absolute: false) => $this->isLoggedIn(),
+                    route(name: 'user.fast.store', absolute: false) => $this->isLoggedIn(),
                     default => throw new Exception('Validation not implemented', 1),
                 };
             default:
