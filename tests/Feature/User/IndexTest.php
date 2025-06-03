@@ -122,6 +122,7 @@ describe('User Index from api routes', function () {
                                     ->where('emailVerifiedAt', $data['emailVerifiedAt'])
                                     ->where('createdAt', $data['createdAt'])
                                     ->where('updatedAt', $data['updatedAt'])
+                                    ->where('deletedAt', $data['deletedAt'])
                                     ->etc();
                             });
                     }
@@ -159,6 +160,7 @@ describe('User Index from api routes', function () {
                                 ->where('emailVerifiedAt', $data['emailVerifiedAt'])
                                 ->where('createdAt', $data['createdAt'])
                                 ->where('updatedAt', $data['updatedAt'])
+                                ->where('deletedAt', $data['deletedAt'])
                                 ->etc();
                         })
                         ->etc();

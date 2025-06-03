@@ -58,6 +58,16 @@ final class User extends Authenticatable implements MustVerifyEmail, UiSummary
     }
 
     /**
+     * Format the deleted_at to view
+     *
+     * @return string
+     */
+    public function getDeletedAtFormattedAttribute()
+    {
+        return $this->getPropertyFormatted('deleted_at');
+    }
+
+    /**
      * Format the email_verified_at to view
      *
      * @return string
@@ -82,6 +92,7 @@ final class User extends Authenticatable implements MustVerifyEmail, UiSummary
             'emailVerifiedAt' => $this->email_verified_at_formatted,
             'createdAt' => $this->created_at_formatted,
             'updatedAt' => $this->updated_at_formatted,
+            'deletedAt' => $this->deleted_at_formatted,
         ];
     }
 
