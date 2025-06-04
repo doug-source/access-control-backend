@@ -15,8 +15,8 @@ trait PickUiProperty
     private function pickUiSummary(LengthAwarePaginator $paginator): LengthAwarePaginator
     {
         return tap($paginator, function (LengthAwarePaginator $paginatedInstance) {
-            return $paginatedInstance->getCollection()->transform(function (UiSummary $role) {
-                return $role->ui;
+            return $paginatedInstance->getCollection()->transform(function (UiSummary $model) {
+                return $model->ui;
             });
         });
     }
