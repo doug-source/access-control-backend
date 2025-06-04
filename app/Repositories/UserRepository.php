@@ -33,7 +33,16 @@ class UserRepository extends AbstractRepository
         return $this->pickUiSummary($query->paginate(
             page: $page,
             perPage: $group,
-            columns: ['id', 'name', 'email', 'phone', 'created_at', 'updated_at', 'email_verified_at']
+            columns: [
+                'id',
+                'name',
+                'email',
+                'phone',
+                'created_at',
+                'updated_at',
+                'email_verified_at',
+                ...($trashed ? ['deleted_at'] : [])
+            ]
         ));
     }
 
