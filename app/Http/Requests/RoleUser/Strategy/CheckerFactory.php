@@ -37,6 +37,7 @@ final class CheckerFactory implements CheckerFactoryScheme
                     formRequest: $formRequest,
                     repository: app(UserRepository::class),
                     routeKey: 'user',
+                    trashed: TRUE,
                 )]);
                 return new GetPlain();
             default:

@@ -34,6 +34,14 @@ abstract class AbstractRepository implements RepositoryInterface
     }
 
     /**
+     * Find a trashed model by its primary key.
+     */
+    public function findWithTrashed(int $id): ?Model
+    {
+        return $this->loadModel()::withTrashed()->find($id);
+    }
+
+    /**
      * Save a new model and return the instance.
      */
     public function create(array $attributes = []): ?Model

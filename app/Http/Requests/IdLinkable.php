@@ -14,11 +14,17 @@ trait IdLinkable
     /**
      * Return the User instance based on the user route parameter
      */
-    private function buildRouteParam(FormRequest $formRequest, AbstractRepository $repository, string $routeKey): Model
+    private function buildRouteParam(FormRequest $formRequest, AbstractRepository $repository, string $routeKey, bool $trashed = FALSE): Model
     {
-        $model = $repository->find(
-            (int) $formRequest->route($routeKey)
-        );
+        if ($trashed) {
+            $model = $repository->findWithTrashed(
+                (int) $formRequest->route($routeKey)
+            );
+        } else {
+            $model = $repository->find(
+                (int) $formRequest->route($routeKey)
+            );
+        }
         if (is_null($model)) {
             abort(Response::HTTP_NOT_FOUND, 'Not Found');
         }

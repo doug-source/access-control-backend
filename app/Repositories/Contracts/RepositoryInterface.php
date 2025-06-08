@@ -13,6 +13,8 @@ interface RepositoryInterface
 
     public function find(int $id): ?Model;
 
+    public function findWithTrashed(int $id): ?Model;
+
     public function create(array $attributes = []): ?Model;
 
     public function delete(int $id): int;
