@@ -27,7 +27,7 @@ class FastUserController extends Controller
     {
         $this->authorize('create', User::class);
         $phone = PhoneConverter::clear($request->phone);
-        $this->userRepository->create(
+        $user = $this->userRepository->create(
             attributes: [
                 ...$request->only(['name', 'email', 'password', 'phone']),
                 'phone' => $phone
@@ -35,7 +35,10 @@ class FastUserController extends Controller
         );
 
         return ResponseBuilder::successJSON(
-            status: Response::HTTP_CREATED
+            status: Response::HTTP_CREATED,
+            headers: [
+                'Location' => route('user.show', ['user' => $user->id])
+            ]
         );
     }
 }
