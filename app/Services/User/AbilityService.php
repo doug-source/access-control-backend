@@ -31,7 +31,7 @@ final class AbilityService implements AbilityServiceInterface
             roleAbilities: $this->uniqueAbilities(
                 $this->dettachRoleAbilities(
                     $user->roles->map(function (Role $role) {
-                        return $role->abilities;
+                        return $role->abilities()->select('id', 'name')->get();
                     })
                 )
             )
@@ -99,7 +99,7 @@ final class AbilityService implements AbilityServiceInterface
         $results = $this->abilitiesFromUser($user);
         if ($owner) {
             return PaginationBuilder::paginate(
-                results: $results->map(fn($ability) => $ability->ui),
+                results: $results,
                 page: $page,
                 group: $group,
             );

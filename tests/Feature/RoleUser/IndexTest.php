@@ -159,8 +159,6 @@ describe("User's Role Index from api routes", function () {
                                 $json
                                     ->where('id', $data['id'])
                                     ->where('name', $data['name'])
-                                    ->where('createdAt', $data['createdAt'])
-                                    ->where('updatedAt', $data['updatedAt'])
                                     ->etc();
                             });
                     }
@@ -199,8 +197,6 @@ describe("User's Role Index from api routes", function () {
                                 $json
                                     ->where('id', $data['id'])
                                     ->where('name', $data['name'])
-                                    ->where('createdAt', $data['createdAt'])
-                                    ->where('updatedAt', $data['updatedAt'])
                                     ->etc();
                             });
                     }
@@ -247,8 +243,6 @@ describe("User's Role Index from api routes", function () {
                             $json
                                 ->where('id', $data['id'])
                                 ->where('name', $data['name'])
-                                ->where('createdAt', $data['createdAt'])
-                                ->where('updatedAt', $data['updatedAt'])
                                 ->etc();
                         })
                         ->etc();

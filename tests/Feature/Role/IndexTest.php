@@ -112,8 +112,6 @@ describe('Abilities from api routes', function () {
                                 $json
                                     ->where('id', $role['id'])
                                     ->where('name', $role['name'])
-                                    ->where('createdAt', $role['createdAt'])
-                                    ->where('updatedAt', $role['updatedAt'])
                                     ->etc();
                             });
                     }

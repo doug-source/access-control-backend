@@ -19,21 +19,17 @@ class AbilityRepository extends AbstractRepository
      */
     public function paginate(int $page, int $group, ?string $name = NULL, array $exclude = []): LengthAwarePaginator
     {
-        $query = $this->loadModel()::query()->whereNotIn('id', $exclude);
+        $query = $this->loadModel()::query()->select('id', 'name')->whereNotIn('id', $exclude);
         if ($name) {
             $query = $query->where([
                 ['name', 'like', "%{$name}%"]
             ]);
         }
-        return tap($query->paginate(
+        return $query->paginate(
             page: $page,
             perPage: $group,
-            columns: ['id', 'name', 'created_at', 'updated_at']
-        ), function (LengthAwarePaginator $paginatedInstance) {
-            return $paginatedInstance->getCollection()->transform(function (Ability $ability) {
-                return $ability->ui;
-            });
-        });
+            columns: ['id', 'name']
+        );
     }
 
     /**

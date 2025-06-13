@@ -19,7 +19,7 @@ class RegisterRequestRepository extends AbstractRepository
      */
     public function paginate(int $page, int $group, ?string $email = NULL): LengthAwarePaginator
     {
-        $query = $this->loadModel()::query();
+        $query = $this->loadModel()::query()->select('id', 'email');
         if ($email) {
             $query = $query->where([
                 ['email', 'like', "%{$email}%"]
@@ -28,7 +28,6 @@ class RegisterRequestRepository extends AbstractRepository
         return $query->paginate(
             page: $page,
             perPage: $group,
-            columns: ['id', 'email', 'phone', 'created_at']
         );
     }
 

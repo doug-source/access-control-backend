@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use App\Library\Builders\Pagination as PaginationBuilder;
 use App\Models\User;
-use App\Repositories\Traits\PickUiProperty;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserRepository extends AbstractRepository
 {
-    use PickUiProperty;
-
     public function __construct()
     {
         parent::__construct(User::class);
@@ -24,26 +22,21 @@ class UserRepository extends AbstractRepository
     {
         $model = $this->loadModel();
         $query = $trashed ? $model::onlyTrashed() : $model::query();
+        $query = $query->select('id', 'name');
 
         if ($name) {
             $query = $query->where([
                 ['name', 'like', "%{$name}%"]
             ]);
         }
-        return $this->pickUiSummary($query->paginate(
+        return $query->paginate(
             page: $page,
             perPage: $group,
             columns: [
                 'id',
                 'name',
-                'email',
-                'phone',
-                'created_at',
-                'updated_at',
-                'email_verified_at',
-                ...($trashed ? ['deleted_at'] : [])
             ]
-        ));
+        );
     }
 
     /**
@@ -51,16 +44,17 @@ class UserRepository extends AbstractRepository
      */
     public function findRoles(User $user, int $page, int $group, ?string $name = NULL): LengthAwarePaginator
     {
-        $query = $user->roles();
+        $query = $user->roles()->select('id', 'name');
         if ($name) {
             $query = $query->where([
                 ['name', 'like', "%{$name}%"]
             ]);
         }
-        return $this->pickUiSummary($query->paginate(
+        return PaginationBuilder::paginate(
+            results: $query->get(),
             page: $page,
-            perPage: $group,
-        ));
+            group: $group,
+        );
     }
 
     /**

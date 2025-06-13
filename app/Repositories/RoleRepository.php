@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use App\Models\Ability;
 use App\Models\Role;
-use App\Repositories\Traits\PickUiProperty;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection as BaseCollection;
 
 final class RoleRepository extends AbstractRepository
 {
-    use PickUiProperty;
-
     public function __construct()
     {
         parent::__construct(Role::class);
@@ -27,17 +23,17 @@ final class RoleRepository extends AbstractRepository
      */
     public function paginate(int $page, int $group, ?string $name = NULL, array $exclude = []): LengthAwarePaginator
     {
-        $query = $this->loadModel()::query()->whereNotIn('id', $exclude);
+        $query = $this->loadModel()::query()->select('id', 'name')->whereNotIn('id', $exclude);
         if ($name) {
             $query = $query->where([
                 ['name', 'like', "%{$name}%"]
             ]);
         }
-        return $this->pickUiSummary($query->paginate(
+        return $query->paginate(
             page: $page,
             perPage: $group,
-            columns: ['id', 'name', 'created_at', 'updated_at']
-        ));
+            columns: ['id', 'name']
+        );
     }
 
     /**
@@ -48,7 +44,7 @@ final class RoleRepository extends AbstractRepository
      */
     public function findRoleListFiltered(int $page, int $group, ?string $name = NULL, array $include = [], array $exclude = []): LengthAwarePaginator
     {
-        $query = $this->loadModel()::query()->whereNotIn('id', $exclude);
+        $query = $this->loadModel()::query()->select('id', 'name')->whereNotIn('id', $exclude);
         if ($name) {
             $query = $query->where([
                 ['name', 'like', "%{$name}%"]
@@ -57,10 +53,10 @@ final class RoleRepository extends AbstractRepository
         if ($include) {
             $query = $query->whereIn('id', $include);
         }
-        return $this->pickUiSummary($query->paginate(
+        return $query->paginate(
             page: $page,
             perPage: $group,
-        ));
+        );
     }
 
     /**
@@ -68,20 +64,16 @@ final class RoleRepository extends AbstractRepository
      */
     public function paginateAbilities(Role $role, int $page, int $group, ?string $name = NULL): LengthAwarePaginator
     {
-        $query = $role->abilities();
+        $query = $role->abilities()->select('id', 'name');
         if ($name) {
             $query = $query->where([
                 ['name', 'like', "%{$name}%"]
             ]);
         }
-        return tap($query->paginate(
+        return $query->paginate(
             page: $page,
             perPage: $group,
-        ), function (LengthAwarePaginator $paginatedInstance) {
-            return $paginatedInstance->getCollection()->transform(function (Ability $ability) {
-                return $ability->ui;
-            });
-        });
+        );
     }
 
     /**

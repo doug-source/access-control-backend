@@ -16,6 +16,10 @@ final class Role extends Model implements UiSummary
         'name',
     ];
 
+    protected $hidden = [
+        'pivot'
+    ];
+
     /**
      * Relationship with database table users
      */

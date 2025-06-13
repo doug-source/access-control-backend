@@ -16,6 +16,10 @@ final class Ability extends Model implements UiSummary
         'name',
     ];
 
+    protected $hidden = [
+        'pivot'
+    ];
+
     /**
      * Relationship with database table users
      */

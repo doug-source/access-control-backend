@@ -117,12 +117,6 @@ describe('User Index from api routes', function () {
                                 $json
                                     ->where('id', $data['id'])
                                     ->where('name', $data['name'])
-                                    ->where('email', $data['email'])
-                                    ->where('phone', $data['phone'])
-                                    ->where('emailVerifiedAt', $data['emailVerifiedAt'])
-                                    ->where('createdAt', $data['createdAt'])
-                                    ->where('updatedAt', $data['updatedAt'])
-                                    ->where('deletedAt', $data['deletedAt'])
                                     ->etc();
                             });
                     }
@@ -155,12 +149,6 @@ describe('User Index from api routes', function () {
                             $json
                                 ->where('id', $data['id'])
                                 ->where('name', $data['name'])
-                                ->where('email', $data['email'])
-                                ->where('phone', $data['phone'])
-                                ->where('emailVerifiedAt', $data['emailVerifiedAt'])
-                                ->where('createdAt', $data['createdAt'])
-                                ->where('updatedAt', $data['updatedAt'])
-                                ->where('deletedAt', $data['deletedAt'])
                                 ->etc();
                         })
                         ->etc();

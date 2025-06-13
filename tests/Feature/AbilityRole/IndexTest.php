@@ -157,8 +157,6 @@ describe("Role's Ability Index from api routes", function () {
                                 $json
                                     ->where('id', $data['id'])
                                     ->where('name', $data['name'])
-                                    ->where('createdAt', $data['createdAt'])
-                                    ->where('updatedAt', $data['updatedAt'])
                                     ->etc();
                             });
                     }
@@ -194,8 +192,6 @@ describe("Role's Ability Index from api routes", function () {
                                 $json
                                     ->where('id', $data['id'])
                                     ->where('name', $data['name'])
-                                    ->where('createdAt', $data['createdAt'])
-                                    ->where('updatedAt', $data['updatedAt'])
                                     ->etc();
                             });
                     }
@@ -239,8 +235,6 @@ describe("Role's Ability Index from api routes", function () {
                                 $json
                                     ->where('id', $ability['id'])
                                     ->where('name', $ability['name'])
-                                    ->where('createdAt', $ability['createdAt'])
-                                    ->where('updatedAt', $ability['updatedAt'])
                                     ->etc();
                             });
                     }
