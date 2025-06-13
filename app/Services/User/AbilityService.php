@@ -54,7 +54,7 @@ final class AbilityService implements AbilityServiceInterface
             return $removeList->contains(function (Ability $removed) use (&$ability) {
                 return $removed->id === $ability->id;
             });
-        });
+        })->values();
     }
 
     /**
