@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Services\User;
+namespace App\Services\Role;
 
 use App\Models\Role;
-use App\Services\User\Contracts\RoleServiceInterface;
+use App\Services\Role\Contracts\RoleServiceInterface;
 use App\Repositories\RoleRepository;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Database\Eloquent\Collection;

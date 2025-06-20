@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 use App\Http\Requests\RoleUser\CheckRequest;
 use App\Library\Builders\Response as ResponseBuilder;
 use App\Library\Converters\ResponseIndex;
-use App\Services\User\Contracts\RoleServiceInterface;
+use App\Services\Role\Contracts\RoleServiceInterface;
 
 class RoleUserController extends Controller
 {

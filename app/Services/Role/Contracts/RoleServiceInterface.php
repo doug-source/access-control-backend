@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\User\Contracts;
+namespace App\Services\Role\Contracts;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
