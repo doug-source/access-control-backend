@@ -14,9 +14,9 @@ use App\Services\Password\Constracts\PasswordServiceInterfacer;
 use App\Services\Password\PasswordService;
 use App\Services\Register\RegisterService;
 use App\Services\Register\Contracts\RegisterServiceInterface;
-use App\Services\User\AbilityService;
+use App\Services\Ability\AbilityService;
 use App\Services\Role\RoleService;
-use App\Services\User\Contracts\AbilityServiceInterface;
+use App\Services\Ability\Contracts\AbilityServiceInterface;
 use App\Services\Role\Contracts\RoleServiceInterface;
 use Illuminate\Support\ServiceProvider;
 

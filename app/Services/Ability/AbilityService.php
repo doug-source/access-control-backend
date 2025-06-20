@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Services\User;
+namespace App\Services\Ability;
 
 use App\Library\Builders\Pagination as PaginationBuilder;
 use App\Models\Role;
-use App\Services\User\Contracts\AbilityServiceInterface;
+use App\Services\Ability\Contracts\AbilityServiceInterface;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Ability;
@@ -14,6 +14,7 @@ use App\Repositories\AbilityRepository;
 use App\Repositories\RoleRepository;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Library\Builders\Collection as CollectionBuilder;
 
 final class AbilityService implements AbilityServiceInterface
 {

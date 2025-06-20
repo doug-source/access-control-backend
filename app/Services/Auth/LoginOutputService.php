@@ -6,7 +6,7 @@ namespace App\Services\Auth;
 
 use App\Services\Auth\Contracts\EmailVerifiedServiceInterface;
 use App\Services\Auth\Contracts\LoginOutputServiceInterface;
-use App\Services\User\Contracts\AbilityServiceInterface;
+use App\Services\Ability\Contracts\AbilityServiceInterface;
 use Illuminate\Support\Str;
 
 final class LoginOutputService implements LoginOutputServiceInterface

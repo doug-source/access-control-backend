@@ -4,7 +4,7 @@ use App\Library\Builders\Phrase;
 use App\Library\Enums\PasswordRules;
 use App\Library\Enums\PhraseKey;
 use App\Models\Provider;
-use App\Services\User\Contracts\AbilityServiceInterface;
+use App\Services\Ability\Contracts\AbilityServiceInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 

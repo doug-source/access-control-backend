@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Provider;
-use App\Services\User\Contracts\AbilityServiceInterface;
+use App\Services\Ability\Contracts\AbilityServiceInterface;
 use Illuminate\Support\Str;
 use Illuminate\Support\Uri;
 use Illuminate\Testing\Fluent\AssertableJson;

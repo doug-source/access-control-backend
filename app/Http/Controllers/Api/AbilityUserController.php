@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AbilityUser\CheckRequest;
 use App\Library\Converters\ResponseIndex;
-use App\Services\User\Contracts\AbilityServiceInterface;
+use App\Services\Ability\Contracts\AbilityServiceInterface;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class AbilityUserController extends Controller
