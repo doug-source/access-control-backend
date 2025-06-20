@@ -6,6 +6,8 @@ namespace App\Repositories;
 
 use App\Models\Ability;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Database\Eloquent\Collection;
 
 class AbilityRepository extends AbstractRepository
 {
@@ -41,5 +43,18 @@ class AbilityRepository extends AbstractRepository
             return NULL;
         }
         return $this->loadModel()::query()->firstWhere('name', $name);
+    }
+
+    /**
+     * Search Ability instances by names
+     *
+     * @param array<string>|Illuminate\Support\Collection<int, string> $names
+     */
+    public function findByNames(array|BaseCollection $names): Collection
+    {
+        if ($names instanceof BaseCollection) {
+            $names = $names->toArray();
+        }
+        return $this->loadModel()::query()->whereIn('name', $names)->get();
     }
 }

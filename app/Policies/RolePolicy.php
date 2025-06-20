@@ -55,4 +55,12 @@ class RolePolicy
     {
         return $user->isSuperAdmin();
     }
+
+    /**
+     * Determine whether the user can update role's relationship with habilities.
+     */
+    public function updateAbility(User $user, Role $role)
+    {
+        return $user->isSuperAdmin();
+    }
 }

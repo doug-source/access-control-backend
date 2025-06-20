@@ -130,4 +130,11 @@ final class AbilityService implements AbilityServiceInterface
             exclude: $role->abilities->pluck('id')->all(),
         );
     }
+
+    public function combine(Collection $abilities, SupportCollection $namesToRemove, SupportCollection $namesToInclude): Collection
+    {
+        return CollectionBuilder::rejectByName(list: $abilities, namesToRemove: $namesToRemove)->concat(
+            $this->abilityRepository->findByNames($namesToInclude)->all()
+        );
+    }
 }
