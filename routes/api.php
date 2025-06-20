@@ -86,7 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get(
         '/roles/{role}/abilities',
         [AbilityRoleController::class, 'index']
-    )->name('role.ability.index')->where(['user' => '[0-9]+']);
+    )->name('role.ability.index')->where(['role' => '[0-9]+']);
     Route::patch(
         '/roles/{role}/abilities',
         [AbilityRoleController::class, 'update']
