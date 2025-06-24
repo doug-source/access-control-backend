@@ -76,6 +76,14 @@ class UserPolicy
     }
 
     /**
+     * Determine whether the user can update any ability models relative to another user.
+     */
+    public function updateAbility(User $user): bool
+    {
+        return $user->isSuperAdmin();
+    }
+
+    /**
      * Determine whether the user can restore the model.
      */
     public function restore(User $user, User $model): bool

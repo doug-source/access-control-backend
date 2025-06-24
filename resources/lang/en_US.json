@@ -45,6 +45,8 @@
     "forbidden-access": "forbidden access",
     "minutes": "minutes",
     "reset-password": ":password reset",
+    "role": "role",
+    "ability": "ability",
 
     "congratulations": "congratulations",
     "click-here": "click here",
@@ -71,6 +73,6 @@
     "link-not-allowed": "link not :allowed",
     "value-already-used": ":subject already :used",
 
-    "invalid-role-remotion": ":invalid role remotion",
-    "invalid-role-inclusion": ":invalid role inclusion"
+    "invalid-subject-remotion": ":invalid :subject remotion",
+    "invalid-subject-inclusion": ":invalid :subject inclusion"
 }

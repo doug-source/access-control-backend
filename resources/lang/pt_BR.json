@@ -45,6 +45,8 @@
     "forbidden-access": "acesso proibido",
     "minutes": "minutos",
     "reset-password": "redefinição de :password",
+    "role": "papel",
+    "ability": "habilidade",
 
     "congratulations": "parabéns",
     "click-here": "clique aqui",
@@ -71,6 +73,6 @@
     "link-not-allowed": "vínculo não :allowed",
     "value-already-used": ":subject já :used",
 
-    "invalid-role-remotion": "remoção :invalid de papel",
-    "invalid-role-inclusion": "adição :invalid de papel"
+    "invalid-subject-remotion": "remoção :invalid de :subject",
+    "invalid-subject-inclusion": "adição :invalid de :subject"
 }

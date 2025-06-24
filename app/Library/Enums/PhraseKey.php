@@ -53,4 +53,7 @@ enum PhraseKey
 
     case InvalidRoleRemotion;
     case InvalidRoleInclusion;
+
+    case InvalidAbilityRemotion;
+    case InvalidAbilityInclusion;
 }

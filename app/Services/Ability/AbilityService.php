@@ -29,23 +29,10 @@ final class AbilityService implements AbilityServiceInterface
     {
         return $this->manageAbilities(
             filters: $this->collectSingleAbilities($user),
-            roleAbilities: $this->uniqueAbilities(
-                $this->dettachRoleAbilities(
-                    $user->roles->map(function (Role $role) {
-                        return $role->abilities()->select('id', 'name')->get();
-                    })
-                )
-            )
+            roleAbilities: $this->abilitiesFromUserRoles($user)
         );
     }
 
-    /**
-     * Group the "to include" abilities into role's abilities collection and
-     * also remove those "to remove".
-     *
-     * @param array{included: Collection<int, Ability>, removed: Collection<int, Ability>} $filters
-     * @param SupportCollection<int, Ability> $roleAbilities
-     */
     private function manageAbilities(array $filters, SupportCollection $roleAbilities)
     {
         ['included' => $includeList, 'removed' => $removeList] = $filters;
@@ -64,7 +51,7 @@ final class AbilityService implements AbilityServiceInterface
      *
      * @return array{included: Collection<int, Ability>, removed: Collection<int, Ability>}
      */
-    private function collectSingleAbilities(User $user)
+    public function collectSingleAbilities(User $user): array
     {
         [$includeList, $removeList] = $user->abilities->partition(fn(Ability $ability) => $ability->pivot->include);
         return [
@@ -135,6 +122,17 @@ final class AbilityService implements AbilityServiceInterface
     {
         return CollectionBuilder::rejectByName(list: $abilities, namesToRemove: $namesToRemove)->concat(
             $this->abilityRepository->findByNames($namesToInclude)->all()
+        );
+    }
+
+    public function abilitiesFromUserRoles(User $user): SupportCollection
+    {
+        return $this->uniqueAbilities(
+            $this->dettachRoleAbilities(
+                $user->roles->map(function (Role $role) {
+                    return $role->abilities()->select('id', 'name')->get();
+                })
+            )
         );
     }
 }

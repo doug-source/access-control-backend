@@ -37,4 +37,19 @@ interface AbilityServiceInterface
      * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Role>
      */
     public function combine(EloquentCollection $abilities, BaseCollection $namesToRemove, BaseCollection $namesToInclude): EloquentCollection;
+
+    /**
+     * Search by abilities linked directly to user into database, splitting them in
+     * "to include" and "to remove" partitions
+     *
+     * @return array{included: Illuminate\Support\Collection<int, \App\Models\Ability>, removed: Illuminate\Support\Collection<int, \App\Models\Ability>}
+     */
+    public function collectSingleAbilities(User $user): array;
+
+    /**
+     * Search by summarized and distinct abilities list from user's roles
+     *
+     * @return \Illuminate\Support\Collection<int, \App\Models\Ability>
+     */
+    public function abilitiesFromUserRoles(User $user): BaseCollection;
 }

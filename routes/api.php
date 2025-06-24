@@ -119,6 +119,10 @@ Route::middleware('auth:sanctum')->group(function () {
         '/users/{user}/abilities',
         [AbilityUserController::class, 'index']
     )->name('user.ability.index')->where(['user' => '[0-9]+']);
+    Route::patch(
+        '/users/{user}/abilities',
+        [AbilityUserController::class, 'update']
+    )->name('user.ability.update')->where(['user' => '[0-9]+']);
 
     Route::post(
         '/users/fast/store',
