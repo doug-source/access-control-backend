@@ -22,8 +22,8 @@ class Collection
         $namesToRemove = collect($namesToRemove);
 
         return $list->reject(
-            fn($role) => $namesToRemove->contains(
-                fn(string $roleName) => $roleName === $role->name
+            fn($instance) => $namesToRemove->contains(
+                fn(string $name) => $name === $instance->name
             )
         );
     }
