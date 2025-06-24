@@ -125,13 +125,18 @@ final class AbilityService implements AbilityServiceInterface
         );
     }
 
+    public function abilitiesFromRoles(SupportCollection $collection): SupportCollection
+    {
+        return $collection->map(
+            fn($role) => $role->abilities()->select('id', 'name')->get()
+        );
+    }
+
     public function abilitiesFromUserRoles(User $user): SupportCollection
     {
         return $this->uniqueAbilities(
             $this->dettachRoleAbilities(
-                $user->roles->map(function (Role $role) {
-                    return $role->abilities()->select('id', 'name')->get();
-                })
+                $this->abilitiesFromRoles($user->roles)
             )
         );
     }

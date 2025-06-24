@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Services\Role\Contracts;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
+use App\Services\Ability\Contracts\AbilityServiceInterface;
+use App\Services\Ability\Contracts\AbilityUserServiceInterface;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection as BaseCollection;
 
@@ -19,10 +21,27 @@ interface RoleServiceInterface
      * @param \Illuminate\Support\Collection<int, string> $namesToInclude
      * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Role>
      */
-    public function combine(Collection $roles, BaseCollection $namesToRemove, BaseCollection $namesToInclude): Collection;
+    public function combine(EloquentCollection $roles, BaseCollection $namesToRemove, BaseCollection $namesToInclude): EloquentCollection;
 
     /**
      * Search by roles belong to (or not belong to) user
      */
     public function findReferenceRoles(User $user, bool $owner, int $page, int $group, ?string $name = NULL): LengthAwarePaginator;
+
+    /**
+     * Handle the user's role insertion dependencies
+     *
+     * @param \App\Models\User $user
+     * @param \Illuminate\Support\Collection<int, \App\Models\Role> $rolesFromUser
+     * @param \Illuminate\Support\Collection<int, string> $namesToInclude
+     * @param \App\Services\Ability\Contracts\AbilityServiceInterface $abilityService
+     * @param \App\Services\Ability\Contracts\AbilityUserServiceInterface $abilityUserService
+     */
+    public function handleUserRoleInsertion(
+        User $user,
+        BaseCollection $rolesFromUser,
+        BaseCollection $namesToInclude,
+        AbilityServiceInterface $abilityService,
+        AbilityUserServiceInterface $abilityUserService
+    ): void;
 }

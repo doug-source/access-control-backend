@@ -2,6 +2,7 @@
 
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
+use App\Models\Ability;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Role;
 use App\Models\User;
@@ -150,7 +151,7 @@ describe("User's role patch route request", function () {
         });
     });
     describe('succeed because', function () {
-        it('has user super-admin authenticated', function () {
+        it('updates the user*s roles including and removing (no dependencies)', function () {
             $userDummy = createUserDB(email: fake()->email(), password: fake()->password());
             [$roleDummyOne, $roleDummyTwo] = Role::factory(count: 2)->create()->all();
             $userDummy->roles()->attach($roleDummyOne->id);
@@ -181,6 +182,51 @@ describe("User's role patch route request", function () {
             $this->assertDatabaseMissing('role_user', [
                 'user_id' => $userDummy->id,
                 'role_id' => $roleDummyOne->id
+            ]);
+        });
+        it('updates the user*s roles including and removing (with inclusion dependencies)', function () {
+            $userDummy = createUserDB(email: fake()->email(), password: fake()->password());
+            [$roleDummyOne, $roleDummyTwo, $roleDummyThree] = Role::factory(count: 3)->create()->all();
+            $abilities = Ability::factory(count: 5)->create()->all();
+            $roleDummyOne->abilities()->attach($abilities[0]->id);
+            $secondAbility = $abilities[1];
+            $roleDummyTwo->abilities()->attach([
+                $secondAbility->id,
+                $abilities[3]->id
+            ]);
+            $roleDummyThree->abilities()->attach($abilities[4]->id);
+
+            $userDummy->roles()->attach($roleDummyOne->id);
+            $userDummy->abilities()->attach($secondAbility->id);
+            $userDummy->abilities()->attach($abilities[2]->id);
+            $userDummy->abilities()->attach($abilities[3]->id);
+            $userDummy->abilities()->attach($abilities[4]->id);
+
+            ['token' => $token, 'user' => $user] = authenticate(scope: $this);
+            createSuperAdminRelationship($user);
+
+            $this->assertDatabaseHas('ability_user', [
+                'user_id' => $userDummy->id,
+                'ability_id' => $secondAbility->id
+            ]);
+            $this->assertDatabaseHas('ability_user', [
+                'user_id' => $userDummy->id,
+                'ability_id' => $abilities[3]->id
+            ]);
+
+            $this->patchJson(route('user.role.update', ['user' => $userDummy->id]), [
+                'Authorization' => "Bearer $token",
+                'included' => [$roleDummyTwo->name, $roleDummyThree->name],
+            ])
+                ->assertNoContent();
+
+            $this->assertDatabaseMissing('ability_user', [
+                'user_id' => $userDummy->id,
+                'ability_id' => $secondAbility->id
+            ]);
+            $this->assertDatabaseMissing('ability_user', [
+                'user_id' => $userDummy->id,
+                'ability_id' => $abilities[3]->id
             ]);
         });
     });

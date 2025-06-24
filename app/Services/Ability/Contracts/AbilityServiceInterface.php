@@ -52,4 +52,12 @@ interface AbilityServiceInterface
      * @return \Illuminate\Support\Collection<int, \App\Models\Ability>
      */
     public function abilitiesFromUserRoles(User $user): BaseCollection;
+
+    /**
+     * Search all abilities to each collection's role instance
+     *
+     * @param \Illuminate\Support\Collection<int, \App\Models\Role> $collection
+     * @return \Illuminate\Support\Collection<int, \Illuminate\Support\Collection<int, \App\Models\Ability>>
+     */
+    public function abilitiesFromRoles(BaseCollection $collection): BaseCollection;
 }

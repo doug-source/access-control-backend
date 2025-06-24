@@ -27,11 +27,15 @@ final class CheckerFactory implements CheckerFactoryScheme
         $method = Str::of($formRequest->method())->lower()->toString();
         switch ($method) {
             case 'patch':
-                return new PatchPlain($formRequest->merge(['user' => $this->buildRouteParam(
+                $user = $this->buildRouteParam(
                     formRequest: $formRequest,
                     repository: app(UserRepository::class),
                     routeKey: 'user',
-                )]));
+                );
+                return new PatchPlain($formRequest->merge([
+                    'user' => $user,
+                    'rolesFromUser' => $user->roles
+                ]));
             case 'get':
                 $formRequest->merge(['user' => $this->buildRouteParam(
                     formRequest: $formRequest,

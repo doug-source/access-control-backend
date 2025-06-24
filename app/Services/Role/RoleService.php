@@ -8,10 +8,12 @@ use App\Models\Role;
 use App\Services\Role\Contracts\RoleServiceInterface;
 use App\Repositories\RoleRepository;
 use Illuminate\Support\Collection as BaseCollection;
-use Illuminate\Database\Eloquent\Collection;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use App\Services\Ability\Contracts\AbilityServiceInterface;
+use App\Services\Ability\Contracts\AbilityUserServiceInterface;
 
 final class RoleService implements RoleServiceInterface
 {
@@ -22,7 +24,7 @@ final class RoleService implements RoleServiceInterface
         // ...
     }
 
-    public function combine(Collection $roles, BaseCollection $namesToRemove, BaseCollection $namesToInclude): Collection
+    public function combine(EloquentCollection $roles, BaseCollection $namesToRemove, BaseCollection $namesToInclude): EloquentCollection
     {
         return $this->separate(roles: $roles, namesToRemove: $namesToRemove)->concat(
             $this->roleRepository->findByNames($namesToInclude)->all()
@@ -36,7 +38,7 @@ final class RoleService implements RoleServiceInterface
      * @param \Illuminate\Support\Collection<int, string> $namesToRemove
      * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Role>
      */
-    private function separate(Collection $roles, BaseCollection $namesToRemove): Collection
+    private function separate(EloquentCollection $roles, BaseCollection $namesToRemove): EloquentCollection
     {
         return $roles->reject(
             fn(Role $role) => $namesToRemove->contains(
@@ -62,5 +64,37 @@ final class RoleService implements RoleServiceInterface
             exclude: $user->roles->pluck('id')->all(),
             name: $name,
         );
+    }
+
+    public function handleUserRoleInsertion(
+        User $user,
+        BaseCollection $rolesFromUser,
+        BaseCollection $namesToInclude,
+        AbilityServiceInterface $abilityService,
+        AbilityUserServiceInterface $abilityUserService
+    ): void {
+        $abilitiesFromRolesFromUser = $abilityService->abilitiesFromRoles($rolesFromUser);
+        $abilitiesIncludedFromUser = $abilityUserService->abilitiesIncludedFromUser($user);
+
+        $abilitiesFromInclusion = $abilityService->abilitiesFromRoles(
+            $this->roleRepository->findByNames($namesToInclude)
+        );
+
+        /** @var array<int, int> */
+        $idsToDetach = $abilitiesFromInclusion->map(function ($abilities) use ($abilitiesFromRolesFromUser, $abilitiesIncludedFromUser) {
+            return $abilities->reject(
+                fn($ability) => $abilitiesFromRolesFromUser->some(
+                    fn($abilityList) => $abilityList->contains(
+                        fn($abilityFromList) => $abilityFromList->id === $ability->id
+                    )
+                )
+            )->filter(
+                fn($ability) => $abilitiesIncludedFromUser->contains(
+                    fn($abilityIncluded) => $abilityIncluded->id === $ability->id
+                )
+            )->pluck('id')->all();
+        })->flatten(1)->all();
+
+        $user->abilities()->detach($idsToDetach);
     }
 }

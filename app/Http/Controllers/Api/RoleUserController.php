@@ -9,14 +9,19 @@ use Illuminate\Http\Response;
 use App\Http\Requests\RoleUser\CheckRequest;
 use App\Library\Builders\Response as ResponseBuilder;
 use App\Library\Converters\ResponseIndex;
+use App\Services\Ability\Contracts\AbilityServiceInterface;
+use App\Services\Ability\Contracts\AbilityUserServiceInterface;
 use App\Services\Role\Contracts\RoleServiceInterface;
 
 class RoleUserController extends Controller
 {
     use AuthorizesRequests;
 
-    public function __construct(private RoleServiceInterface $roleService)
-    {
+    public function __construct(
+        private RoleServiceInterface $roleService,
+        private AbilityServiceInterface $abilityService,
+        private AbilityUserServiceInterface $abilityUserService,
+    ) {
         // ...
     }
 
@@ -47,12 +52,27 @@ class RoleUserController extends Controller
     public function update(CheckRequest $request)
     {
         $this->authorize('updateRole', User::class);
+        /** @var \App\Models\User */
         $user = $request->input('user');
+        /** @var \Illuminate\Support\Collection<int, \App\Models\Role> */
+        $rolesFromUser = $request->input('rolesFromUser');
+
+        $namesToRemove = collect($request->input('removed', []));
+        $namesToInclude = collect($request->input('included', []));
+
+        $this->roleService->handleUserRoleInsertion(
+            $user,
+            $rolesFromUser,
+            $namesToInclude,
+            $this->abilityService,
+            $this->abilityUserService
+        );
+
         $user->roles()->sync(
             $this->roleService->combine(
                 roles: $user->roles,
-                namesToRemove: collect($request->input('removed', [])),
-                namesToInclude: collect($request->input('included', [])),
+                namesToRemove: $namesToRemove,
+                namesToInclude: $namesToInclude,
             )->pluck('id')->all()
         );
 

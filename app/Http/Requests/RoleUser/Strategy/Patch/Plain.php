@@ -7,17 +7,17 @@ namespace App\Http\Requests\RoleUser\Strategy\Patch;
 use App\Http\Requests\Checker;
 use App\Library\Builders\Phrase;
 use App\Library\Enums\PhraseKey;
-use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 final class Plain implements Checker
 {
-    private ?User $user = NULL;
+    private Collection $rolesFromUser;
 
     public function __construct(FormRequest $formRequest)
     {
-        $this->user = $formRequest->input('user');
+        $this->rolesFromUser = $formRequest->input('rolesFromUser');
     }
 
     public function all(FormRequest $formRequest, array $requestInputs): array
@@ -29,7 +29,7 @@ final class Plain implements Checker
 
     public function rules(): array
     {
-        $rolesFromUser = collect($this->user->roles->pluck('name'));
+        $rolesFromUser = collect($this->rolesFromUser->pluck('name'));
 
         return [
             'removed' => [

@@ -8,6 +8,7 @@ use App\Models\Ability;
 use App\Repositories\AbilityRepository;
 use App\Services\Ability\Contracts\AbilityUserServiceInterface;
 use Illuminate\Support\Collection;
+use App\Models\User;
 
 class AbilityUserService implements AbilityUserServiceInterface
 {
@@ -57,5 +58,25 @@ class AbilityUserService implements AbilityUserServiceInterface
             $carry->put($ability->id, ['include' => $ability->pivot->include]);
             return $carry;
         }, $acc);
+    }
+
+    /**
+     * Pick the abilities/user with relation 'include' equal to $status parameter
+     */
+    private function abilitiesFilteredFromUser(User $user, bool $status): Collection
+    {
+        return $user->abilities->filter(
+            fn(Ability $ability) => $ability->pivot->include === $status
+        );
+    }
+
+    public function abilitiesIncludedFromUser(User $user): Collection
+    {
+        return $this->abilitiesFilteredFromUser($user, TRUE);
+    }
+
+    public function abilitiesRemovedFromUser(User $user): Collection
+    {
+        return $this->abilitiesFilteredFromUser($user, FALSE);
     }
 }
