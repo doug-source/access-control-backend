@@ -84,6 +84,36 @@ final class RoleService implements RoleServiceInterface
         );
     }
 
+    /**
+     * Handle the user's role insertion/remotion dependencies
+     *
+     * @param \Illuminate\Support\Collection<int, \Illuminate\Support\Collection<int, \App\Models\Ability>> $seedAbilitiesList
+     * @param \Illuminate\Support\Collection<int, \Illuminate\Support\Collection<int, \App\Models\Ability>> $baseAbilitiesList
+     * @param \Illuminate\Support\Collection<int, \App\Models\Ability> $filterAbilities
+     */
+    private function handleUserRoleDependencies(
+        User $user,
+        BaseCollection $seedAbilitiesList,
+        BaseCollection $baseAbilitiesList,
+        BaseCollection $filterAbilities,
+    ) {
+        $user->abilities()->detach(
+            $seedAbilitiesList->map(function ($abilities) use ($baseAbilitiesList, $filterAbilities) {
+                return $abilities->reject(
+                    fn($ability) => $baseAbilitiesList->some(
+                        fn($abilityList) => $abilityList->contains(
+                            fn($abilityFromList) => $abilityFromList->id === $ability->id
+                        )
+                    )
+                )->filter(
+                    fn($ability) => $filterAbilities->contains(
+                        fn($abilityIncluded) => $abilityIncluded->id === $ability->id
+                    )
+                )->pluck('id')->all();
+            })->flatten(1)->all()
+        );
+    }
+
     public function handleUserRoleInsertion(
         User $user,
         BaseCollection $rolesFromUser,
@@ -91,28 +121,36 @@ final class RoleService implements RoleServiceInterface
         AbilityServiceInterface $abilityService,
         AbilityUserServiceInterface $abilityUserService
     ): void {
-        $abilitiesFromRolesFromUser = $abilityService->abilitiesFromRoles($rolesFromUser);
-        $abilitiesIncludedFromUser = $abilityUserService->abilitiesIncludedFromUser($user);
+        $this->handleUserRoleDependencies(
+            user: $user,
+            seedAbilitiesList: $abilityService->abilitiesFromRoles(
+                $this->roleRepository->findByNames($namesToInclude)
+            ),
+            baseAbilitiesList: $abilityService->abilitiesFromRoles($rolesFromUser),
+            filterAbilities: $abilityUserService->abilitiesIncludedFromUser($user)
+        );
+    }
 
-        $abilitiesFromInclusion = $abilityService->abilitiesFromRoles(
-            $this->roleRepository->findByNames($namesToInclude)
+    public function handleUserRoleRemotion(
+        User $user,
+        BaseCollection $rolesFromUser,
+        BaseCollection $namesToRemove,
+        AbilityServiceInterface $abilityService,
+        AbilityUserServiceInterface $abilityUserService
+    ): void {
+        $rolesFromUserFiltered = $rolesFromUser->reject(
+            fn($role) => $namesToRemove->contains(
+                fn($name) => $role->name === $name
+            )
         );
 
-        /** @var array<int, int> */
-        $idsToDetach = $abilitiesFromInclusion->map(function ($abilities) use ($abilitiesFromRolesFromUser, $abilitiesIncludedFromUser) {
-            return $abilities->reject(
-                fn($ability) => $abilitiesFromRolesFromUser->some(
-                    fn($abilityList) => $abilityList->contains(
-                        fn($abilityFromList) => $abilityFromList->id === $ability->id
-                    )
-                )
-            )->filter(
-                fn($ability) => $abilitiesIncludedFromUser->contains(
-                    fn($abilityIncluded) => $abilityIncluded->id === $ability->id
-                )
-            )->pluck('id')->all();
-        })->flatten(1)->all();
-
-        $user->abilities()->detach($idsToDetach);
+        $this->handleUserRoleDependencies(
+            user: $user,
+            seedAbilitiesList: $abilityService->abilitiesFromRoles(
+                $this->roleRepository->findByNames($namesToRemove)
+            ),
+            baseAbilitiesList: $abilityService->abilitiesFromRoles($rolesFromUserFiltered),
+            filterAbilities: $abilityUserService->abilitiesRemovedFromUser($user)
+        );
     }
 }

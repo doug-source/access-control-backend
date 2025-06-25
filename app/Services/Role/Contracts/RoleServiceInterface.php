@@ -43,4 +43,21 @@ interface RoleServiceInterface
         AbilityServiceInterface $abilityService,
         AbilityUserServiceInterface $abilityUserService
     ): void;
+
+    /**
+     * Handle the user's role remotion dependencies
+     *
+     * @param \App\Models\User $user
+     * @param \Illuminate\Support\Collection<int, \App\Models\Role> $rolesFromUser
+     * @param \Illuminate\Support\Collection<int, string> $namesToRemove
+     * @param \App\Services\Ability\Contracts\AbilityServiceInterface $abilityService
+     * @param \App\Services\Ability\Contracts\AbilityUserServiceInterface $abilityUserService
+     */
+    public function handleUserRoleRemotion(
+        User $user,
+        BaseCollection $rolesFromUser,
+        BaseCollection $namesToRemove,
+        AbilityServiceInterface $abilityService,
+        AbilityUserServiceInterface $abilityUserService
+    ): void;
 }

@@ -67,6 +67,13 @@ class RoleUserController extends Controller
             $this->abilityService,
             $this->abilityUserService
         );
+        $this->roleService->handleUserRoleRemotion(
+            $user,
+            $rolesFromUser,
+            $namesToRemove,
+            $this->abilityService,
+            $this->abilityUserService
+        );
         $this->roleService->updateUserRoles(
             user: $user,
             namesToRemove: $namesToRemove,
