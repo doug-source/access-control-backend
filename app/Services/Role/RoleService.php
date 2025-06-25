@@ -25,7 +25,7 @@ final class RoleService implements RoleServiceInterface
     }
 
     /**
-     * Receive role names to remove from collection role
+     * Filter the roles from the collection role using role's names
      *
      * @param \Illuminate\Database\Eloquent\Collection<int, \App\Models\Role> $roles
      * @param \Illuminate\Support\Collection<int, string> $namesToRemove
