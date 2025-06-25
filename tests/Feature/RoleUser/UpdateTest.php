@@ -189,15 +189,14 @@ describe("User's role patch route request", function () {
             [$roleDummyOne, $roleDummyTwo, $roleDummyThree] = Role::factory(count: 3)->create()->all();
             $abilities = Ability::factory(count: 5)->create()->all();
             $roleDummyOne->abilities()->attach($abilities[0]->id);
-            $secondAbility = $abilities[1];
             $roleDummyTwo->abilities()->attach([
-                $secondAbility->id,
+                $abilities[1]->id,
                 $abilities[3]->id
             ]);
             $roleDummyThree->abilities()->attach($abilities[4]->id);
 
             $userDummy->roles()->attach($roleDummyOne->id);
-            $userDummy->abilities()->attach($secondAbility->id);
+            $userDummy->abilities()->attach($abilities[1]->id);
             $userDummy->abilities()->attach($abilities[2]->id);
             $userDummy->abilities()->attach($abilities[3]->id);
             $userDummy->abilities()->attach($abilities[4]->id);
@@ -205,14 +204,11 @@ describe("User's role patch route request", function () {
             ['token' => $token, 'user' => $user] = authenticate(scope: $this);
             createSuperAdminRelationship($user);
 
-            $this->assertDatabaseHas('ability_user', [
+            collect(range(1, 4))->each(fn($index) => $this->assertDatabaseHas('ability_user', [
                 'user_id' => $userDummy->id,
-                'ability_id' => $secondAbility->id
-            ]);
-            $this->assertDatabaseHas('ability_user', [
-                'user_id' => $userDummy->id,
-                'ability_id' => $abilities[3]->id
-            ]);
+                'ability_id' => $abilities[$index]->id,
+                'include' => TRUE
+            ]));
 
             $this->patchJson(route('user.role.update', ['user' => $userDummy->id]), [
                 'Authorization' => "Bearer $token",
@@ -220,14 +216,10 @@ describe("User's role patch route request", function () {
             ])
                 ->assertNoContent();
 
-            $this->assertDatabaseMissing('ability_user', [
+            collect([1, 3])->each(fn($index) => $this->assertDatabaseMissing('ability_user', [
                 'user_id' => $userDummy->id,
-                'ability_id' => $secondAbility->id
-            ]);
-            $this->assertDatabaseMissing('ability_user', [
-                'user_id' => $userDummy->id,
-                'ability_id' => $abilities[3]->id
-            ]);
+                'ability_id' => $abilities[$index]->id,
+            ]));
         });
     });
 });
