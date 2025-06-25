@@ -14,14 +14,13 @@ use Illuminate\Support\Collection as BaseCollection;
 interface RoleServiceInterface
 {
     /**
-     * Receive role names to remove and to include into collection role
+     * Update the User's roles removing and inserting role instances
      *
-     * @param \Illuminate\Database\Eloquent\Collection<int, \App\Models\Role> $roles
+     * @param \App\Models\User $user
      * @param \Illuminate\Support\Collection<int, string> $namesToRemove
      * @param \Illuminate\Support\Collection<int, string> $namesToInclude
-     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Role>
      */
-    public function combine(EloquentCollection $roles, BaseCollection $namesToRemove, BaseCollection $namesToInclude): EloquentCollection;
+    public function updateUserRoles(User $user, BaseCollection $namesToRemove, BaseCollection $namesToInclude): void;
 
     /**
      * Search by roles belong to (or not belong to) user

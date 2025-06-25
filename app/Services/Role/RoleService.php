@@ -24,13 +24,6 @@ final class RoleService implements RoleServiceInterface
         // ...
     }
 
-    public function combine(EloquentCollection $roles, BaseCollection $namesToRemove, BaseCollection $namesToInclude): EloquentCollection
-    {
-        return $this->separate(roles: $roles, namesToRemove: $namesToRemove)->concat(
-            $this->roleRepository->findByNames($namesToInclude)->all()
-        );
-    }
-
     /**
      * Receive role names to remove from collection role
      *
@@ -47,6 +40,31 @@ final class RoleService implements RoleServiceInterface
         );
     }
 
+    /**
+     * Reject the roles not removed from collection as well as add the new roles to collection returned
+     *
+     * @param \Illuminate\Database\Eloquent\Collection<int, \App\Models\Role> $roles
+     * @param \Illuminate\Support\Collection<int, string> $namesToRemove
+     * @param \Illuminate\Support\Collection<int, string> $namesToInclude
+     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Role>
+     */
+    private function combine(EloquentCollection $roles, BaseCollection $namesToRemove, BaseCollection $namesToInclude): EloquentCollection
+    {
+        return $this->separate(roles: $roles, namesToRemove: $namesToRemove)->concat(
+            $this->roleRepository->findByNames($namesToInclude)->all()
+        );
+    }
+
+    public function updateUserRoles(User $user, BaseCollection $namesToRemove, BaseCollection $namesToInclude): void
+    {
+        $user->roles()->sync(
+            $this->combine(
+                roles: $user->roles,
+                namesToRemove: $namesToRemove,
+                namesToInclude: $namesToInclude,
+            )->pluck('id')->all()
+        );
+    }
 
     public function findReferenceRoles(User $user, bool $owner, int $page, int $group, ?string $name = NULL): LengthAwarePaginator
     {

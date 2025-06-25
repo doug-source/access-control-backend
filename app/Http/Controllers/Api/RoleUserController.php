@@ -67,13 +67,10 @@ class RoleUserController extends Controller
             $this->abilityService,
             $this->abilityUserService
         );
-
-        $user->roles()->sync(
-            $this->roleService->combine(
-                roles: $user->roles,
-                namesToRemove: $namesToRemove,
-                namesToInclude: $namesToInclude,
-            )->pluck('id')->all()
+        $this->roleService->updateUserRoles(
+            user: $user,
+            namesToRemove: $namesToRemove,
+            namesToInclude: $namesToInclude,
         );
 
         return ResponseBuilder::successJSON(
