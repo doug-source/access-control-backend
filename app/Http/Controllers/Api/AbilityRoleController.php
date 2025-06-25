@@ -47,12 +47,14 @@ class AbilityRoleController extends Controller
     {
         $role = $request->input('role');
         $this->authorize('updateAbility', $role);
-        $role->abilities()->sync(
-            $this->abilityService->combine(
-                abilities: $role->abilities,
-                namesToRemove: collect($request->input('removed', [])),
-                namesToInclude: collect($request->input('included', [])),
-            )->pluck('id')->all()
+
+        $namesToRemove = collect($request->input('removed', []));
+        $namesToInclude = collect($request->input('included', []));
+
+        $this->abilityService->updateRoleAbilities(
+            role: $role,
+            namesToRemove: $namesToRemove,
+            namesToInclude: $namesToInclude,
         );
 
         return ResponseBuilder::successJSON(

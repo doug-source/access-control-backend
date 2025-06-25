@@ -29,14 +29,13 @@ interface AbilityServiceInterface
     public function findReferenceRoleAbilities(Role $role, bool $owner, int $page, int $group, ?string $name = NULL): LengthAwarePaginator;
 
     /**
-     * Receive ability names to remove and to include into collection ability
+     * Update the Role's abilities removing and inserting ability instances
      *
-     * @param \Illuminate\Database\Eloquent\Collection<int, \App\Models\Ability> $abilities
+     * @param \App\Models\Role $role
      * @param \Illuminate\Support\Collection<int, string> $namesToRemove
      * @param \Illuminate\Support\Collection<int, string> $namesToInclude
-     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Role>
      */
-    public function combine(EloquentCollection $abilities, BaseCollection $namesToRemove, BaseCollection $namesToInclude): EloquentCollection;
+    public function updateRoleAbilities(Role $role, BaseCollection $namesToRemove, BaseCollection $namesToInclude): void;
 
     /**
      * Search by abilities linked directly to user into database, splitting them in

@@ -118,10 +118,29 @@ final class AbilityService implements AbilityServiceInterface
         );
     }
 
-    public function combine(Collection $abilities, SupportCollection $namesToRemove, SupportCollection $namesToInclude): Collection
+    /**
+     * Reject the abilities not removed from collection as well as add the new abilities to collection returned
+     *
+     * @param \Illuminate\Database\Eloquent\Collection<int, \App\Models\Ability> $abilities
+     * @param \Illuminate\Support\Collection<int, string> $namesToRemove
+     * @param \Illuminate\Support\Collection<int, string> $namesToInclude
+     * @return \Illuminate\Support\Collection<int, \App\Models\Role>
+     */
+    private function combine(Collection $abilities, SupportCollection $namesToRemove, SupportCollection $namesToInclude): Collection
     {
         return CollectionBuilder::rejectByName(list: $abilities, namesToRemove: $namesToRemove)->concat(
             $this->abilityRepository->findByNames($namesToInclude)->all()
+        );
+    }
+
+    public function updateRoleAbilities(Role $role, SupportCollection $namesToRemove, SupportCollection $namesToInclude): void
+    {
+        $role->abilities()->sync(
+            $this->combine(
+                abilities: $role->abilities,
+                namesToRemove: $namesToRemove,
+                namesToInclude: $namesToInclude,
+            )->pluck('id')->all()
         );
     }
 
