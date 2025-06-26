@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Services\Ability\AbilityRoleService;
 use App\Services\Auth\{
     Contracts\EmailVerifiedServiceInterface,
     Contracts\LoginOutputServiceInterface,
@@ -16,6 +17,7 @@ use App\Services\Register\RegisterService;
 use App\Services\Register\Contracts\RegisterServiceInterface;
 use App\Services\Ability\AbilityService;
 use App\Services\Ability\AbilityUserService;
+use App\Services\Ability\Contracts\AbilityRoleServiceInterface;
 use App\Services\Role\RoleService;
 use App\Services\Ability\Contracts\AbilityServiceInterface;
 use App\Services\Ability\Contracts\AbilityUserServiceInterface;
@@ -53,6 +55,10 @@ final class ServiceServiceProvider extends ServiceProvider
         [
             AbilityUserServiceInterface::class,
             AbilityUserService::class
+        ],
+        [
+            AbilityRoleServiceInterface::class,
+            AbilityRoleService::class
         ]
     ];
 

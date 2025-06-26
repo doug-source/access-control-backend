@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AbilityRole\CheckRequest;
 use App\Library\Builders\Response as ResponseBuilder;
 use App\Library\Converters\ResponseIndex;
+use App\Services\Ability\Contracts\AbilityRoleServiceInterface;
 use App\Services\Ability\Contracts\AbilityServiceInterface;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Response;
@@ -14,8 +15,10 @@ class AbilityRoleController extends Controller
 {
     use AuthorizesRequests;
 
-    public function __construct(private AbilityServiceInterface $abilityService)
-    {
+    public function __construct(
+        private AbilityServiceInterface $abilityService,
+        private AbilityRoleServiceInterface $abilityRoleService,
+    ) {
         // ...
     }
 
@@ -50,7 +53,17 @@ class AbilityRoleController extends Controller
 
         $namesToRemove = collect($request->input('removed', []));
         $namesToInclude = collect($request->input('included', []));
+        $usersFromRole = $role->users;
 
+        $this->abilityRoleService->handleRoleAbilityInclusion(
+            usersFromRole: $usersFromRole,
+            namesToInclude: $namesToInclude,
+        );
+        $this->abilityRoleService->handleRoleAbilityRemotion(
+            usersFromRole: $usersFromRole,
+            namesToRemove: $namesToRemove,
+            role: $role,
+        );
         $this->abilityService->updateRoleAbilities(
             role: $role,
             namesToRemove: $namesToRemove,

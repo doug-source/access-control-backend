@@ -150,38 +150,126 @@ describe("Role's abilities patch route request", function () {
         });
     });
     describe('succeed because', function () {
-        it('has user super-admin authenticated', function () {
+        it('updates the role*s abilities including and removing (no dependencies)', function () {
             $roleDummy = Role::factory(count: 1)->createOne();
-            [$abilityDummyOne, $abilityDummyTwo] = Ability::factory(count: 2)->create()->all();
-            $roleDummy->abilities()->attach($abilityDummyOne->id);
+            $abilityDummies = Ability::factory(count: 2)->create()->all();
+            $roleDummy->abilities()->attach($abilityDummies[0]->id);
 
             ['token' => $token, 'user' => $user] = authenticate(scope: $this);
             createSuperAdminRelationship($user);
 
             $this->assertDatabaseHas('ability_role', [
                 'role_id' => $roleDummy->id,
-                'ability_id' => $abilityDummyOne->id,
+                'ability_id' => $abilityDummies[0]->id,
             ]);
             $this->assertDatabaseMissing('ability_role', [
                 'role_id' => $roleDummy->id,
-                'ability_id' => $abilityDummyTwo->id,
+                'ability_id' => $abilityDummies[1]->id,
             ]);
 
             $this->patchJson(route('role.ability.update', ['role' => $roleDummy->id]), [
                 'Authorization' => "Bearer $token",
-                'removed' => [$abilityDummyOne->name],
-                'included' => [$abilityDummyTwo->name],
+                'removed' => [$abilityDummies[0]->name],
+                'included' => [$abilityDummies[1]->name],
             ])
                 ->assertNoContent();
 
             $this->assertDatabaseHas('ability_role', [
                 'role_id' => $roleDummy->id,
-                'ability_id' => $abilityDummyTwo->id
+                'ability_id' => $abilityDummies[1]->id
             ]);
             $this->assertDatabaseMissing('ability_role', [
                 'role_id' => $roleDummy->id,
-                'ability_id' => $abilityDummyOne->id
+                'ability_id' => $abilityDummies[0]->id
             ]);
+        });
+        it('updates the role*s abilities including and removing (with inclusion dependencies)', function () {
+            $keyAbility = Ability::factory(count: 1)->createOne();
+            $roles = Role::factory(4)->create()->all();
+            $userDummies = collect([1, 2, 3])->map(function () use ($roles) {
+                $user = createUserDB(fake()->email());
+                collect(range(0, 3))->each(function ($index) use ($roles, $user) {
+                    $roles[$index]->abilities()->attach(
+                        Ability::factory()->createOne()->id
+                    );
+                    $user->roles()->attach($roles[$index]->id);
+                });
+                return $user;
+            });
+            $userDummies->each(
+                function ($user) use ($keyAbility) {
+                    $user->abilities()->attach($keyAbility->id, ['include' => TRUE]);
+                }
+            );
+            $userDummies->each(
+                function ($user) use ($keyAbility) {
+                    $this->assertDatabaseHas('ability_user', [
+                        'user_id' => $user->id,
+                        'ability_id' => $keyAbility->id,
+                        'include' => TRUE
+                    ]);
+                }
+            );
+
+            ['token' => $token, 'user' => $user] = authenticate(scope: $this);
+            createSuperAdminRelationship($user);
+
+            $this->patchJson(route('role.ability.update', ['role' => $roles[0]->id]), [
+                'Authorization' => "Bearer $token",
+                'included' => [$keyAbility->name],
+            ])
+                ->assertNoContent();
+
+            $userDummies->each(
+                function ($user) use ($keyAbility) {
+                    $this->assertDatabaseMissing('ability_user', [
+                        'user_id' => $user->id,
+                        'ability_id' => $keyAbility->id,
+                    ]);
+                }
+            );
+        });
+        it('updates the role*s abilities including and removing (with remotion dependencies)', function () {
+            $keyAbility = Ability::factory()->createOne();
+            $roles = Role::factory(3)->create()->all();
+            $roles[0]->abilities()->attach($keyAbility->id);
+            $userDummies = collect([1, 2, 3])->map(function () use ($roles) {
+                $user = createUserDB(fake()->email());
+                $user->roles()->attach($roles[0]->id);
+                collect(range(1, 2))->each(function ($index) use ($roles, $user) {
+                    $roles[$index]->abilities()->attach(
+                        Ability::factory()->createOne()->id
+                    );
+                    $user->roles()->attach($roles[$index]->id);
+                });
+                return $user;
+            });
+            $userDummies->each(
+                fn($user) => $user->abilities()->attach($keyAbility->id, ['include' => FALSE])
+            );
+            $userDummies->each(
+                fn($user) => $this->assertDatabaseHas('ability_user', [
+                    'user_id' => $user->id,
+                    'ability_id' => $keyAbility->id,
+                    'include' => FALSE
+                ])
+            );
+
+            ['token' => $token, 'user' => $user] = authenticate(scope: $this);
+            createSuperAdminRelationship($user);
+
+            $this->patchJson(route('role.ability.update', ['role' => $roles[0]->id]), [
+                'Authorization' => "Bearer $token",
+                'removed' => [$keyAbility->name],
+            ])
+                ->assertNoContent();
+
+            $userDummies->each(
+                fn($user) => $this->assertDatabaseMissing('ability_user', [
+                    'user_id' => $user->id,
+                    'ability_id' => $keyAbility->id,
+                ])
+            );
         });
     });
 });
