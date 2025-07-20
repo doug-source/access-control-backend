@@ -89,6 +89,7 @@ final class User extends Authenticatable implements MustVerifyEmail, UiSummary
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
+            'photo' => $this->photo,
             'emailVerifiedAt' => $this->email_verified_at_formatted,
             'createdAt' => $this->created_at_formatted,
             'updatedAt' => $this->updated_at_formatted,

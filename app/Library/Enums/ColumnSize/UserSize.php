@@ -10,6 +10,7 @@ enum UserSize
     case NAME;
     case PHONE;
     case PASSWORD;
+    case PHOTO;
 
     public function get(): int
     {
@@ -17,6 +18,7 @@ enum UserSize
             UserSize::EMAIL,
             UserSize::PASSWORD,
             UserSize::NAME => 255,
+            UserSize::PHOTO => 100,
             UserSize::PHONE => 11,
         };
     }
