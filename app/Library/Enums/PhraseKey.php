@@ -56,4 +56,9 @@ enum PhraseKey
 
     case InvalidAbilityRemotion;
     case InvalidAbilityInclusion;
+
+    case ValidMimes;
+    case Or;
+
+    case MaxFileSizeInvalid;
 }

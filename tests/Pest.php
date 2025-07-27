@@ -11,6 +11,7 @@
 |
 */
 
+use App\Library\Converters\Phone as PhoneConverter;
 use App\Models\Ability;
 use App\Models\Role;
 use App\Models\User;
@@ -65,6 +66,7 @@ function createUserDB(string $email, ?string $password = NULL, bool $emailVerifi
 
     return User::factory()->createOne([
         'email' => $email,
+        'phone' => PhoneConverter::clear(fake()->phoneNumber()),
         'password' => !is_null($password) ? Hash::make($password) : NULL,
         ...$preParams
     ]);

@@ -27,6 +27,8 @@ final class LoginOutputService implements LoginOutputServiceInterface
                 subject: $user->createToken('auth-app')->plainTextToken
             ),
             'email' => $user->email,
+            'phone' => $user->phone,
+            'photo' => $user->photo,
             'emailVerified' => $emailVerifiedService->userHasEmailVerified(),
             'abilities' => $this->abilityService->abilitiesFromUser($user)->pluck('name')
         ];

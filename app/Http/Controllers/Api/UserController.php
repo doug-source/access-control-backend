@@ -17,6 +17,9 @@ use Illuminate\Http\{
     Request,
     Response
 };
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 
 class UserController extends Controller
 {
@@ -85,5 +88,35 @@ class UserController extends Controller
         return ResponseBuilder::successJSON(
             status: Response::HTTP_CREATED
         );
+    }
+
+    /**
+     * Update the resource's data
+     */
+    public function update(CheckRequest $request)
+    {
+        $user = Auth::user();
+        $attributes = $this->detachRequest($request, $user);
+        $this->userRepository->update(id: $user->id, attributes: $attributes);
+
+        return ResponseBuilder::successJSON(
+            data: ['photo' => $attributes['photo'] ?? $user->photo]
+        );
+    }
+
+    /**
+     * Filter just the request fields modified.
+     *
+     * @return array<array-key, string>
+     */
+    private function detachRequest(Request $request, Authenticatable|Model|null $user)
+    {
+        $filePath = self::handleFile($request, $user, 'photo', 'user-photos');
+        $inputs = collect([
+            ...$request->only(['name', 'phone']),
+            ...($filePath ? ['photo' => $filePath] : [])
+        ])->filter(fn($val, $key) => $user->$key !== $val)->toArray();
+        $inputs['phone'] = PhoneConverter::clear($inputs['phone'] ?? NULL);
+        return $inputs;
     }
 }

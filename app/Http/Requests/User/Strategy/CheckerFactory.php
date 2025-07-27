@@ -13,6 +13,7 @@ use App\Http\Requests\User\Strategy\{
     Post\Fast as FastPostPlain,
     Post\Plain as PostPlain,
     Post\Restore as RestorePlain,
+    Patch\Plain as PatchPlain
 };
 use App\Repositories\RegisterPermissionRepository;
 use Exception;
@@ -31,6 +32,7 @@ class CheckerFactory implements CheckerFactoryScheme
         return match ($method) {
             'GET' => $this->selectGetChecker($formRequest),
             'POST' => $this->selectPostChecker($formRequest),
+            'PATCH' => new PatchPlain()
         };
     }
 

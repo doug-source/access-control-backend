@@ -93,6 +93,7 @@ Route::middleware('auth:sanctum')->group(function () {
     )->name('role.ability.update')->where(['role' => '[0-9]+']);
 
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
+    Route::patch('/users', [UserController::class, 'update'])->name('user.update');
     Route::get('/users/removed', [UserRemovedController::class, 'index'])->name('user.removed.index');
     Route::get(
         '/users/removed/{user}',

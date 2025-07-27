@@ -38,6 +38,12 @@ final class CheckRequest extends VerifyRequest
                     route(name: 'user.fast.store', absolute: false) => $this->isLoggedIn(),
                     default => throw new Exception('Validation not implemented', 1),
                 };
+            case 'patch':
+                return match ('/' . Uri::of(Request::getUri())->path()) {
+                    route(name: 'user.update', absolute: false) => $this->isLoggedIn(),
+                    default => throw new Exception('Validation not implemented', 1),
+                };
+                return $this->isLoggedIn();
             default:
                 throw new Exception('Validation not implemented', 1);
         }

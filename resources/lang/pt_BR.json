@@ -74,5 +74,8 @@
     "value-already-used": ":subject já :used",
 
     "invalid-subject-remotion": "remoção :invalid de :subject",
-    "invalid-subject-inclusion": "adição :invalid de :subject"
+    "invalid-subject-inclusion": "adição :invalid de :subject",
+
+    "valid-mimes": "extensões permitidas",
+    "max-file-size-invalid": ":size :maximum de arquivo excedido"
 }

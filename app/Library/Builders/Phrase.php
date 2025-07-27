@@ -17,6 +17,7 @@ final class Phrase
         $providers = config('services.providers');
 
         $message = match ($key) {
+            PhraseKey::Or => Str::of(__('or')),
             PhraseKey::ParameterRequired => Str::of(__('subject-required', [
                 'subject' => __('parameter'),
                 'required' => __('required-m')
@@ -184,6 +185,11 @@ final class Phrase
                 'invalid' => __('invalid-f'),
                 'subject' => __('ability')
             ])),
+            PhraseKey::ValidMimes => Str::of(__('valid-mimes')),
+            PhraseKey::MaxFileSizeInvalid => Str::of(__('max-file-size-invalid', [
+                'maximum' => __('maximum'),
+                'size' => __('size'),
+            ]))
         };
         if ($uppercase) {
             return $message->append($remain)->ucfirst();
