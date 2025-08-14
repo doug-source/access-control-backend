@@ -11,7 +11,7 @@ Route::get('/', function () {
 });
 
 Route::get(
-    '/auth/{provider}/redirect/{type}',
+    '/auth/{provider}/redirect/{type}/{token?}',
     [SocialiteController::class, 'redirectToProvider']
 )->name('oauth.redirect');
 

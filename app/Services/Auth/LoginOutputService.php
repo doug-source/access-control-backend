@@ -16,6 +16,19 @@ final class LoginOutputService implements LoginOutputServiceInterface
         // ...
     }
 
+    /**
+     * Pick the photo storaged by user
+     */
+    private function takePhoto($user)
+    {
+        if ($user->photo) {
+            $host = request()->schemeAndHttpHost();
+            return "{$host}/storage/app/{$user->photo}";
+        }
+        $providers = $user->providers;
+        return $providers->count() > 0 ? $providers->first()->avatar : NULL;
+    }
+
     public function generate(EmailVerifiedServiceInterface $emailVerifiedService, $user): array
     {
         return [
@@ -28,7 +41,7 @@ final class LoginOutputService implements LoginOutputServiceInterface
             ),
             'email' => $user->email,
             'phone' => $user->phone,
-            'photo' => $user->photo,
+            'photo' => $this->takePhoto($user),
             'emailVerified' => $emailVerifiedService->userHasEmailVerified(),
             'abilities' => $this->abilityService->abilitiesFromUser($user)->pluck('name')
         ];

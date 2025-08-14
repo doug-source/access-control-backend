@@ -38,6 +38,9 @@ final class Phrase
                 'subject' => __('provider'),
                 'invalid' => __('invalid-m')
             ])),
+            PhraseKey::ProviderCredentialsInvalid => Str::of(__('provider-credentials-invalid', [
+                'invalid' => __('invalid-f')
+            ])),
             PhraseKey::LoginByProvider => Str::of(__('login-by-provider', [
                 'log-in' => __('log-in'),
                 'with' => __('with'),

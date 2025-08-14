@@ -9,6 +9,7 @@ enum PhraseKey
     case UserNullable;
     case PasswordNotNullable;
     case ProviderInvalid;
+    case ProviderCredentialsInvalid;
     case LoginByProvider;
     case EmailInvalid;
     case LoginInvalid;

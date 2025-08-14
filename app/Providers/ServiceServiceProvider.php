@@ -21,6 +21,8 @@ use App\Services\Ability\Contracts\AbilityRoleServiceInterface;
 use App\Services\Role\RoleService;
 use App\Services\Ability\Contracts\AbilityServiceInterface;
 use App\Services\Ability\Contracts\AbilityUserServiceInterface;
+use App\Services\Provider\Contracts\ProviderServiceInterface;
+use App\Services\Provider\ProviderService;
 use App\Services\Role\Contracts\RoleServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
@@ -59,6 +61,10 @@ final class ServiceServiceProvider extends ServiceProvider
         [
             AbilityRoleServiceInterface::class,
             AbilityRoleService::class
+        ],
+        [
+            ProviderServiceInterface::class,
+            ProviderService::class
         ]
     ];
 

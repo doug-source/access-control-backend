@@ -37,6 +37,7 @@
     "subject-required": ":subject :required",
     "subject-invalid": ":invalid :subject",
     "login-by-provider": ":log-in :with :provider :required",
+    "provider-credentials-invalid": ":invalid credentials provided",
     "min-size-invalid": ":minimum :size does not provided",
     "max-size-invalid": ":maximum :size exceeded",
     "min-qty-invalid": ":subject :minimum :quantity",
