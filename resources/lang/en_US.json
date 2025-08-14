@@ -26,7 +26,7 @@
     "digits": "digits",
     "special-chars": "special characteres",
     "quantity": "quantidade",
-    "login-with-password": ":login-in :with :password",
+    "login-with-password": ":log-in :with :password",
     "email-address": ":email :address",
     "verified": "verified",
     "allowed-m": "allowed",
