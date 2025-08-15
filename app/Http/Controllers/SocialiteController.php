@@ -14,6 +14,7 @@ use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\RedirectResponse;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User as UserModel;
+use Exception;
 
 class SocialiteController extends Controller
 {
@@ -44,12 +45,11 @@ class SocialiteController extends Controller
         $type = $session->pull('type');
         $token = $session->pull('token');
 
-        switch ($type) {
-            case 'login':
-                return $this->handleProvideCallbackToLogin($provider);
-            case 'register':
-                return $this->handleProvideCallbackToRegister($provider, $token);
-        }
+        return match ($type) {
+            'login' => $this->handleProvideCallbackToLogin($provider),
+            'register' => $this->handleProvideCallbackToRegister($provider, $token),
+            default => throw new Exception("Execution flow not implemented", 1)
+        };
     }
 
     /**
