@@ -8,6 +8,7 @@ use App\Library\Builders\UrlExternal;
 use App\Library\Enums\PhraseKey;
 use App\Library\Validators\ProviderLogin as ProviderLoginValidator;
 use App\Library\Validators\ProviderRegister as ProviderRegisterValidator;
+use App\Library\Validators\ProviderRequest as ProviderRequestValidator;
 use App\Repositories\UserRepository;
 use App\Services\Provider\Contracts\ProviderServiceInterface;
 use GuzzleHttp\Exception\ClientException;
@@ -15,12 +16,14 @@ use Illuminate\Http\RedirectResponse;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User as UserModel;
 use Exception;
+use App\Services\Register\Contracts\RegisterServiceInterface;
 
 class SocialiteController extends Controller
 {
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly ProviderServiceInterface $providerService,
+        private readonly RegisterServiceInterface $registerService,
     ) {
         // ...
     }
@@ -48,6 +51,7 @@ class SocialiteController extends Controller
         return match ($type) {
             'login' => $this->handleProvideCallbackToLogin($provider),
             'register' => $this->handleProvideCallbackToRegister($provider, $token),
+            'request' => $this->handleProvideCallbackToRequest($provider),
             default => throw new Exception("Execution flow not implemented", 1)
         };
     }
@@ -72,7 +76,7 @@ class SocialiteController extends Controller
             );
         } catch (ClientException $th) {
             return UrlExternal::build(query: [
-                'errormsg' => Phrase::pickSentence(PhraseKey::ProviderCredentialsInvalid)
+                'errormsg' => Phrase::pickSentence(PhraseKey::ProviderCredentialsInvalid)->value()
             ])->redirect();
         }
         return $this->providerUserResponse($user);
@@ -85,15 +89,16 @@ class SocialiteController extends Controller
     {
         try {
             $userProvided = Socialite::driver($provider)->user();
+            $email = $userProvided->getEmail();
         } catch (ClientException $th) {
             return UrlExternal::build(query: [
-                'errormsg' => Phrase::pickSentence(PhraseKey::ProviderCredentialsInvalid)
+                'errormsg' => Phrase::pickSentence(PhraseKey::ProviderCredentialsInvalid)->value()
             ])->redirect();
         }
 
         $errors = (new ProviderRegisterValidator(
             provider: $provider,
-            email: $userProvided->getEmail(),
+            email: $email,
             token: $token
         ))->validate();
         if ($errors) {
@@ -103,6 +108,39 @@ class SocialiteController extends Controller
         }
         $user = $this->providerService->createUserByProvider($userProvided, $provider);
         return $this->providerUserResponse($user);
+    }
+
+    /**
+     * Execute the provider's callback logic during the register request
+     */
+    private function handleProvideCallbackToRequest($provider)
+    {
+        $path = config('app.frontend.uri.register.request');
+        try {
+            $email = Socialite::driver($provider)->user()->getEmail();
+        } catch (ClientException $th) {
+            return UrlExternal::build(path: $path, query: [
+                'errormsg' => Phrase::pickSentence(PhraseKey::ProviderCredentialsInvalid)->value()
+            ])->redirect();
+        }
+
+        $errors = (new ProviderRequestValidator(
+            provider: $provider,
+            email: $email,
+        ))->validate();
+        if ($errors) {
+            return UrlExternal::build(path: $path, query: [
+                'errormsg' => array_pop($errors)
+            ])->redirect();
+        }
+
+        if (!$this->registerService->existsUserByEmail($email)) {
+            $this->registerService->handleRegister($email, NULL);
+        }
+
+        return UrlExternal::build(path: $path, query: [
+            'successmsg' => Phrase::pickSentence(key: PhraseKey::Registered, remain: '!')->toString()
+        ])->redirect();
     }
 
     /**

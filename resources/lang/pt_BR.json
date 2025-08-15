@@ -57,6 +57,7 @@
     "register-approval": "aprovação de :register",
     "confirmation-email": ":confirmation de :email",
     "confirmation-email-text": "clique no :button abaixo para verificar seu :email-address:",
+    "registered": "registrado",
 
     "verify-email-already-verified": ":email já :verified",
 

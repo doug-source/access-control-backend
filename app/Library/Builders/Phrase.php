@@ -123,6 +123,7 @@ final class Phrase
             PhraseKey::RegisterApproval => Str::of(__('register-approval', [
                 'register' => __('register')
             ])),
+            PhraseKey::Registered => Str::of(__('registered')),
 
             PhraseKey::PasswordsSent => Str::of(__('passwords.sent', [
                 'email' => __('email'),

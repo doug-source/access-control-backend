@@ -35,6 +35,7 @@ enum PhraseKey
     case ConfirmationEmail;
     case ConfirmationEmailText;
     case RegisterApproval;
+    case Registered;
 
     case PasswordsSent;
     case PasswordsReset;
