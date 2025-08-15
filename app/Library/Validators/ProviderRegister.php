@@ -1,55 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Library\Validators;
 
 use App\Library\Builders\Phrase;
-use App\Library\Enums\ColumnSize\RegisterPermissionSize;
 use App\Library\Enums\PhraseKey;
-use App\Library\Validators\Contracts\CustomValidatorInterface;
+use App\Library\Enums\ColumnSize\RegisterPermissionSize;
 use App\Repositories\RegisterPermissionRepository;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use App\Rules\RegisterPermissionValid;
 
-final class ProviderRegister implements CustomValidatorInterface
+final class ProviderRegister extends AbstractProvider
 {
-    /** @var string */
-    protected $provider;
-
     protected string $email;
-
     protected ?string $token;
+    protected int $tokenMaxSize;
 
-    protected string $tokenMaxSize;
-
-    /**
-     * Create a new rule instance.
-     *
-     * @return void
-     */
     public function __construct($provider, string $email, ?string $token = NULL)
     {
-        $this->provider = $provider;
+        parent::__construct($provider);
         $this->email = $email;
         $this->token = $token;
         $this->tokenMaxSize = RegisterPermissionSize::TOKEN->get();
     }
 
-    /**
-     * Execute the validation
-     * @return array{url: string}|array
-     */
-    public function validate(): array
+    protected function fields(): array
     {
-        $providers = config('services.providers');
-        $validator = Validator::make([
-            'provider' => $this->provider,
+        $fields = parent::fields();
+        return [
+            ...$fields,
             'email' => $this->email,
             'token' => $this->token,
-        ], [
-            'provider' => [
-                Rule::in($providers),
-            ],
+        ];
+    }
+
+    protected function rules(): array
+    {
+        $rules = parent::rules();
+        return [
+            ...$rules,
             'email' => ['required', 'unique:App\Models\User,email'],
             'token' => [
                 'bail',
@@ -60,19 +49,18 @@ final class ProviderRegister implements CustomValidatorInterface
                     token: $this->token,
                 )
             ]
-        ], [
-            'provider.in' => Phrase::pickSentence(PhraseKey::ProviderInvalid),
+        ];
+    }
+
+    protected function messages(): array
+    {
+        $messages = parent::messages();
+        return [
+            ...$messages,
             'email.required' => Phrase::pickSentence(PhraseKey::ParameterRequired),
             'email.unique' => Phrase::pickSentence(PhraseKey::EmailInvalid),
             'token.required' => Phrase::pickSentence(PhraseKey::ParameterRequired),
             'token.max' => Phrase::pickSentence(PhraseKey::MaxSizeInvalid, " ({$this->tokenMaxSize})"),
-        ]);
-
-        if ($validator->stopOnFirstFailure()->fails()) {
-            return [
-                $validator->errors()->first()
-            ];
-        }
-        return [];
+        ];
     }
 }
