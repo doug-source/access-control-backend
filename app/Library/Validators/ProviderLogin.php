@@ -22,10 +22,12 @@ final class ProviderLogin extends AbstractProvider
         $rules = parent::rules();
         return [
             ...$rules,
-            new ProviderUserLinked(
-                provider: $this->provider,
-                userRepository: $this->userRepository
-            )
+            'provider' => [
+                ...$rules['provider'],
+                new ProviderUserLinked(
+                    userRepository: $this->userRepository
+                )
+            ]
         ];
     }
 }

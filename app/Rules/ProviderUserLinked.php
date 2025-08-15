@@ -12,9 +12,6 @@ use Laravel\Socialite\Facades\Socialite;
 
 class ProviderUserLinked implements ValidationRule
 {
-    /** @var string */
-    protected $provider;
-
     protected UserRepository $userRepository;
 
     /**
@@ -22,9 +19,8 @@ class ProviderUserLinked implements ValidationRule
      *
      * @return void
      */
-    public function __construct($provider, UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository)
     {
-        $this->provider = $provider;
         $this->userRepository = $userRepository;
     }
 
@@ -33,10 +29,10 @@ class ProviderUserLinked implements ValidationRule
      *
      * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
-    public function validate(string $attribute, mixed $value, Closure $fail): void
+    public function validate(string $attribute, mixed $provider, Closure $fail): void
     {
         try {
-            $providerUser = Socialite::driver($this->provider)->user();
+            $providerUser = Socialite::driver($provider)->user();
             $user = $this->userRepository->findByEmail($providerUser->getEmail());
 
             if (is_null($user)) {
@@ -45,7 +41,7 @@ class ProviderUserLinked implements ValidationRule
                 $fail(Phrase::pickSentence(PhraseKey::PasswordNotNullable));
             }
         } catch (ClientException $th) {
-            $fail(Phrase::pickSentence(PhraseKey::ProviderInvalid));
+            $fail(Phrase::pickSentence(PhraseKey::ProviderCredentialsInvalid));
         }
     }
 }
