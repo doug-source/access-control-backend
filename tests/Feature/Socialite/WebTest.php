@@ -4,6 +4,9 @@ use App\Library\Builders\Phrase;
 use App\Library\Builders\UrlExternal;
 use App\Library\Enums\PhraseKey;
 use App\Models\Provider;
+use App\Models\RegisterPermission;
+use App\Models\User;
+use App\Repositories\UserRepository;
 use GuzzleHttp\{
     Psr7\Request,
     Psr7\Response,
@@ -110,18 +113,30 @@ describe('Socialite from web routes', function () {
                 );
         });
         it('uses the "register" using Google Provider', function () {
-            $user = buildSocialite(createUsedDB: FALSE);
-            $this->get(route('oauth.redirect', ['provider' => 'google', 'type' => 'register']));
+            $registerPermission = RegisterPermission::factory()->createOne();
+            buildSocialite(email: $registerPermission->email, name: fake()->name(), createUsedDB: false);
+
+            $this->get(
+                route(
+                    'oauth.redirect',
+                    [
+                        'provider' => 'google',
+                        'type' => 'register',
+                        'token' => $registerPermission->token
+                    ]
+                )
+            );
             $this->get(route('oauth.callback', 'google'))
                 ->assertStatus(HttpResponse::HTTP_FOUND)
-                ->assertRedirect(
-                    UrlExternal::build(
-                        path: config('app.frontend.uri.register.request'),
-                        query: [
-                            'provided' => $user->email
-                        ]
-                    )
+                ->assertRedirectContains(
+                    UrlExternal::build(query: ['provided' => ''])->value()
                 );
+
+            $user = app(UserRepository::class)->findByEmail($registerPermission->email);
+
+            $this->assertDatabaseHas('personal_access_tokens', [
+                'tokenable_id' => $user->id,
+            ]);
         });
     });
 });

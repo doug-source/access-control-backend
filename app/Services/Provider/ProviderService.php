@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Provider;
 
+use App\Models\User;
 use App\Repositories\ProviderRepository;
 use App\Repositories\RegisterPermissionRepository;
 use App\Repositories\UserRepository;
@@ -20,7 +21,7 @@ final class ProviderService implements ProviderServiceInterface
         // ...
     }
 
-    public function createUserByProvider(UserProvided $userProvided, string $provider): void
+    public function createUserByProvider(UserProvided $userProvided, string $provider): User
     {
         $registerPermission = $this->permissionRepository->findByEmail($userProvided->getEmail());
         $this->permissionRepository->delete($registerPermission->id);
@@ -38,5 +39,6 @@ final class ProviderService implements ProviderServiceInterface
             'user_id' => $user->id,
             'avatar' => $userProvided->getAvatar()
         ]);
+        return $user;
     }
 }

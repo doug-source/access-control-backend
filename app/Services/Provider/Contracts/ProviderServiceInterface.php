@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Provider\Contracts;
 
+use App\Models\User;
 use Laravel\Socialite\Contracts\User as UserProvided;
 
 interface ProviderServiceInterface
@@ -11,5 +12,5 @@ interface ProviderServiceInterface
     /**
      * Create the user by login provider
      */
-    public function createUserByProvider(UserProvided $userProvided, string $provider): void;
+    public function createUserByProvider(UserProvided $userProvided, string $provider): User;
 }

@@ -93,6 +93,8 @@ describe('Authentication', function () {
                                 ->where('token', $token)
                                 ->where('email', $userModel->email)
                                 ->where('emailVerified', TRUE)
+                                ->where('phone', $userModel->phone)
+                                ->where('photo', $userModel->photo)
                                 ->where('abilities', $abilities);
                         });
                 });

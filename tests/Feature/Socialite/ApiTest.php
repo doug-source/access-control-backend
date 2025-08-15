@@ -80,7 +80,9 @@ describe('Socialite from api routes', function () {
                                 ->whereNot('token', $token)
                                 ->where('email', $userModel->email)
                                 ->where('emailVerified', FALSE)
-                                ->where('abilities', $abilities);
+                                ->where('abilities', $abilities)
+                                ->where('phone', $userModel->phone)
+                                ->where('photo', $userModel->photo);
                         });
                 });
         });

@@ -60,11 +60,12 @@ expect()->extend('toBeOne', function () {
 /**
  * Create the database user instance used by testing environment
  */
-function createUserDB(string $email, ?string $password = NULL, bool $emailVerified = TRUE)
+function createUserDB(string $email, ?string $password = NULL, ?string $name = NULL, bool $emailVerified = TRUE)
 {
     $preParams = $emailVerified ? [] : ['email_verified_at' => NULL];
 
     return User::factory()->createOne([
+        'name' => $name ?? fake()->name(),
         'email' => $email,
         'phone' => PhoneConverter::clear(fake()->phoneNumber()),
         'password' => !is_null($password) ? Hash::make($password) : NULL,
@@ -78,6 +79,7 @@ function createUserDB(string $email, ?string $password = NULL, bool $emailVerifi
 function buildSocialite(
     ?string $password = NULL,
     string $email = 'test@test.com',
+    ?string $name = NULL,
     bool $createUsedDB = true,
     bool $emailVerified = TRUE,
     ?Exception $exception = NULL
@@ -85,17 +87,18 @@ function buildSocialite(
     $user = $createUsedDB ? createUserDB(
         email: $email,
         password: $password,
+        name: $name,
         emailVerified: $emailVerified
-    ) : (object)['email' => $email];
+    ) : (object)['email' => $email, 'name' => $name];
 
     $socialiteUser = Mockery::mock(ProviderUser::class);
 
     if ($exception) {
         $socialiteUser->shouldReceive('getEmail')->andThrow($exception);
     } else {
-        // ->shouldReceive('getId')->andReturn($googleId = '12345654321345')
-        // ->shouldReceive('getName')->andReturn($user->name)
-        // ->shouldReceive('getAvatar')->andReturn($avatarUrl = 'https://en.gravatar.com/userimage');
+        $socialiteUser->shouldReceive('getId')->andReturn('12345654321345');
+        $socialiteUser->shouldReceive('getName')->andReturn($user->name);
+        $socialiteUser->shouldReceive('getAvatar')->andReturn('https://gravatar.com/avatar/fd631317f9f9ed1acf2547344c75d429?s=50&d=robohash&r=x');
         $socialiteUser->shouldReceive('getEmail')->andReturn($user->email);
     }
 

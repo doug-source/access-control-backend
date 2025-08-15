@@ -13,7 +13,7 @@ use App\Services\Provider\Contracts\ProviderServiceInterface;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\RedirectResponse;
 use Laravel\Socialite\Facades\Socialite;
-use Laravel\Socialite\Contracts\User as UserProvided;
+use App\Models\User as UserModel;
 
 class SocialiteController extends Controller
 {
@@ -66,7 +66,10 @@ class SocialiteController extends Controller
                 'errormsg' => array_pop($errors)
             ])->redirect();
         }
-        return $this->providerUserResponse(Socialite::driver($provider)->user());
+        $user = $this->userRepository->findByEmail(
+            email: Socialite::driver($provider)->user()->getEmail()
+        );
+        return $this->providerUserResponse($user);
     }
 
     /**
@@ -92,16 +95,15 @@ class SocialiteController extends Controller
                 'errormsg' => array_pop($errors)
             ])->redirect();
         }
-        $this->providerService->createUserByProvider($userProvided, $provider);
-        return $this->providerUserResponse($userProvided);
+        $user = $this->providerService->createUserByProvider($userProvided, $provider);
+        return $this->providerUserResponse($user);
     }
 
     /**
      * Build the redirect response used by provider callback during the authentication
      */
-    protected function providerUserResponse(UserProvided $userProvided): RedirectResponse
+    protected function providerUserResponse(UserModel $user): RedirectResponse
     {
-        $user = $this->userRepository->findByEmail(email: $userProvided->getEmail());
         return UrlExternal::build(
             query: [
                 'provided' => $user->createToken('Sanctum+Socialite+temporary')->plainTextToken
