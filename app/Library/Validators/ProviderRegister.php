@@ -39,7 +39,7 @@ final class ProviderRegister extends AbstractProvider
         $rules = parent::rules();
         return [
             ...$rules,
-            'email' => ['required', 'unique:App\Models\User,email'],
+            'email' => ['email', 'unique:App\Models\User,email'],
             'token' => [
                 'bail',
                 'required',
@@ -57,7 +57,7 @@ final class ProviderRegister extends AbstractProvider
         $messages = parent::messages();
         return [
             ...$messages,
-            'email.required' => Phrase::pickSentence(PhraseKey::ParameterRequired),
+            'email.email' => Phrase::pickSentence(PhraseKey::EmailInvalid),
             'email.unique' => Phrase::pickSentence(PhraseKey::EmailInvalid),
             'token.required' => Phrase::pickSentence(PhraseKey::ParameterRequired),
             'token.max' => Phrase::pickSentence(PhraseKey::MaxSizeInvalid, " ({$this->tokenMaxSize})"),
