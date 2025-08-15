@@ -66,9 +66,15 @@ class SocialiteController extends Controller
                 'errormsg' => array_pop($errors)
             ])->redirect();
         }
-        $user = $this->userRepository->findByEmail(
-            email: Socialite::driver($provider)->user()->getEmail()
-        );
+        try {
+            $user = $this->userRepository->findByEmail(
+                email: Socialite::driver($provider)->user()->getEmail()
+            );
+        } catch (ClientException $th) {
+            return UrlExternal::build(query: [
+                'errormsg' => Phrase::pickSentence(PhraseKey::ProviderCredentialsInvalid)
+            ])->redirect();
+        }
         return $this->providerUserResponse($user);
     }
 
