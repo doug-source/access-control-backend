@@ -16,6 +16,12 @@ final class LoginOutputService implements LoginOutputServiceInterface
         // ...
     }
 
+    public function makePhotoPath(string $fileName): string
+    {
+        $host = request()->schemeAndHttpHost();
+        return "{$host}/storage/app/{$fileName}";
+    }
+
     /**
      * Pick the photo storaged by user
      */

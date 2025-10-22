@@ -20,6 +20,7 @@ use Illuminate\Http\{
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\Auth\Contracts\StorageServiceInterface;
 
 class UserController extends Controller
 {
@@ -29,6 +30,7 @@ class UserController extends Controller
         private readonly RegisterServiceInterface $registerService,
         private readonly RegisterPermissionRepository $permissionRepository,
         private readonly UserRepository $userRepository,
+        private readonly StorageServiceInterface $storageService
     ) {
         // ...
     }
@@ -98,10 +100,14 @@ class UserController extends Controller
         $user = Auth::user();
         $attributes = $this->detachRequest($request, $user);
         $this->userRepository->update(id: $user->id, attributes: $attributes);
+        $data = NULL;
+        if (isset($attributes['photo'])) {
+            $data = [
+                'photo' => $this->storageService->makeResourcePathUrl($attributes['photo'])
+            ];
+        }
 
-        return ResponseBuilder::successJSON(
-            data: ['photo' => $attributes['photo'] ?? $user->photo]
-        );
+        return ResponseBuilder::successJSON(data: $data);
     }
 
     /**
@@ -114,7 +120,7 @@ class UserController extends Controller
         $filePath = self::handleFile($request, $user, 'photo', 'user-photos');
         $inputs = collect([
             ...$request->only(['name', 'phone']),
-            ...($filePath ? ['photo' => $filePath] : [])
+            ...($filePath ? ['photo' => '' . $filePath] : [])
         ])->filter(fn($val, $key) => $user->$key !== $val)->toArray();
         $inputs['phone'] = PhoneConverter::clear($inputs['phone'] ?? NULL);
         return $inputs;

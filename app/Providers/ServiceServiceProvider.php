@@ -9,7 +9,8 @@ use App\Services\Auth\{
     Contracts\EmailVerifiedServiceInterface,
     Contracts\LoginOutputServiceInterface,
     EmailVerifiedService,
-    LoginOutputService
+    LoginOutputService,
+    StorageService
 };
 use App\Services\Password\Constracts\PasswordServiceInterfacer;
 use App\Services\Password\PasswordService;
@@ -25,6 +26,7 @@ use App\Services\Provider\Contracts\ProviderServiceInterface;
 use App\Services\Provider\ProviderService;
 use App\Services\Role\Contracts\RoleServiceInterface;
 use Illuminate\Support\ServiceProvider;
+use App\Services\Auth\Contracts\StorageServiceInterface;
 
 final class ServiceServiceProvider extends ServiceProvider
 {
@@ -65,6 +67,10 @@ final class ServiceServiceProvider extends ServiceProvider
         [
             ProviderServiceInterface::class,
             ProviderService::class
+        ],
+        [
+            StorageServiceInterface::class,
+            StorageService::class
         ]
     ];
 
