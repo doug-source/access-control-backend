@@ -13,6 +13,7 @@ use App\Services\Auth\Contracts\{
 };
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
@@ -47,6 +48,8 @@ class AuthController extends Controller
     {
         $user = $request->user();
         $user->tokens()->delete();
-        return ResponseBuilder::successJSON();
+        return ResponseBuilder::successJSON(
+            status: Response::HTTP_NO_CONTENT
+        );
     }
 }
