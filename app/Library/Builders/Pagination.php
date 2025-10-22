@@ -14,7 +14,7 @@ final class Pagination
     public static function paginate(Collection $results, int $page, int $group)
     {
         return self::paginator(
-            items: $results->forPage($page, $group),
+            items: $results->forPage($page, $group)->values(),
             total: $results->count(),
             page: $page,
             group: $group,
