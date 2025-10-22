@@ -28,6 +28,28 @@ class DatabaseSeeder extends Seeder
         'common'
     ];
 
+    private array $remainAbilities = [
+        'role-screen',
+        'ability-screen',
+        'register-permission-screen',
+        'add-user-screen',
+        'add-role-screen',
+        'add-ability-screen',
+        'show-user-screen',
+        'show-role-screen',
+        'show-ability-screen',
+        'show-register-request-screen',
+        'show-register-permission-screen',
+        'remove-user',
+        'restore-user',
+        'remove-register-request',
+        'approve-register-request',
+        'attach-role-and-ability',
+        'attach-ability-to-role',
+        'ability-from-role-screen',
+        'remove-role'
+    ];
+
     /**
      * Seed the application's database.
      */
@@ -50,6 +72,12 @@ class DatabaseSeeder extends Seeder
             class: AbilitiesTableSeeder::class,
             parameters: [
                 'abilities' => $this->superAdmin['abilities']
+            ]
+        );
+        $this->call(
+            class: AbilitiesTableSeeder::class,
+            parameters: [
+                'abilities' => $this->remainAbilities
             ]
         );
         $this->call(
