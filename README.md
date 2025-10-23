@@ -2,8 +2,9 @@
 
 Este projeto tem o objetivo de apresentar uma aplicação web backend utilizando-se do [framework Laravel](https://laravel.com/) (PHP) como base, em conjunto com o sistema integrado de autenticação/autorização [Laravel Sanctum](https://laravel.com/docs/12.x/sanctum), através da criação/utilização de contas autenticadas através de email/senha ou diretamente utilizando contas de email do google.
 
-A aplicação é desenvolvida focando em três pontos-chave:
+Inicialmente a aplicação frontend [access-control-frontend](https://github.com/doug-source/access-control-frontend) pode ser utilizada como cliente da API deste projeto.
 
+A aplicação é desenvolvida focando em três pontos-chave:
 -  Usuário
 -  Papel
 -  Habilidade
