@@ -30,3 +30,15 @@ Define algo como a função/cargo utilizado pelo usuário logado no sistema, mui
 ### Habilidade
 
 Define qualquer tipo de ação permitida pelo usuário dentro do sistema.
+
+## Recursos diversos
+
+Sempre que um possível usuário desejar solicitar a criação de uma nova conta, é necessário que o mesmo envie, através da aplicação, uma solicitação de registro. Essa solicitação deve ser posteriormente aprovada por alguma conta (que possua relacionamento com o papel `super-admin`).
+
+O usuário aprovado receberá um email no qual ele deve definir o email e senha (ou conta de email do Google já existente) que será utilizado como autenticação pela nova conta a ser criada. Após o cadastro desses dados, o novo usuário receberá um email de verificação de conta, para que o uso da aplicação pelo usuário seja completamente liberado.
+
+Após criar a conta, o usuário poderá também modificar posteriormente as seguintes informações:
+
+-  Nome
+-  Foto
+-  Telefone
